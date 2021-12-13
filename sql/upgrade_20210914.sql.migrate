@@ -1,0 +1,40 @@
+-- 用于旧版本兼容迁移脚本，请手动执行
+
+DROP TABLE IF EXISTS `sys_req_log`;
+
+ALTER TABLE `sys_department` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_department` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_department` CHANGE parend_id parent_id int(11) DEFAULT NULL;
+
+ALTER TABLE `sys_login_log` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_login_log` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_menu` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_menu` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_menu` CHANGE isShow is_show tinyint(4) DEFAULT '1';
+
+ALTER TABLE `sys_role` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_role` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_role` CHANGE userId user_id varchar(255) NOT NULL;
+
+ALTER TABLE `sys_role_department` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_role_department` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_role_menu` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_role_menu` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_task` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_task` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_task_log` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_task_log` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_user` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_user` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+ALTER TABLE `sys_user_role` CHANGE createTime created_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+ALTER TABLE `sys_user_role` CHANGE updateTime updated_at datetime(6) DEFAULT CURRENT_TIMESTAMP(6) NOT NULL;
+
+DELETE FROM `sys_menu` WHERE id = 38;
+DELETE FROM `sys_role_menu` WHERE `menu_id` = 38;
+DELETE FROM `sys_task` WHERE id = 1;
