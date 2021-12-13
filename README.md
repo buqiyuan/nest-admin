@@ -7,7 +7,7 @@
 
 ### 演示地址
 
-- [http://opensource.admin.si-yee.com](http://buqiyuan.gitee.io/vue3-antd-admin/)
+- [http://buqiyuan.gitee.io/vue3-antd-admin/](http://buqiyuan.gitee.io/vue3-antd-admin/)
 - [Swagger Api文档](http://buqiyuan.site:7001/swagger-api/static/index.html)
 
 ### sql文件
