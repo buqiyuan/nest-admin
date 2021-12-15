@@ -29,7 +29,7 @@ export default {
     password: 'root',
     database: 'sf-admin',
     synchronize: true,
-    logging: true,
+    logging: false,
   },
   redis: {
     host: '127.0.0.1', // default value

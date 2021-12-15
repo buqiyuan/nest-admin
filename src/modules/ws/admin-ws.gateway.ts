@@ -12,7 +12,7 @@ import { EVENT_OFFLINE, EVENT_ONLINE } from './ws.event';
 /**
  * Admin WebSokcet网关，不含权限校验，Socket端只做通知相关操作
  */
-@WebSocketGateway(parseInt(process.env.WS_PORT || '7005'), {
+@WebSocketGateway(parseInt(process.env.WS_PORT), {
   path: '/ws',
   namespace: '/admin',
 })
