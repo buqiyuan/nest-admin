@@ -27,9 +27,10 @@ export default {
     port: 3306,
     username: 'root',
     password: 'root',
-    database: 'sf-admin',
+    database: 'nest-admin',
     synchronize: true,
     logging: false,
+    timezone: '+08:00', // 东八区
   },
   redis: {
     host: '127.0.0.1', // default value

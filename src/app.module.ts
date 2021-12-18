@@ -38,6 +38,7 @@ import { LOGGER_MODULE_OPTIONS } from './shared/logger/logger.constants';
         database: configService.get<string>('database.database'),
         synchronize: configService.get<boolean>('database.synchronize'),
         logging: configService.get('database.logging'),
+        timezone: configService.get('database.timezone'), // 时区
         // 自定义日志
         logger: new TypeORMLoggerService(
           configService.get('database.logging'),
