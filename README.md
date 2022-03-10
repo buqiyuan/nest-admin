@@ -8,7 +8,7 @@
 ### 演示地址
 
 - [http://buqiyuan.gitee.io/vue3-antd-admin/](http://buqiyuan.gitee.io/vue3-antd-admin/)
-- [Swagger Api文档](http://buqiyuan.site:7001/swagger-api/static/index.html)
+- [Swagger Api文档](https://nest-api.buqiyuan.site/api/swagger-api/static/index.html#/)
 
 ### sql文件
 - /sql/init.sql

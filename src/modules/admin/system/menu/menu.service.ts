@@ -76,6 +76,18 @@ export class SysMenuService {
         throw new ApiException(10006);
       }
     }
+    //判断一级菜单路由是否重复
+    if (Object.is(dto.parentId, -1) && Object.is(dto.type, 0)) {
+      // 查找所有一级菜单
+      const rootMenus = await this.menuRepository.find({ parentId: null });
+      const path = dto.router.split('/').filter(Boolean).join('/');
+      const pathReg = new RegExp(`^/?${path}/?$`);
+      const isExist = rootMenus.some((n) => pathReg.test(n.router));
+      if (isExist) {
+        // 一级菜单路由不能重复
+        throw new ApiException(10004);
+      }
+    }
   }
 
   /**

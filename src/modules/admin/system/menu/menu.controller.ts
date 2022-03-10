@@ -51,9 +51,10 @@ export class SysMenuController {
     }
   }
 
-  @ApiOperation({ summary: '新增菜单或权限' })
+  @ApiOperation({ summary: '更新菜单或权限' })
   @Post('update')
   async update(@Body() dto: UpdateMenuDto): Promise<void> {
+    //
     if (dto.menuId <= FORBIDDEN_OP_MENU_ID_INDEX) {
       // 系统内置功能不提供删除
       throw new ApiException(10016);
@@ -63,6 +64,7 @@ export class SysMenuController {
     if (dto.parentId === -1) {
       dto.parentId = null;
     }
+
     const insertData: CreateMenuDto & { id: number } = {
       ...dto,
       id: dto.menuId,
