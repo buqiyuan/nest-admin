@@ -7,7 +7,7 @@ import SysMenu from 'src/entities/admin/sys-menu.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
-import { CreateMenuDto } from './menu.dto';
+import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
 import { RedisService } from 'src/shared/services/redis.service';
 
 @Injectable()
@@ -61,7 +61,7 @@ export class SysMenuService {
   /**
    * 检查菜单创建规则是否符合
    */
-  async check(dto: CreateMenuDto): Promise<void | never> {
+  async check(dto: CreateMenuDto & { menuId?: number }): Promise<void | never> {
     if (dto.type === 2 && dto.parentId === -1) {
       // 无法直接创建权限，必须有ParentId
       throw new ApiException(10005);
@@ -79,7 +79,10 @@ export class SysMenuService {
     //判断一级菜单路由是否重复
     if (Object.is(dto.parentId, -1) && Object.is(dto.type, 0)) {
       // 查找所有一级菜单
-      const rootMenus = await this.menuRepository.find({ parentId: null });
+      const rootMenus = await this.menuRepository.find({
+        parentId: null,
+        id: Not(dto.menuId),
+      });
       const path = dto.router.split('/').filter(Boolean).join('/');
       const pathReg = new RegExp(`^/?${path}/?$`);
       const isExist = rootMenus.some((n) => pathReg.test(n.router));
