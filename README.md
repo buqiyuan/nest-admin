@@ -12,7 +12,7 @@
 
 ### 项目启动前的准备工作
 - sql文件：[/sql/init.sql](https://github.com/buqiyuan/nest-admin/tree/main/sql)
-- mysql和redis连接配置：[config.development](https://github.com/buqiyuan/nest-admin/blob/main/src/config/config.development.ts)
+- mysql和redis连接配置：[src/config/config.development.ts](https://github.com/buqiyuan/nest-admin/blob/main/src/config/config.development.ts)
 
 演示环境账号密码：
 
