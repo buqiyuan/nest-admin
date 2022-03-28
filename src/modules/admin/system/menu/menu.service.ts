@@ -33,6 +33,7 @@ export class SysMenuService {
    */
   async save(menu: CreateMenuDto & { id?: number }): Promise<void> {
     await this.menuRepository.save(menu);
+    this.adminWSService.noticeUserToUpdateMenusByRoleIds([this.rootRoleId]);
   }
 
   /**
