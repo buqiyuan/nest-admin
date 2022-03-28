@@ -10,8 +10,9 @@
 - [http://buqiyuan.gitee.io/vue3-antd-admin/](http://buqiyuan.gitee.io/vue3-antd-admin/)
 - [Swagger Api文档](https://nest-api.buqiyuan.site/api/swagger-api/static/index.html#/)
 
-### sql文件
-- /sql/init.sql
+### 项目启动前的准备工作
+- sql文件：[/sql/init.sql](https://github.com/buqiyuan/nest-admin/tree/main/sql)
+- mysql和redis连接配置：[config.development](https://github.com/buqiyuan/nest-admin/blob/main/src/config/config.development.ts)
 
 演示环境账号密码：
 

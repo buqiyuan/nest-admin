@@ -7,8 +7,9 @@ import SysMenu from 'src/entities/admin/sys-menu.entity';
 import { IsNull, Not, Repository } from 'typeorm';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
-import { CreateMenuDto, UpdateMenuDto } from './menu.dto';
+import { CreateMenuDto } from './menu.dto';
 import { RedisService } from 'src/shared/services/redis.service';
+import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 
 @Injectable()
 export class SysMenuService {
@@ -17,6 +18,7 @@ export class SysMenuService {
     private redisService: RedisService,
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
     private roleService: SysRoleService,
+    private adminWSService: AdminWSService,
   ) {}
 
   /**
@@ -185,6 +187,7 @@ export class SysMenuService {
    */
   async deleteMenuItem(mids: number[]): Promise<void> {
     await this.menuRepository.delete(mids);
+    this.adminWSService.noticeUserToUpdateMenusByMenuIds(mids);
   }
 
   /**

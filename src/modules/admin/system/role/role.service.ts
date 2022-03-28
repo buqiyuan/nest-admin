@@ -9,6 +9,7 @@ import { EntityManager, In, Not, Repository } from 'typeorm';
 import { CreateRoleDto, UpdateRoleDto } from './role.dto';
 import { CreatedRoleId, RoleInfo } from './role.class';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
+import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 
 @Injectable()
 export class SysRoleService {
@@ -22,6 +23,7 @@ export class SysRoleService {
     private userRoleRepository: Repository<SysUserRole>,
     @InjectEntityManager() private entityManager: EntityManager,
     @Inject(ROOT_ROLE_ID) private rootRoleId: number,
+    private adminWSService: AdminWSService,
   ) {}
 
   /**
@@ -171,6 +173,11 @@ export class SysRoleService {
         await manager.delete(SysRoleDepartment, realDeleteRowIds);
       }
     });
+    // 如果勾选了新的菜单或取消勾选了原有的菜单，则通知前端重新获取权限菜单
+    if ([insertMenusRowIds, deleteMenusRowIds].some((n) => n.length)) {
+      this.adminWSService.noticeUserToUpdateMenusByRoleIds([roleId]);
+    }
+
     return role;
   }
 
