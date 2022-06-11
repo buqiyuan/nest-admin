@@ -2,7 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import SysLoginLog from 'src/entities/admin/sys-login-log.entity';
 import SysTaskLog from 'src/entities/admin/sys-task-log.entity';
-import { Repository } from 'typeorm';
+import SysUser from 'src/entities/admin/sys-user.entity';
+import { In, Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { LoginLogInfo, TaskLogInfo } from './log.class';
 
@@ -13,6 +14,8 @@ export class SysLogService {
     private loginLogRepository: Repository<SysLoginLog>,
     @InjectRepository(SysTaskLog)
     private taskLogRepository: Repository<SysTaskLog>,
+    @InjectRepository(SysUser)
+    private userRepository: Repository<SysUser>,
   ) {}
 
   /**
@@ -30,7 +33,13 @@ export class SysLogService {
    * 计算登录日志日志总数
    */
   async countLoginLog(): Promise<number> {
-    return await this.loginLogRepository.count();
+    const userIds = await this.userRepository
+      .createQueryBuilder('user')
+      .select(['user.id'])
+      .getMany();
+    return await this.loginLogRepository.count({
+      userId: In(userIds.map((n) => n.id)),
+    });
   }
 
   /**
