@@ -65,6 +65,7 @@ export class SysMenuService {
    * 检查菜单创建规则是否符合
    */
   async check(dto: CreateMenuDto & { menuId?: number }): Promise<void | never> {
+    console.log('dto', dto);
     if (dto.type === 2 && dto.parentId === -1) {
       // 无法直接创建权限，必须有ParentId
       throw new ApiException(10005);
@@ -79,18 +80,16 @@ export class SysMenuService {
         throw new ApiException(10006);
       }
     }
-    //判断一级菜单路由是否重复
-    if (Object.is(dto.parentId, -1) && Object.is(dto.type, 0)) {
+    //判断同级菜单路由是否重复
+    if (!Object.is(dto.type, 2)) {
       // 查找所有一级菜单
-      const rootMenus = await this.menuRepository.find({
-        parentId: null,
-        id: Not(dto.menuId),
+      const menus = await this.menuRepository.find({
+        parentId: Object.is(dto.parentId, -1) ? null : dto.parentId,
       });
-      const path = dto.router.split('/').filter(Boolean).join('/');
-      const pathReg = new RegExp(`^/?${path}/?$`);
-      const isExist = rootMenus.some((n) => pathReg.test(n.router));
+      const pathReg = new RegExp(`^/?${dto.router}/?$`);
+      const isExist = menus.some((n) => pathReg.test(n.router));
       if (isExist) {
-        // 一级菜单路由不能重复
+        // 同级菜单路由不能重复
         throw new ApiException(10004);
       }
     }

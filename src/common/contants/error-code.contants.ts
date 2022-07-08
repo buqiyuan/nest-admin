@@ -37,4 +37,6 @@ export const ErrorCodeMap = {
   20001: '当前创建的文件或目录已存在',
   20002: '无需操作',
   20003: '已超出支持的最大处理数量',
-};
+} as const;
+
+export type ErrorCodeMapType = keyof typeof ErrorCodeMap;
