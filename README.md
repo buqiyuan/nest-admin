@@ -57,7 +57,7 @@ yarn build
 
 ### 使用docker一键启动
 ```bash
-docker-compose up 
+docker-compose up -d
 ```
 
 ### 系统截图
