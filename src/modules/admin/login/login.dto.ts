@@ -22,7 +22,7 @@ export class ImageCaptchaDto {
   @ApiProperty({
     required: false,
     default: 50,
-    description: '验证码宽度',
+    description: '验证码高度',
   })
   @Type(() => Number)
   @IsInt()
