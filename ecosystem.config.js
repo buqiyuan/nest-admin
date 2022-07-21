@@ -27,11 +27,11 @@ module.exports = {
       // eslint-disable-next-line @typescript-eslint/camelcase
       restart_delay: 60, // 异常重启情况下，延时重启时间
       env: {
-        // 环境参数，当前指定为开发环境
-        NODE_ENV: 'development',
+        // 环境参数，当前指定为生产环境
+        NODE_ENV: 'production',
       },
       env_development: {
-        NODE_ENV: "development"
+        NODE_ENV: 'development',
       },
       // eslint-disable-next-line @typescript-eslint/camelcase
       env_production: {

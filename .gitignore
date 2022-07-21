@@ -37,5 +37,5 @@ lerna-debug.log*
 
 # Code
 # src/config/config.development.*
-src/config/config.production.*
+# src/config/config.production.*
 docs/sample/mysql/

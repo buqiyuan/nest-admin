@@ -27,6 +27,39 @@
 | :-------: | :----: | :--------: |
 | rootadmin | 123456 | 超级管理员 |
 
+### 安装使用
+
+- 获取项目代码
+
+```bash
+git clone https://github.com/buqiyuan/nest-admin
+```
+- 安装依赖
+
+```bash
+cd nest-admin
+
+yarn install
+
+```
+
+- 运行
+
+```bash
+yarn dev
+```
+
+- 打包
+
+```bash
+yarn build
+```
+
+### 使用docker一键启动
+```bash
+docker-compose up 
+```
+
 ### 系统截图
 
 ![](https://s1.ax1x.com/2021/12/11/oTi1nf.png)

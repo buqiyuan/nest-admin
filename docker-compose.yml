@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: nest-admin-mysql
+    restart: always
+    ports:
+      - 3306:3306
+    # 主要就是把服务的端口映射出来给其他服务使用的。
+    expose:
+      - 3306
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci #设置utf8字符集
+    volumes:
+      - ./docs/sample/mysql/:/var/lib/mysql/ # ./docs/sample/mysql/路径可以替换成自己的路径
+      - ./sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本
+    environment:
+      TZ: Asia/Shanghai
+      MYSQL_DATABASE: nest-admin
+      MYSQL_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - nest_admin_net
+
+  redis:
+    image: redis:alpine
+    container_name: nest-admin-redis
+    restart: always
+    ports:
+      - 6379:6379
+    # 主要就是把服务的端口映射出来给其他服务使用的。
+    expose:
+      - 6379
+    command: redis-server
+    environment:
+      TZ: Asia/Shanghai
+    networks:
+      - nest_admin_net
+
+  nest-admin-server:
+    # build: 从当前路径构建镜像
+    build: .
+    restart: always
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - 7001:7001
+      - 7002:7002
+    # 当前服务启动之前先要把depends_on指定的服务启动起来才行
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - nest_admin_net
+
+networks:
+  nest_admin_net:
+    name: nest_admin_net
