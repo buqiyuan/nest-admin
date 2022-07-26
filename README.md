@@ -55,9 +55,14 @@ yarn dev
 yarn build
 ```
 
-### 使用docker一键启动
+## 使用docker一键启动
+启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 ```bash
 docker-compose up -d
+```
+查看实时日志输出
+```bash
+docker-compose logs -f
 ```
 
 ### 系统截图

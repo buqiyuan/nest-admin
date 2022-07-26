@@ -24,7 +24,7 @@ export default {
   database: {
     type: 'mysql',
     host: '127.0.0.1',
-    port: 3306,
+    port: 33066,
     username: 'root',
     password: 'root',
     database: 'nest-admin',

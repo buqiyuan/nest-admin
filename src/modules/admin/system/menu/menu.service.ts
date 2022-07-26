@@ -65,7 +65,6 @@ export class SysMenuService {
    * 检查菜单创建规则是否符合
    */
   async check(dto: CreateMenuDto & { menuId?: number }): Promise<void | never> {
-    console.log('dto', dto);
     if (dto.type === 2 && dto.parentId === -1) {
       // 无法直接创建权限，必须有ParentId
       throw new ApiException(10005);
@@ -86,8 +85,11 @@ export class SysMenuService {
       const menus = await this.menuRepository.find({
         parentId: Object.is(dto.parentId, -1) ? null : dto.parentId,
       });
-      const pathReg = new RegExp(`^/?${dto.router}/?$`);
-      const isExist = menus.some((n) => pathReg.test(n.router));
+      const router = dto.router.split('/').filter(Boolean).join('/');
+      const pathReg = new RegExp(`^/?${router}/?$`);
+      const isExist = menus.some(
+        (n) => pathReg.test(n.router) && n.id !== dto.menuId,
+      );
       if (isExist) {
         // 同级菜单路由不能重复
         throw new ApiException(10004);
