@@ -30,7 +30,9 @@ export class AdminWSService {
   /**
    * 根据uid查找socketid
    */
-  async findSocketIdByUid(uid: number): Promise<RemoteSocket<unknown>> {
+  async findSocketIdByUid(
+    uid: number,
+  ): Promise<RemoteSocket<unknown, unknown>> {
     const onlineSockets = await this.getOnlineSockets();
     const socket = onlineSockets.find((socket) => {
       const token = socket.handshake.query?.token as string;
@@ -45,7 +47,7 @@ export class AdminWSService {
    */
   async filterSocketIdByUidArr(
     uids: number[],
-  ): Promise<RemoteSocket<unknown>[]> {
+  ): Promise<RemoteSocket<unknown, unknown>[]> {
     const onlineSockets = await this.getOnlineSockets();
     const sockets = onlineSockets.filter((socket) => {
       const token = socket.handshake.query?.token as string;
@@ -76,7 +78,7 @@ export class AdminWSService {
    */
   async noticeUserToUpdateMenusByMenuIds(menuIds: number[]): Promise<void> {
     const roleMenus = await this.roleMenuRepository.find({
-      menuId: In(menuIds),
+      where: { menuId: In(menuIds) },
     });
     const roleIds = roleMenus.map((n) => n.roleId);
     await this.noticeUserToUpdateMenusByRoleIds(roleIds);
@@ -87,7 +89,7 @@ export class AdminWSService {
    */
   async noticeUserToUpdateMenusByRoleIds(roleIds: number[]): Promise<void> {
     const users = await this.userRoleRepository.find({
-      roleId: In(roleIds),
+      where: { roleId: In(roleIds) },
     });
     if (users) {
       const userIds = users.map((n) => n.userId);

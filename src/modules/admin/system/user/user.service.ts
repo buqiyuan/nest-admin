@@ -39,8 +39,7 @@ export class SysUserService {
    */
   async findUserByUserName(username: string): Promise<SysUser | undefined> {
     return await this.userRepository.findOne({
-      username: username,
-      status: 1,
+      where: { username: username, status: 1 },
     });
   }
 
@@ -50,7 +49,9 @@ export class SysUserService {
    * @param ip login ip
    */
   async getAccountInfo(uid: number, ip?: string): Promise<AccountInfo> {
-    const user: SysUser = await this.userRepository.findOne({ id: uid });
+    const user: SysUser = await this.userRepository.findOne({
+      where: { id: uid },
+    });
     if (isEmpty(user)) {
       throw new ApiException(10017);
     }
@@ -76,7 +77,7 @@ export class SysUserService {
    * 更改管理员密码
    */
   async updatePassword(uid: number, dto: UpdatePasswordDto): Promise<void> {
-    const user = await this.userRepository.findOne({ id: uid });
+    const user = await this.userRepository.findOne({ where: { id: uid } });
     if (isEmpty(user)) {
       throw new ApiException(10017);
     }
@@ -94,7 +95,7 @@ export class SysUserService {
    * 直接更改管理员密码
    */
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
-    const user = await this.userRepository.findOne({ id: uid });
+    const user = await this.userRepository.findOne({ where: { id: uid } });
     if (isEmpty(user)) {
       throw new ApiException(10017);
     }
@@ -110,7 +111,7 @@ export class SysUserService {
   async add(param: CreateUserDto): Promise<void> {
     // const insertData: any = { ...CreateUserDto };
     const exists = await this.userRepository.findOne({
-      username: param.username,
+      where: { username: param.username },
     });
     if (!isEmpty(exists)) {
       throw new ApiException(10001);
@@ -189,17 +190,19 @@ export class SysUserService {
   async info(
     id: number,
   ): Promise<SysUser & { roles: number[]; departmentName: string }> {
-    const user: any = await this.userRepository.findOne(id);
+    const user: any = await this.userRepository.findOne({ where: { id } });
     if (isEmpty(user)) {
       throw new ApiException(10017);
     }
     const departmentRow = await this.departmentRepository.findOne({
-      id: user.departmentId,
+      where: { id: user.departmentId },
     });
     if (isEmpty(departmentRow)) {
       throw new ApiException(10018);
     }
-    const roleRows = await this.userRoleRepository.find({ userId: user.id });
+    const roleRows = await this.userRoleRepository.find({
+      where: { userId: user.id },
+    });
     const roles = roleRows.map((e) => {
       return e.roleId;
     });
@@ -235,12 +238,11 @@ export class SysUserService {
     const rootUserId = await this.findRootUserId();
     if (queryAll) {
       return await this.userRepository.count({
-        id: Not(In([rootUserId, uid])),
+        where: { id: Not(In([rootUserId, uid])) },
       });
     }
     return await this.userRepository.count({
-      id: Not(In([rootUserId, uid])),
-      departmentId: In(deptIds),
+      where: { id: Not(In([rootUserId, uid])), departmentId: In(deptIds) },
     });
   }
 
@@ -249,7 +251,7 @@ export class SysUserService {
    */
   async findRootUserId(): Promise<number> {
     const result = await this.userRoleRepository.findOne({
-      id: this.rootRoleId,
+      where: { id: this.rootRoleId },
     });
     return result.userId;
   }

@@ -65,7 +65,7 @@ export class SysTaskService implements OnModuleInit {
       await jobs[i].remove();
     }
     // 查找所有需要运行的任务
-    const tasks = await this.taskRepository.find({ status: 1 });
+    const tasks = await this.taskRepository.find({ where: { status: 1 } });
     if (tasks && tasks.length > 0) {
       for (const t of tasks) {
         await this.start(t);
@@ -100,7 +100,7 @@ export class SysTaskService implements OnModuleInit {
    * task info
    */
   async info(id: number): Promise<SysTask> {
-    return await this.taskRepository.findOne({ id });
+    return await this.taskRepository.findOne({ where: { id } });
   }
 
   /**
@@ -239,7 +239,7 @@ export class SysTaskService implements OnModuleInit {
    */
   async updateTaskCompleteStatus(tid: number): Promise<void> {
     const jobs = await this.taskQueue.getRepeatableJobs();
-    const task = await this.taskRepository.findOne({ id: tid });
+    const task = await this.taskRepository.findOne({ where: { id: tid } });
     // 如果下次执行时间小于当前时间，则表示已经执行完成。
     for (const job of jobs) {
       const currentTime = new Date().getTime();

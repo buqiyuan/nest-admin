@@ -1,3 +1,4 @@
+import { DataSourceOptions } from 'typeorm';
 import * as qiniu from 'qiniu';
 
 export default {
@@ -23,20 +24,20 @@ export default {
   // typeorm config
   database: {
     type: 'mysql',
-    host: '127.0.0.1',
-    port: 33066,
-    username: 'root',
-    password: 'root',
-    database: 'nest-admin',
+    host: process.env.DATABASE_HOST,
+    port: parseInt(process.env.DATABASE_PORT, 10),
+    username: process.env.MYSQL_USERNAME,
+    password: process.env.MYSQL_PASSWORD,
+    database: process.env.MYSQL_DATABASE,
     synchronize: true,
     logging: false,
     timezone: '+08:00', // 东八区
-  },
+  } as DataSourceOptions,
   redis: {
-    host: '127.0.0.1', // default value
-    port: 6379, // default value
-    password: '',
-    db: 0,
+    host: process.env.REDIS_HOST, // default value
+    port: parseInt(process.env.REDIS_PORT, 10), // default value
+    password: process.env.REDIS_PASSWORD,
+    db: process.env.REDIS_DB,
   },
   // qiniu config
   qiniu: {

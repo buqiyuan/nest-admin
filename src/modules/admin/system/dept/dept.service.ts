@@ -35,14 +35,14 @@ export class SysDeptService {
    * 根据ID查找部门信息
    */
   async info(id: number): Promise<DeptDetailInfo> {
-    const department = await this.deptRepositoty.findOne({ id });
+    const department = await this.deptRepositoty.findOne({ where: { id } });
     if (isEmpty(department)) {
       throw new ApiException(10019);
     }
     let parentDepartment = null;
     if (department.parentId) {
       parentDepartment = await this.deptRepositoty.findOne({
-        id: department.parentId,
+        where: { id: department.parentId },
       });
     }
     return { department, parentDepartment };
@@ -105,21 +105,21 @@ export class SysDeptService {
    * 根据部门查询关联的用户数量
    */
   async countUserByDeptId(id: number): Promise<number> {
-    return await this.userRepositoty.count({ departmentId: id });
+    return await this.userRepositoty.count({ where: { departmentId: id } });
   }
 
   /**
    * 根据部门查询关联的角色数量
    */
   async countRoleByDeptId(id: number): Promise<number> {
-    return await this.roleDeptRepositoty.count({ departmentId: id });
+    return await this.roleDeptRepositoty.count({ where: { departmentId: id } });
   }
 
   /**
    * 查找当前部门下的子部门数量
    */
   async countChildDept(id: number): Promise<number> {
-    return await this.deptRepositoty.count({ parentId: id });
+    return await this.deptRepositoty.count({ where: { parentId: id } });
   }
 
   /**

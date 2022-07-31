@@ -60,21 +60,21 @@ export class SysParamConfigService {
    * 查询单个
    */
   async findOne(id: number): Promise<SysConfig> {
-    return await this.configRepository.findOne({ id });
+    return await this.configRepository.findOne({ where: { id } });
   }
 
   async isExistKey(key: string): Promise<void | never> {
-    const result = await this.configRepository.findOne({ key });
+    const result = await this.configRepository.findOne({ where: { key } });
     if (result) {
       throw new ApiException(10021);
     }
   }
 
   async findValueByKey(key: string): Promise<string | null> {
-    const result = await this.configRepository.findOne(
-      { key },
-      { select: ['value'] },
-    );
+    const result = await this.configRepository.findOne({
+      where: { key },
+      select: ['value'],
+    });
     if (result) {
       return result.value;
     }

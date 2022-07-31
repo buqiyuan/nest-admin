@@ -22,6 +22,7 @@ import { LOGGER_MODULE_OPTIONS } from './shared/logger/logger.constants';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [Configuration],
+      envFilePath: ['.env', `.env.${process.env.NODE_ENV}`],
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, LoggerModule],

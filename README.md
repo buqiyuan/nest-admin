@@ -1,5 +1,7 @@
 ### nest-admin
 
+![](https://img.shields.io/github/commit-activity/m/buqiyuan/nest-admin) ![](https://img.shields.io/github/license/buqiyuan/nest-admin) ![](https://img.shields.io/github/repo-size/buqiyuan/nest-admin) ![](https://img.shields.io/github/languages/top/buqiyuan/nest-admin)
+
 **基于NestJs + TypeScript + TypeORM + Redis + MySql + Vue3 + Ant Design Vue编写的一款简单高效的前后端分离的权限管理系统。希望这个项目在全栈的路上能够帮助到你。**
 
 - 前端项目地址：[传送门](https://github.com/buqiyuan/vue3-antd-admin)
@@ -58,7 +60,11 @@ yarn build
 ## 使用docker一键启动
 启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 ```bash
-docker-compose up -d
+docker-compose --env-file .env.production up --build  
+```
+停止并删除容器
+```bash
+docker-compose --env-file .env.production down 
 ```
 查看实时日志输出
 ```bash

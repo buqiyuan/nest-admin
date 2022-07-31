@@ -31,7 +31,7 @@ export class SysRoleService {
    */
   async list(): Promise<SysRole[]> {
     const result = await this.roleRepository.find({
-      id: Not(this.rootRoleId),
+      where: { id: Not(this.rootRoleId) },
     });
     return result;
   }
@@ -41,7 +41,7 @@ export class SysRoleService {
    */
   async count(): Promise<number> {
     const count = await this.roleRepository.count({
-      id: Not(this.rootRoleId),
+      where: { id: Not(this.rootRoleId) },
     });
     return count;
   }
@@ -50,9 +50,13 @@ export class SysRoleService {
    * 根据角色获取角色信息
    */
   async info(rid: number): Promise<RoleInfo> {
-    const roleInfo = await this.roleRepository.findOne({ id: rid });
-    const menus = await this.roleMenuRepository.find({ roleId: rid });
-    const depts = await this.roleDepartmentRepository.find({ roleId: rid });
+    const roleInfo = await this.roleRepository.findOne({ where: { id: rid } });
+    const menus = await this.roleMenuRepository.find({
+      where: { roleId: rid },
+    });
+    const depts = await this.roleDepartmentRepository.find({
+      where: { roleId: rid },
+    });
     return { roleInfo, menus, depts };
   }
 
@@ -117,8 +121,12 @@ export class SysRoleService {
       label,
       remark,
     });
-    const originDeptRows = await this.roleDepartmentRepository.find({ roleId });
-    const originMenuRows = await this.roleMenuRepository.find({ roleId });
+    const originDeptRows = await this.roleDepartmentRepository.find({
+      where: { roleId },
+    });
+    const originMenuRows = await this.roleMenuRepository.find({
+      where: { roleId },
+    });
     const originMenuIds = originMenuRows.map((e) => {
       return e.menuId;
     });
@@ -222,6 +230,6 @@ export class SysRoleService {
     if (includes(ids, this.rootRoleId)) {
       throw new Error('Not Support Delete Root');
     }
-    return await this.userRoleRepository.count({ roleId: In(ids) });
+    return await this.userRoleRepository.count({ where: { roleId: In(ids) } });
   }
 }

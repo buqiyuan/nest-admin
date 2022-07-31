@@ -38,7 +38,7 @@ export class SysLogService {
       .select(['user.id'])
       .getMany();
     return await this.loginLogRepository.count({
-      userId: In(userIds.map((n) => n.id)),
+      where: { userId: In(userIds.map((n) => n.id)) },
     });
   }
 

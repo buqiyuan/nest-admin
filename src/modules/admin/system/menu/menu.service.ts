@@ -83,7 +83,7 @@ export class SysMenuService {
     if (!Object.is(dto.type, 2)) {
       // 查找所有一级菜单
       const menus = await this.menuRepository.find({
-        parentId: Object.is(dto.parentId, -1) ? null : dto.parentId,
+        where: { parentId: Object.is(dto.parentId, -1) ? null : dto.parentId },
       });
       const router = dto.router.split('/').filter(Boolean).join('/');
       const pathReg = new RegExp(`^/?${router}/?$`);
@@ -102,7 +102,7 @@ export class SysMenuService {
    */
   async findChildMenus(mid: number): Promise<any> {
     const allMenus: any = [];
-    const menus = await this.menuRepository.find({ parentId: mid });
+    const menus = await this.menuRepository.find({ where: { parentId: mid } });
     // if (_.isEmpty(menus)) {
     //   return allMenus;
     // }
@@ -123,7 +123,7 @@ export class SysMenuService {
    * @param mid menu id
    */
   async getMenuItemInfo(mid: number): Promise<SysMenu> {
-    const menu = await this.menuRepository.findOne({ id: mid });
+    const menu = await this.menuRepository.findOne({ where: { id: mid } });
     return menu;
   }
 
@@ -133,10 +133,12 @@ export class SysMenuService {
   async getMenuItemAndParentInfo(
     mid: number,
   ): Promise<MenuItemAndParentInfoResult> {
-    const menu = await this.menuRepository.findOne({ id: mid });
+    const menu = await this.menuRepository.findOne({ where: { id: mid } });
     let parentMenu: SysMenu | undefined = undefined;
     if (menu && menu.parentId) {
-      parentMenu = await this.menuRepository.findOne({ id: menu.parentId });
+      parentMenu = await this.menuRepository.findOne({
+        where: { id: menu.parentId },
+      });
     }
     return { menu, parentMenu };
   }
@@ -145,7 +147,7 @@ export class SysMenuService {
    * 查找节点路由是否存在
    */
   async findRouterExist(router: string): Promise<boolean> {
-    const menus = await this.menuRepository.findOne({ router });
+    const menus = await this.menuRepository.findOne({ where: { router } });
     return !isEmpty(menus);
   }
 
@@ -159,8 +161,7 @@ export class SysMenuService {
     if (includes(roleIds, this.rootRoleId)) {
       // root find all perms
       result = await this.menuRepository.find({
-        perms: Not(IsNull()),
-        type: 2,
+        where: { perms: Not(IsNull()), type: 2 },
       });
     } else {
       result = await this.menuRepository

@@ -11,6 +11,7 @@ export class AuthService {
   checkAdminAuthToken(
     token: string | string[] | undefined,
   ): IAdminUser | never {
+    console.log('token', token);
     if (isEmpty(token)) {
       throw new SocketException(11001);
     }

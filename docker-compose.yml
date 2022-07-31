@@ -5,17 +5,15 @@ services:
     image: mysql:latest
     container_name: nest-admin-mysql
     restart: always
+    env_file: 
+      - .env
+      - .env.production
     ports:
-      - 33066:3306
+      - '${MYSQL_PORT}:3306'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci #设置utf8字符集
     volumes:
       - ./docs/sample/mysql/:/var/lib/mysql/ # ./docs/sample/mysql/路径可以替换成自己的路径
       - ./sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本
-    environment:
-      TZ: Asia/Shanghai
-      MYSQL_DATABASE: nest-admin
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
     networks:
       - nest_admin_net
 
@@ -23,11 +21,13 @@ services:
     image: redis:alpine
     container_name: nest-admin-redis
     restart: always
+    env_file: 
+      - .env
+      - .env.production
     ports:
-      - 6379:6379
-    command: redis-server
-    environment:
-      TZ: Asia/Shanghai
+      - '${REDIS_PORT}:6379'
+    command: >
+      --requirepass ${REDIS_PASSWORD}
     networks:
       - nest_admin_net
 
@@ -37,11 +37,12 @@ services:
     image: nest-admin-server
     container_name: nest-admin-server
     restart: always
-    environment:
-      TZ: Asia/Shanghai
+    env_file: 
+      - .env
+      - .env.production
     ports:
-      - 7001:7001
-      - 7002:7002
+      - '${PORT}:7001'
+      - '${WS_PORT}:7002'
     # 当前服务启动之前先要把depends_on指定的服务启动起来才行
     depends_on:
       - mysql
