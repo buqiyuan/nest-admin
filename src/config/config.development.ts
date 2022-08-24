@@ -25,7 +25,7 @@ export default {
   database: {
     type: 'mysql',
     host: process.env.DATABASE_HOST,
-    port: parseInt(process.env.DATABASE_PORT, 10),
+    port: parseInt(process.env.MYSQL_PORT, 10),
     username: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
@@ -47,5 +47,9 @@ export default {
     bucket: 'xxx',
     zone: qiniu.zone.Zone_z0,
     access: 'public',
+  },
+  swagger: {
+    title: 'nest-admin后台管理系统API文档',
+    desc: `NestJs CRUD for RESTful API使用 nestjs + mysql + typeorm + redis + jwt + swagger 企业中后台管理系统项目RBAC权限管理(细粒度到按钮)、实现单点登录等。`,
   },
 };

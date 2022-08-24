@@ -1,4 +1,4 @@
-### nest-admin
+## nest-admin
 
 ![](https://img.shields.io/github/commit-activity/m/buqiyuan/nest-admin) ![](https://img.shields.io/github/license/buqiyuan/nest-admin) ![](https://img.shields.io/github/repo-size/buqiyuan/nest-admin) ![](https://img.shields.io/github/languages/top/buqiyuan/nest-admin)
 
@@ -12,8 +12,11 @@
 - [Swagger Api文档](https://nest-api.buqiyuan.site/api/swagger-api/static/index.html#/)
 
 ### 项目启动前的准备工作
-- sql文件：[/sql/init.sql](https://github.com/buqiyuan/nest-admin/tree/main/sql)
-- mysql和redis连接配置：[src/config/config.development.ts](https://github.com/buqiyuan/nest-admin/blob/main/src/config/config.development.ts)
+- sql文件：[/sql/init.sql](https://github.com/buqiyuan/nest-admin/tree/main/sql) 用于数据库初始化
+- 项目相关配置，如：配置mysql和redis连接
+  - 公共配置: [.env](https://github.com/buqiyuan/nest-admin/blob/main/.env)
+  - 开发环境: [.env.development](https://github.com/buqiyuan/nest-admin/blob/main/.env.development)
+  - 生产环境: [.env.production](https://github.com/buqiyuan/nest-admin/blob/main/.env.production)
 
 演示环境账号密码：
 
@@ -29,13 +32,45 @@
 | :-------: | :----: | :--------: |
 | rootadmin | 123456 | 超级管理员 |
 
-### 安装使用
+
+## 快速体验
+
+启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
+
+```bash
+docker-compose --env-file .env.production up --build -d
+```
+
+停止并删除所有容器
+
+```bash
+docker-compose --env-file .env.production down 
+```
+
+查看实时日志输出
+
+```bash
+docker-compose logs -f
+
+```
+
+## 本地开发
 
 - 获取项目代码
 
 ```bash
 git clone https://github.com/buqiyuan/nest-admin
 ```
+
+- 【可选】如果你是新手，还不太会搭建`mysql/redis`，你可以使用 `Docker` 启动指定服务供本地开发时使用, 例如：
+
+```bash
+# 启动MySql服务
+docker-compose  --env-file .env.development run -d --service-ports mysql
+# 启动Redis服务
+docker-compose  --env-file .env.development run -d --service-ports redis
+```
+
 - 安装依赖
 
 ```bash
@@ -46,6 +81,7 @@ yarn install
 ```
 
 - 运行
+启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 
 ```bash
 yarn dev
@@ -57,19 +93,6 @@ yarn dev
 yarn build
 ```
 
-## 使用docker一键启动
-启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
-```bash
-docker-compose --env-file .env.production up --build  
-```
-停止并删除容器
-```bash
-docker-compose --env-file .env.production down 
-```
-查看实时日志输出
-```bash
-docker-compose logs -f
-```
 
 ### 系统截图
 
