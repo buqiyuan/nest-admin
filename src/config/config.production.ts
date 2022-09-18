@@ -39,12 +39,12 @@ export default {
   // typeorm config
   database: {
     type: 'mysql',
-    host: process.env.DATABASE_HOST,
+    host: process.env.MYSQL_HOST,
     port: parseInt(process.env.MYSQL_PORT, 10),
     username: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    synchronize: false,
+    synchronize: true,
     logging: ['error'],
     timezone: '+08:00', // 东八区
   } as DataSourceOptions,

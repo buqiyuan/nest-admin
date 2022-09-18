@@ -23,11 +23,11 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "cleanlog": "rimraf logs",
-    "docker:rmi": "docker-compose --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
-    "docker:dev": "docker-compose --env-file .env.development up --build -d",
-    "docker:prod": "docker-compose --env-file .env.production up --build -d",
-    "docker:down": "docker-compose --env-file .env.production down ",
-    "docker:logs": "docker-compose logs -f"
+    "docker:rmi": "docker compose --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
+    "docker:dev": "docker compose --env-file .env.development up --build -d",
+    "docker:prod": "docker compose --env-file .env.production up --build -d",
+    "docker:down": "docker compose --env-file .env.production down ",
+    "docker:logs": "docker compose logs -f"
   },
   "dependencies": {
     "@fastify/swagger": "^7.5.1",

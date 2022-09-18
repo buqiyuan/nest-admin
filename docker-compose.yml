@@ -5,12 +5,12 @@ services:
     image: mysql:latest
     container_name: nest-admin-mysql
     restart: always
-    env_file: 
+    env_file:
       - .env
       - .env.production
     ports:
       - '${MYSQL_PORT}:3306'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci #设置utf8字符集
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
     volumes:
       - ./docs/sample/mysql/:/var/lib/mysql/ # ./docs/sample/mysql/路径可以替换成自己的路径
       - ./sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本
@@ -21,7 +21,7 @@ services:
     image: redis:alpine
     container_name: nest-admin-redis
     restart: always
-    env_file: 
+    env_file:
       - .env
       - .env.production
     ports:
@@ -37,9 +37,13 @@ services:
     image: nest-admin-server
     container_name: nest-admin-server
     restart: always
-    env_file: 
+    env_file:
       - .env
       - .env.production
+    environment:
+      - MYSQL_HOST=host.docker.internal
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     ports:
       - '${PORT}:7001'
       - '${WS_PORT}:7002'

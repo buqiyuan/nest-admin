@@ -40,7 +40,7 @@
 ```bash
 yarn docker:prod
 # or
-docker-compose --env-file .env.production up --build -d
+docker compose --env-file .env.production up --build -d
 ```
 
 停止并删除所有容器
@@ -48,13 +48,13 @@ docker-compose --env-file .env.production up --build -d
 ```bash
 yarn docker:down
 # or
-docker-compose --env-file .env.production down 
+docker compose --env-file .env.production down 
 ```
 
 查看实时日志输出
 
 ```bash
-docker-compose logs -f
+docker compose logs -f
 
 ```
 
@@ -70,9 +70,9 @@ git clone https://github.com/buqiyuan/nest-admin
 
 ```bash
 # 启动MySql服务
-docker-compose  --env-file .env.development run -d --service-ports mysql
+docker compose  --env-file .env.development run -d --service-ports mysql
 # 启动Redis服务
-docker-compose  --env-file .env.development run -d --service-ports redis
+docker compose  --env-file .env.development run -d --service-ports redis
 ```
 
 - 安装依赖

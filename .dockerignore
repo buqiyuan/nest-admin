@@ -38,6 +38,6 @@ lerna-debug.log*
 # Code
 src/config/config.development.*
 docs/*
-sql/*
+# sql/*
 test/*
 README.md

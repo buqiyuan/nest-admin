@@ -20,6 +20,8 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 
 # install & build
 COPY ./ ./
+RUN chmod +x ./wait-for-it.sh
+RUN apk update && apk add bash
 RUN yarn install
 RUN yarn build
 # clean dev dep
@@ -35,4 +37,5 @@ EXPOSE 7002
 
 # 容器启动时执行的命令，类似npm run start
 # CMD ["yarn", "start:prod"]
-CMD ["pm2-runtime", "ecosystem.config.js"]
+# CMD ["pm2-runtime", "ecosystem.config.js"]
+ENTRYPOINT ./wait-for-it.sh mysql:3306 -- pm2-runtime ecosystem.config.js
