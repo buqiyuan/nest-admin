@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { findIndex, isEmpty } from 'lodash';
+import { camelCase, findIndex, isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import SysDepartment from 'src/entities/admin/sys-department.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
@@ -9,6 +9,7 @@ import { UtilService } from 'src/shared/services/util.service';
 import { EntityManager, In, Not, Repository } from 'typeorm';
 import {
   CreateUserDto,
+  PageSearchUserDto,
   UpdatePasswordDto,
   UpdateUserDto,
   UpdateUserInfoDto,
@@ -214,7 +215,7 @@ export class SysUserService {
    * 查找列表里的信息
    */
   async infoList(ids: number[]): Promise<SysUser[]> {
-    const users = await this.userRepository.findByIds(ids);
+    const users = await this.userRepository.findBy({ id: In(ids) });
     return users;
   }
 
@@ -262,13 +263,13 @@ export class SysUserService {
    */
   async page(
     uid: number,
-    deptIds: number[],
-    page: number,
-    count: number,
-  ): Promise<PageSearchUserInfo[]> {
-    const queryAll: boolean = isEmpty(deptIds);
+    params: PageSearchUserDto,
+  ): Promise<[PageSearchUserInfo[], number]> {
+    const { departmentIds, limit, page, name, username, phone, remark } =
+      params;
+    const queryAll: boolean = isEmpty(departmentIds);
     const rootUserId = await this.findRootUserId();
-    const result = await this.userRepository
+    const qb = this.userRepository
       .createQueryBuilder('user')
       .innerJoinAndSelect(
         'sys_department',
@@ -281,41 +282,36 @@ export class SysUserService {
         'user_role.user_id = user.id',
       )
       .innerJoinAndSelect('sys_role', 'role', 'role.id = user_role.role_id')
+      .select([
+        'user.id,GROUP_CONCAT(role.name) as roleNames',
+        'dept.name',
+        'user.*',
+      ])
       .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
       .andWhere(queryAll ? '1 = 1' : 'user.departmentId IN (:...deptIds)', {
-        deptIds,
+        departmentIds,
       })
-      .offset(page * count)
-      .limit(count)
-      .getRawMany();
-    const dealResult: PageSearchUserInfo[] = [];
-    // 过滤去重
-    result.forEach((e) => {
-      const index = findIndex(dealResult, (e2) => e2.id === e.user_id);
-      if (index < 0) {
-        // 当前元素不存在则插入
-        dealResult.push({
-          createdAt: e.user_created_at,
-          departmentId: e.user_department_id,
-          email: e.user_email,
-          headImg: e.user_head_img,
-          id: e.user_id,
-          name: e.user_name,
-          nickName: e.user_nick_name,
-          phone: e.user_phone,
-          remark: e.user_remark,
-          status: e.user_status,
-          updatedAt: e.user_updated_at,
-          username: e.user_username,
-          departmentName: e.dept_name,
-          roleNames: [e.role_name],
-        });
-      } else {
-        // 已存在
-        dealResult[index].roleNames.push(e.role_name);
-      }
+      .andWhere('user.name LIKE :name', { name: `%${name}%` })
+      .andWhere('user.username LIKE :username', { username: `%${username}%` })
+      .andWhere('user.remark LIKE :remark', { remark: `%${remark}%` })
+      .andWhere('user.phone LIKE :phone', { phone: `%${phone}%` })
+      .orderBy('user.updated_at', 'DESC')
+      .groupBy('user.id')
+      .offset((page - 1) * limit)
+      .limit(limit);
+    const [_, total] = await qb.getManyAndCount();
+    const list = await qb.getRawMany();
+    const dealResult: PageSearchUserInfo[] = list.map((n) => {
+      const convertData = Object.entries<[string, any]>(n).map(
+        ([key, value]) => [camelCase(key), value],
+      );
+      return {
+        ...Object.fromEntries(convertData),
+        departmentName: n.dept_name,
+        roleNames: n.roleNames.split(','),
+      };
     });
-    return dealResult;
+    return [dealResult, total];
   }
 
   /**

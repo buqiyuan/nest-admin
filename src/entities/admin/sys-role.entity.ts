@@ -20,7 +20,7 @@ export default class SysRole extends BaseEntity {
   @ApiProperty()
   label: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   @ApiProperty()
   remark: string;
 }

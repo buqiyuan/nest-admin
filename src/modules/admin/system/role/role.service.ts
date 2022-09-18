@@ -5,8 +5,8 @@ import SysRoleDepartment from 'src/entities/admin/sys-role-department.entity';
 import SysRoleMenu from 'src/entities/admin/sys-role-menu.entity';
 import SysRole from 'src/entities/admin/sys-role.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
-import { EntityManager, In, Not, Repository } from 'typeorm';
-import { CreateRoleDto, UpdateRoleDto } from './role.dto';
+import { EntityManager, In, Like, Not, Repository } from 'typeorm';
+import { CreateRoleDto, PageSearchRoleDto, UpdateRoleDto } from './role.dto';
 import { CreatedRoleId, RoleInfo } from './role.class';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { AdminWSService } from 'src/modules/ws/admin-ws.service';
@@ -192,16 +192,20 @@ export class SysRoleService {
   /**
    * 分页加载角色信息
    */
-  async page(page: number, count: number): Promise<SysRole[]> {
-    const result = await this.roleRepository.find({
+  async page(param: PageSearchRoleDto): Promise<[SysRole[], number]> {
+    const { limit, page, name, label, remark } = param;
+    const result = await this.roleRepository.findAndCount({
       where: {
         id: Not(this.rootRoleId),
+        name: Like(`%${name}%`),
+        label: Like(`%${label}%`),
+        remark: Like(`%${remark}%`),
       },
       order: {
         id: 'ASC',
       },
-      take: count,
-      skip: page * count,
+      take: limit,
+      skip: (page - 1) * limit,
     });
     return result;
   }

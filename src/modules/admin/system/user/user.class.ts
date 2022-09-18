@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import SysUser from 'src/entities/admin/sys-user.entity';
+import SysUser from '@/entities/admin/sys-user.entity';
 
 export class AccountInfo {
   @ApiProperty()

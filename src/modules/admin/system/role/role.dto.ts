@@ -1,3 +1,4 @@
+import { PageOptionsDto } from '@/common/dto/page.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -78,4 +79,30 @@ export class InfoRoleDto {
   @Min(0)
   @Type(() => Number)
   roleId: number;
+}
+
+export class PageSearchRoleDto extends PageOptionsDto {
+  @ApiProperty({
+    required: false,
+    description: '角色名称',
+  })
+  @IsString()
+  @IsOptional()
+  name = '';
+
+  @ApiProperty({
+    required: false,
+    description: '角色唯一标识',
+  })
+  @IsString()
+  @IsOptional()
+  label = '';
+
+  @ApiProperty({
+    required: false,
+    description: '备注',
+  })
+  @IsString()
+  @IsOptional()
+  remark = '';
 }

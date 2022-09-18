@@ -36,15 +36,15 @@ export default class SysUser extends BaseEntity {
   @ApiProperty()
   headImg: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   @ApiProperty()
   email: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   @ApiProperty()
   phone: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, default: '' })
   @ApiProperty()
   remark: string;
 

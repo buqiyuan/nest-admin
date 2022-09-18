@@ -38,12 +38,16 @@
 启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 
 ```bash
+yarn docker:prod
+# or
 docker-compose --env-file .env.production up --build -d
 ```
 
 停止并删除所有容器
 
 ```bash
+yarn docker:down
+# or
 docker-compose --env-file .env.production down 
 ```
 

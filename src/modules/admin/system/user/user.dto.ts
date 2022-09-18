@@ -181,6 +181,38 @@ export class PageSearchUserDto extends PageOptionsDto {
   @ArrayNotEmpty()
   @IsOptional()
   departmentIds: number[];
+
+  @ApiProperty({
+    required: false,
+    description: '用户姓名',
+  })
+  @IsString()
+  @IsOptional()
+  name = '';
+
+  @ApiProperty({
+    required: false,
+    description: '用户名',
+  })
+  @IsString()
+  @IsOptional()
+  username = '';
+
+  @ApiProperty({
+    required: false,
+    description: '用户手机号',
+  })
+  @IsString()
+  @IsOptional()
+  phone = '';
+
+  @ApiProperty({
+    required: false,
+    description: '用户备注',
+  })
+  @IsString()
+  @IsOptional()
+  remark = '';
 }
 
 export class PasswordUserDto {

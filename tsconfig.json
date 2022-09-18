@@ -16,5 +16,14 @@
     "lib": [
       "ESNext"
     ],
-  }
+    "paths": { /*定义别名*/
+      "@/*": [
+        "src/*"
+      ]
+    },
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
 }

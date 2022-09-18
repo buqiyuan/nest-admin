@@ -1,6 +1,21 @@
 import { DataSourceOptions } from 'typeorm';
 import * as qiniu from 'qiniu';
 
+const parseZone = (zone: string) => {
+  switch (zone) {
+    case 'Zone_as0':
+      return qiniu.zone.Zone_as0;
+    case 'Zone_na0':
+      return qiniu.zone.Zone_na0;
+    case 'Zone_z0':
+      return qiniu.zone.Zone_z0;
+    case 'Zone_z1':
+      return qiniu.zone.Zone_z1;
+    case 'Zone_z2':
+      return qiniu.zone.Zone_z2;
+  }
+};
+
 export default {
   rootRoleId: 1,
   // nodemailer config
@@ -41,15 +56,28 @@ export default {
   },
   // qiniu config
   qiniu: {
-    accessKey: 'xxx',
-    secretKey: 'xxx',
-    domain: 'xxx',
-    bucket: 'xxx',
-    zone: qiniu.zone.Zone_z0,
-    access: 'public',
+    accessKey: process.env.QINIU_ACCESSKEY,
+    secretKey: process.env.QINIU_SECRETKEY,
+    domain: process.env.QINIU_DOMAIN,
+    bucket: process.env.QINIU_BUCKET,
+    zone: parseZone(process.env.QINIU_ZONE || 'Zone_z2'),
+    access: (process.env.QINIU_ACCESS_TYPE as any) || 'public',
   },
+  // logger config
+  logger: {
+    timestamp: false,
+    dir: process.env.LOGGER_DIR,
+    maxFileSize: process.env.LOGGER_MAX_SIZE,
+    maxFiles: process.env.LOGGER_MAX_FILES,
+    errorLogName: process.env.LOGGER_ERROR_FILENAME,
+    appLogName: process.env.LOGGER_APP_FILENAME,
+  },
+  // swagger
   swagger: {
-    title: 'nest-admin后台管理系统API文档',
-    desc: `NestJs CRUD for RESTful API使用 nestjs + mysql + typeorm + redis + jwt + swagger 企业中后台管理系统项目RBAC权限管理(细粒度到按钮)、实现单点登录等。`,
+    enable: process.env.SWAGGER_ENABLE === 'true',
+    path: process.env.SWAGGER_PATH,
+    title: process.env.SWAGGER_TITLE,
+    desc: process.env.SWAGGER_DESC,
+    version: process.env.SWAGGER_VERSION,
   },
 };
