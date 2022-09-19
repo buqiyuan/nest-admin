@@ -289,7 +289,7 @@ export class SysUserService {
       ])
       .where('user.id NOT IN (:...ids)', { ids: [rootUserId, uid] })
       .andWhere(queryAll ? '1 = 1' : 'user.departmentId IN (:...deptIds)', {
-        departmentIds,
+        deptIds: departmentIds,
       })
       .andWhere('user.name LIKE :name', { name: `%${name}%` })
       .andWhere('user.username LIKE :username', { username: `%${username}%` })
