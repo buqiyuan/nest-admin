@@ -9,13 +9,14 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
 import { ApiTransformInterceptor } from './common/interceptors/api-transform.interceptor';
 import { setupSwagger } from './setup-swagger';
 import { LoggerService } from './shared/logger/logger.service';
+import { SocketIoAdapter } from '@/modules/ws/socket-io.adapter';
+import { ConfigService } from '@nestjs/config';
 
 const PORT = process.env.PORT;
 
@@ -54,7 +55,7 @@ async function bootstrap() {
   // api interceptor
   app.useGlobalInterceptors(new ApiTransformInterceptor(new Reflector()));
   // websocket
-  app.useWebSocketAdapter(new IoAdapter());
+  app.useWebSocketAdapter(new SocketIoAdapter(app, app.get(ConfigService)));
   // swagger
   setupSwagger(app);
   // start
