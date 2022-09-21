@@ -88,7 +88,7 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  name = '';
+  name: string = '';
 
   @ApiProperty({
     required: false,
@@ -96,7 +96,7 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  label = '';
+  label: string = '';
 
   @ApiProperty({
     required: false,
@@ -104,5 +104,5 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  remark = '';
+  remark: string = '';
 }
