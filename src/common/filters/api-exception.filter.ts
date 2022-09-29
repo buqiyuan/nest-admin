@@ -8,7 +8,7 @@ import {
 import { FastifyReply } from 'fastify';
 import { isDev } from 'src/config/env';
 import { ApiException } from '../exceptions/api.exception';
-import { ResOp } from '../class/res.class';
+import { ResponseDto } from '../class/res.class';
 import { LoggerService } from 'src/shared/logger/logger.service';
 
 /**
@@ -44,7 +44,7 @@ export class ApiExceptionFilter implements ExceptionFilter {
     if (status >= 500) {
       this.logger.error(exception, ApiExceptionFilter.name);
     }
-    const result = new ResOp(code, null, message);
+    const result = new ResponseDto(code, null, message);
     response.status(status).send(result);
   }
 }

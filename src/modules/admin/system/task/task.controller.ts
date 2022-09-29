@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { isEmpty } from 'lodash';
-import { PageResult } from 'src/common/class/res.class';
+import { PaginatedResponseDto } from 'src/common/class/res.class';
 import { PageOptionsDto } from 'src/common/dto/page.dto';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import SysTask from 'src/entities/admin/sys-task.entity';
@@ -23,7 +23,9 @@ export class SysTaskController {
   @ApiOperation({ summary: '获取任务列表' })
   @ApiOkResponse({ type: [SysTask] })
   @Get('page')
-  async page(@Query() dto: PageOptionsDto): Promise<PageResult<SysTask>> {
+  async page(
+    @Query() dto: PageOptionsDto,
+  ): Promise<PaginatedResponseDto<SysTask>> {
     const list = await this.taskService.page(dto.page - 1, dto.limit);
     const count = await this.taskService.count();
     return {

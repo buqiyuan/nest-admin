@@ -6,7 +6,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
-import { PageResult } from 'src/common/class/res.class';
+import { PaginatedResponseDto } from 'src/common/class/res.class';
 import SysRole from 'src/entities/admin/sys-role.entity';
 import { SysRoleService } from './role.service';
 import {
@@ -41,7 +41,9 @@ export class SysRoleController {
   @ApiOperation({ summary: '分页查询角色信息' })
   @ApiOkResponse({ type: [SysRole] })
   @Get('page')
-  async page(@Query() dto: PageSearchRoleDto): Promise<PageResult<SysRole>> {
+  async page(
+    @Query() dto: PageSearchRoleDto,
+  ): Promise<PaginatedResponseDto<SysRole>> {
     const [list, total] = await this.roleService.page(dto);
     return {
       list,
