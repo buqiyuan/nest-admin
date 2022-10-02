@@ -39,3 +39,6 @@ lerna-debug.log*
 # src/config/config.development.*
 # src/config/config.production.*
 docs/sample/mysql/
+
+# env info
+.env.production
