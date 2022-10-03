@@ -1,4 +1,3 @@
-import { PageOptionsDto } from '@/common/dto/page.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
@@ -11,6 +10,7 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+import { PageOptionsDto } from '@/common/dto/page.dto';
 
 export class DeleteRoleDto {
   @ApiProperty({
@@ -88,7 +88,7 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  name: string = '';
+  name = '';
 
   @ApiProperty({
     required: false,
@@ -96,7 +96,7 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  label: string = '';
+  label = '';
 
   @ApiProperty({
     required: false,
@@ -104,5 +104,5 @@ export class PageSearchRoleDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  remark: string = '';
+  remark = '';
 }

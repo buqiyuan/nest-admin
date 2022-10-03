@@ -16,7 +16,7 @@ const parseZone = (zone: string) => {
   }
 };
 
-export const Configuration = () => ({
+export const getConfiguration = () => ({
   rootRoleId: parseInt(process.env.ROOT_ROLE_ID || '1'),
   // nodemailer config
   mailer: {
@@ -40,11 +40,14 @@ export const Configuration = () => ({
   database: {
     type: 'mysql',
     host: process.env.MYSQL_HOST,
-    port: parseInt(process.env.MYSQL_PORT, 10),
+    port: Number.parseInt(process.env.MYSQL_PORT, 10),
     username: process.env.MYSQL_USERNAME,
     password: process.env.MYSQL_PASSWORD,
     database: process.env.MYSQL_DATABASE,
-    synchronize: true,
+    entities: [__dirname + '/../**/entities/*.entity.{ts,js}'],
+    autoLoadEntities: true,
+    /** https://typeorm.io/migrations */
+    synchronize: false,
     logging: ['error'],
     timezone: '+08:00', // 东八区
   } as DataSourceOptions,

@@ -9,6 +9,7 @@ import { PaginatedResponseDto } from 'src/common/class/res.class';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { SysMenuService } from '../menu/menu.service';
 import {
   CreateUserDto,
   DeleteUserDto,
@@ -19,7 +20,6 @@ import {
 } from './user.dto';
 import { PageSearchUserInfo, UserDetailInfo } from './user.class';
 import { SysUserService } from './user.service';
-import { SysMenuService } from '../menu/menu.service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('管理员模块')

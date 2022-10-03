@@ -6,10 +6,10 @@ import SysRoleMenu from 'src/entities/admin/sys-role-menu.entity';
 import SysRole from 'src/entities/admin/sys-role.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
 import { EntityManager, In, Like, Not, Repository } from 'typeorm';
-import { CreateRoleDto, PageSearchRoleDto, UpdateRoleDto } from './role.dto';
-import { CreatedRoleId, RoleInfo } from './role.class';
 import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { AdminWSService } from 'src/modules/ws/admin-ws.service';
+import { CreateRoleDto, PageSearchRoleDto, UpdateRoleDto } from './role.dto';
+import { CreatedRoleId, RoleInfo } from './role.class';
 
 @Injectable()
 export class SysRoleService {

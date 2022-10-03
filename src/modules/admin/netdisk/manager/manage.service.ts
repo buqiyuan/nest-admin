@@ -1,4 +1,10 @@
+import { extname, basename } from 'path';
 import { Inject, Injectable } from '@nestjs/common';
+import * as qiniu from 'qiniu';
+import { rs, conf, auth } from 'qiniu';
+import { UtilService } from 'src/shared/services/util.service';
+import { isEmpty } from 'lodash';
+import { IQiniuConfig } from '../../admin.interface';
 import {
   NETDISK_COPY_SUFFIX,
   NETDISK_DELIMITER,
@@ -6,15 +12,9 @@ import {
   NETDISK_LIMIT,
   QINIU_CONFIG,
 } from '../../admin.constants';
-import { IQiniuConfig } from '../../admin.interface';
-import * as qiniu from 'qiniu';
-import { rs, conf, auth } from 'qiniu';
-import { UtilService } from 'src/shared/services/util.service';
-import { isEmpty } from 'lodash';
-import { SFileInfo, SFileInfoDetail, SFileList } from './manage.class';
 import { SysUserService } from '../../system/user/user.service';
 import { AccountInfo } from '../../system/user/user.class';
-import { extname, basename } from 'path';
+import { SFileInfo, SFileInfoDetail, SFileList } from './manage.class';
 import { FileOpItem } from './manage.dto';
 
 @Injectable()

@@ -1,3 +1,4 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import * as parser from 'cron-parser';
 import { isEmpty } from 'lodash';
 import {
@@ -15,7 +16,6 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator';
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 
 // cron 表达式验证，bull lib下引用了cron-parser

@@ -188,7 +188,7 @@ export class PageSearchUserDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  name: string = '';
+  name = '';
 
   @ApiProperty({
     required: false,
@@ -196,7 +196,7 @@ export class PageSearchUserDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  username: string = '';
+  username = '';
 
   @ApiProperty({
     required: false,
@@ -204,7 +204,7 @@ export class PageSearchUserDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  phone: string = '';
+  phone = '';
 
   @ApiProperty({
     required: false,
@@ -212,7 +212,7 @@ export class PageSearchUserDto extends PageOptionsDto {
   })
   @IsString()
   @IsOptional()
-  remark: string = '';
+  remark = '';
 }
 
 export class PasswordUserDto {

@@ -5,11 +5,11 @@ import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import SysMenu from 'src/entities/admin/sys-menu.entity';
 import { IsNull, Not, Repository } from 'typeorm';
+import { RedisService } from 'src/shared/services/redis.service';
+import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 import { SysRoleService } from '../role/role.service';
 import { MenuItemAndParentInfoResult } from './menu.class';
 import { CreateMenuDto } from './menu.dto';
-import { RedisService } from 'src/shared/services/redis.service';
-import { AdminWSService } from 'src/modules/ws/admin-ws.service';
 
 @Injectable()
 export class SysMenuService {

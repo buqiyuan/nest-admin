@@ -7,14 +7,14 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
-import { FastifyRequest } from 'fastify';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { FastifyRequest } from 'fastify';
+import { UtilService } from 'src/shared/services/util.service';
 import { Authorize } from '../core/decorators/authorize.decorator';
+import { LogDisabled } from '../core/decorators/log-disabled.decorator';
 import { ImageCaptchaDto, LoginInfoDto } from './login.dto';
 import { ImageCaptcha, LoginToken } from './login.class';
 import { LoginService } from './login.service';
-import { LogDisabled } from '../core/decorators/log-disabled.decorator';
-import { UtilService } from 'src/shared/services/util.service';
 
 @ApiTags('登录模块')
 @Controller()

@@ -9,6 +9,7 @@ import {
   FastifyAdapter,
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
+import { ConfigService } from '@nestjs/config';
 import { ValidationError } from 'class-validator';
 import { AppModule } from './app.module';
 import { ApiExceptionFilter } from './common/filters/api-exception.filter';
@@ -16,7 +17,6 @@ import { ApiTransformInterceptor } from './common/interceptors/api-transform.int
 import { setupSwagger } from './setup-swagger';
 import { LoggerService } from './shared/logger/logger.service';
 import { SocketIoAdapter } from '@/modules/ws/socket-io.adapter';
-import { ConfigService } from '@nestjs/config';
 
 const PORT = process.env.PORT;
 

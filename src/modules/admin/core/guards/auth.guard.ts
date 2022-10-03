@@ -1,8 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
 import { FastifyRequest } from 'fastify';
 import { isEmpty } from 'lodash';
-import { JwtService } from '@nestjs/jwt';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import {
   ADMIN_PREFIX,

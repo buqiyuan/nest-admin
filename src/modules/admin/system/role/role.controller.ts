@@ -8,7 +8,11 @@ import {
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
 import { PaginatedResponseDto } from 'src/common/class/res.class';
 import SysRole from 'src/entities/admin/sys-role.entity';
-import { SysRoleService } from './role.service';
+import { ApiException } from 'src/common/exceptions/api.exception';
+import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { IAdminUser } from '../../admin.interface';
+import { SysMenuService } from '../menu/menu.service';
+import { RoleInfo } from './role.class';
 import {
   CreateRoleDto,
   DeleteRoleDto,
@@ -16,11 +20,7 @@ import {
   PageSearchRoleDto,
   UpdateRoleDto,
 } from './role.dto';
-import { ApiException } from 'src/common/exceptions/api.exception';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { IAdminUser } from '../../admin.interface';
-import { RoleInfo } from './role.class';
-import { SysMenuService } from '../menu/menu.service';
+import { SysRoleService } from './role.service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('角色模块')

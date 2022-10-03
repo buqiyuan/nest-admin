@@ -1,15 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import * as svgCaptcha from 'svg-captcha';
-import { ImageCaptcha, PermMenuInfo } from './login.class';
-import { isEmpty } from 'lodash';
-import { ImageCaptchaDto } from './login.dto';
 import { JwtService } from '@nestjs/jwt';
+import { isEmpty } from 'lodash';
+import * as svgCaptcha from 'svg-captcha';
 import { UtilService } from 'src/shared/services/util.service';
-import { SysMenuService } from '../system/menu/menu.service';
-import { SysUserService } from '../system/user/user.service';
 import { ApiException } from 'src/common/exceptions/api.exception';
-import { SysLogService } from '../system/log/log.service';
 import { RedisService } from 'src/shared/services/redis.service';
+import { SysLogService } from '../system/log/log.service';
+import { SysUserService } from '../system/user/user.service';
+import { SysMenuService } from '../system/menu/menu.service';
+import { ImageCaptchaDto } from './login.dto';
+import { ImageCaptcha, PermMenuInfo } from './login.class';
 
 @Injectable()
 export class LoginService {

@@ -15,7 +15,7 @@ export function getAppRootPath(): string {
   const root = parse(cur).root;
 
   let appRootPath = '';
-  while (true) {
+  while (cur) {
     if (
       existsSync(join(cur, 'node_modules')) &&
       existsSync(join(cur, 'package.json'))

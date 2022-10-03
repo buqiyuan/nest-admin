@@ -40,8 +40,6 @@ services:
     env_file:
       - .env
       - .env.production
-    environment:
-      - MYSQL_HOST=host.docker.internal
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:

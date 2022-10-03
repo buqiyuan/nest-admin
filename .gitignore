@@ -41,4 +41,5 @@ lerna-debug.log*
 docs/sample/mysql/
 
 # env info
+.env
 .env.production
