@@ -40,6 +40,6 @@ lerna-debug.log*
 # src/config/config.production.*
 docs/sample/mysql/
 
-# env info
+# environment
 .env
 .env.production
