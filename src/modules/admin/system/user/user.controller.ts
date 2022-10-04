@@ -5,10 +5,11 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { PageResult } from 'src/common/class/res.class';
+import { PaginatedResponseDto } from 'src/common/class/res.class';
 import { ADMIN_PREFIX } from '../../admin.constants';
 import { IAdminUser } from '../../admin.interface';
 import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { SysMenuService } from '../menu/menu.service';
 import {
   CreateUserDto,
   DeleteUserDto,
@@ -19,7 +20,6 @@ import {
 } from './user.dto';
 import { PageSearchUserInfo, UserDetailInfo } from './user.class';
 import { SysUserService } from './user.service';
-import { SysMenuService } from '../menu/menu.service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('管理员模块')
@@ -64,7 +64,7 @@ export class SysUserController {
   async page(
     @Body() dto: PageSearchUserDto,
     @AdminUser() user: IAdminUser,
-  ): Promise<PageResult<PageSearchUserInfo>> {
+  ): Promise<PaginatedResponseDto<PageSearchUserInfo>> {
     const [list, total] = await this.userService.page(user.uid, dto);
     // const total = await this.userService.count(user.uid, dto.departmentIds);
     return {

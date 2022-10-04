@@ -3,9 +3,11 @@ import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { ADMIN_PREFIX } from './modules/admin/admin.constants';
+import { ConfigurationKeyPaths } from '@/config/configuration';
 
 export function setupSwagger(app: INestApplication): void {
-  const configService: ConfigService = app.get(ConfigService);
+  const configService: ConfigService<ConfigurationKeyPaths> =
+    app.get(ConfigService);
 
   // 默认为启用
   const enable = configService.get<boolean>('swagger.enable', true);

@@ -34,14 +34,12 @@ services:
   nest-admin-server:
     # build: 从当前路径构建镜像
     build: .
-    image: nest-admin-server
+    image: buqiyuan/nest-admin-server:stable
     container_name: nest-admin-server
     restart: always
     env_file:
       - .env
       - .env.production
-    environment:
-      - MYSQL_HOST=host.docker.internal
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { JwtService } from '@nestjs/jwt';
 import { In, Repository } from 'typeorm';
 import SysRoleMenu from 'src/entities/admin/sys-role-menu.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
 import { AdminWSGateway } from 'src/modules/ws/admin-ws.gateway';
 import { RemoteSocket } from 'socket.io';
 import { EVENT_UPDATE_MENU } from './ws.event';
-import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AdminWSService {

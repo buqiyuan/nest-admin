@@ -5,7 +5,7 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { PageResult } from 'src/common/class/res.class';
+import { PaginatedResponseDto } from 'src/common/class/res.class';
 import { PageOptionsDto } from 'src/common/dto/page.dto';
 import SysConfig from 'src/entities/admin/sys-config.entity';
 import { ADMIN_PREFIX } from '../../admin.constants';
@@ -26,7 +26,9 @@ export class SysParamConfigController {
   @ApiOperation({ summary: '分页获取参数配置列表' })
   @ApiOkResponse({ type: [SysConfig] })
   @Get('page')
-  async page(@Query() dto: PageOptionsDto): Promise<PageResult<SysConfig>> {
+  async page(
+    @Query() dto: PageOptionsDto,
+  ): Promise<PaginatedResponseDto<SysConfig>> {
     const list = await this.paramConfigService.getConfigListByPage(
       dto.page - 1,
       dto.limit,

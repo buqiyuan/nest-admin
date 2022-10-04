@@ -25,9 +25,6 @@ RUN apk update && apk add bash
 RUN yarn install
 RUN yarn build
 # clean dev dep
-RUN yarn install --production
-RUN yarn cache clean
-
 RUN yarn global add pm2
 
 # httpserver set port

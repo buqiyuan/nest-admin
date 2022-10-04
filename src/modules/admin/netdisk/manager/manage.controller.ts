@@ -4,8 +4,12 @@ import {
   ApiSecurity,
   ApiTags,
 } from '@nestjs/swagger';
-import { NetDiskManageService } from './manage.service';
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { ApiException } from 'src/common/exceptions/api.exception';
+import { AdminUser } from '../../core/decorators/admin-user.decorator';
+import { IAdminUser } from '../../admin.interface';
+import { ADMIN_PREFIX } from '../../admin.constants';
+import { SFileInfoDetail, SFileList, UploadToken } from './manage.class';
 import {
   DeleteDto,
   FileInfoDto,
@@ -15,11 +19,7 @@ import {
   MKDirDto,
   RenameDto,
 } from './manage.dto';
-import { SFileInfoDetail, SFileList, UploadToken } from './manage.class';
-import { ApiException } from 'src/common/exceptions/api.exception';
-import { AdminUser } from '../../core/decorators/admin-user.decorator';
-import { IAdminUser } from '../../admin.interface';
-import { ADMIN_PREFIX } from '../../admin.constants';
+import { NetDiskManageService } from './manage.service';
 
 @ApiSecurity(ADMIN_PREFIX)
 @ApiTags('网盘管理模块')

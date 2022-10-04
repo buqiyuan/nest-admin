@@ -7,9 +7,9 @@ import {
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
 import { isDev } from 'src/config/env';
-import { ApiException } from '../exceptions/api.exception';
-import { ResOp } from '../class/res.class';
 import { LoggerService } from 'src/shared/logger/logger.service';
+import { ApiException } from '../exceptions/api.exception';
+import { ResponseDto } from '../class/res.class';
 
 /**
  * 异常接管，统一异常返回数据
@@ -36,15 +36,15 @@ export class ApiExceptionFilter implements ExceptionFilter {
         : status;
     let message = '服务器异常，请稍后再试';
     // 开发模式下提示500类型错误，生产模式下屏蔽500内部错误提示
-    if (isDev() || status < 500) {
-      message =
-        exception instanceof HttpException ? exception.message : `${exception}`;
-    }
+    // if (isDev() || status < 500) {
+    message =
+      exception instanceof HttpException ? exception.message : `${exception}`;
+    // }
     // 记录 500 日志
     if (status >= 500) {
       this.logger.error(exception, ApiExceptionFilter.name);
     }
-    const result = new ResOp(code, null, message);
+    const result = new ResponseDto(code, null, message);
     response.status(status).send(result);
   }
 }

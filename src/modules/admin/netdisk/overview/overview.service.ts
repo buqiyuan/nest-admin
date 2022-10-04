@@ -1,6 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { QINIU_API, QINIU_CONFIG } from '../../admin.constants';
-import { IQiniuConfig } from '../../admin.interface';
+import { HttpService } from '@nestjs/axios';
 import * as qiniu from 'qiniu';
 import {
   getMonth,
@@ -10,8 +9,9 @@ import {
   fromUnixTime,
   parseISO,
 } from 'date-fns';
+import { QINIU_API, QINIU_CONFIG } from '../../admin.constants';
+import { IQiniuConfig } from '../../admin.interface';
 import { CountInfo, FlowInfo, HitInfo, SpaceInfo } from './overview.class';
-import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class NetDiskOverviewService {

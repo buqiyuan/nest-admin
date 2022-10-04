@@ -6,6 +6,8 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { ADMIN_PREFIX } from 'src/modules/admin/admin.constants';
+import { FastifyRequest } from 'fastify';
+import { UtilService } from 'src/shared/services/util.service';
 import { IAdminUser } from '../admin.interface';
 import { AdminUser } from '../core/decorators/admin-user.decorator';
 import { PermissionOptional } from '../core/decorators/permission-optional.decorator';
@@ -15,8 +17,6 @@ import { AccountInfo } from '../system/user/user.class';
 import { UpdatePasswordDto } from '../system/user/user.dto';
 import { SysUserService } from '../system/user/user.service';
 import { UpdatePersonInfoDto } from './account.dto';
-import { FastifyRequest } from 'fastify';
-import { UtilService } from 'src/shared/services/util.service';
 
 @ApiTags('账户模块')
 @ApiSecurity(ADMIN_PREFIX)

@@ -1,5 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BullModule } from '@nestjs/bull';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import {
   ROOT_ROLE_ID,
   SYS_TASK_QUEUE_NAME,
@@ -15,6 +17,8 @@ import SysTaskLog from 'src/entities/admin/sys-task-log.entity';
 import SysTask from 'src/entities/admin/sys-task.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
 import SysUser from 'src/entities/admin/sys-user.entity';
+import { WSModule } from 'src/modules/ws/ws.module';
+import SysConfig from 'src/entities/admin/sys-config.entity';
 import { rootRoleIdProvider } from '../core/provider/root-role-id.provider';
 import { SysDeptController } from './dept/dept.controller';
 import { SysDeptService } from './dept/dept.service';
@@ -26,19 +30,16 @@ import { SysRoleController } from './role/role.controller';
 import { SysRoleService } from './role/role.service';
 import { SysUserController } from './user/user.controller';
 import { SysUserService } from './user/user.service';
-import { BullModule } from '@nestjs/bull';
 import { SysTaskController } from './task/task.controller';
 import { SysTaskService } from './task/task.service';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { SysTaskConsumer } from './task/task.processor';
 import { SysOnlineController } from './online/online.controller';
 import { SysOnlineService } from './online/online.service';
-import { WSModule } from 'src/modules/ws/ws.module';
-import SysConfig from 'src/entities/admin/sys-config.entity';
 import { SysParamConfigController } from './param-config/param-config.controller';
 import { SysParamConfigService } from './param-config/param-config.service';
 import { SysServeController } from './serve/serve.controller';
 import { SysServeService } from './serve/serve.service';
+import { ConfigurationKeyPaths } from '@/config/configuration';
 
 @Module({
   imports: [
@@ -59,7 +60,7 @@ import { SysServeService } from './serve/serve.service';
     BullModule.registerQueueAsync({
       name: SYS_TASK_QUEUE_NAME,
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService<ConfigurationKeyPaths>) => ({
         redis: {
           host: configService.get<string>('redis.host'),
           port: configService.get<number>('redis.port'),

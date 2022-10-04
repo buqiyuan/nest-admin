@@ -1,12 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm';
-import { camelCase, findIndex, isEmpty } from 'lodash';
+import { camelCase, isEmpty } from 'lodash';
 import { ApiException } from 'src/common/exceptions/api.exception';
 import SysDepartment from 'src/entities/admin/sys-department.entity';
 import SysUserRole from 'src/entities/admin/sys-user-role.entity';
 import SysUser from 'src/entities/admin/sys-user.entity';
 import { UtilService } from 'src/shared/services/util.service';
 import { EntityManager, In, Not, Repository } from 'typeorm';
+import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
+import { RedisService } from 'src/shared/services/redis.service';
+import { SYS_USER_INITPASSWORD } from 'src/common/contants/param-config.contants';
+import { SysParamConfigService } from '../param-config/param-config.service';
+import { AccountInfo, PageSearchUserInfo } from './user.class';
 import {
   CreateUserDto,
   PageSearchUserDto,
@@ -14,11 +19,6 @@ import {
   UpdateUserDto,
   UpdateUserInfoDto,
 } from './user.dto';
-import { AccountInfo, PageSearchUserInfo } from './user.class';
-import { ROOT_ROLE_ID } from 'src/modules/admin/admin.constants';
-import { RedisService } from 'src/shared/services/redis.service';
-import { SysParamConfigService } from '../param-config/param-config.service';
-import { SYS_USER_INITPASSWORD } from 'src/common/contants/param-config.contants';
 
 @Injectable()
 export class SysUserService {
