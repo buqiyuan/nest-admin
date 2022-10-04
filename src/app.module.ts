@@ -4,7 +4,10 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bull';
-import { getConfiguration } from './config/configuration';
+import {
+  ConfigurationKeyPaths,
+  getConfiguration,
+} from './config/configuration';
 import { AdminModule } from './modules/admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { MissionModule } from './mission/mission.module';
@@ -27,7 +30,7 @@ import { LOGGER_MODULE_OPTIONS } from './shared/logger/logger.constants';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule, LoggerModule],
       useFactory: (
-        configService: ConfigService,
+        configService: ConfigService<ConfigurationKeyPaths>,
         loggerOptions: LoggerModuleOptions,
       ) => ({
         autoLoadEntities: true,

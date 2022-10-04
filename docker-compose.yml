@@ -34,7 +34,7 @@ services:
   nest-admin-server:
     # build: 从当前路径构建镜像
     build: .
-    image: buqiyuan/nest-admin-server:latest
+    image: buqiyuan/nest-admin-server:stable
     container_name: nest-admin-server
     restart: always
     env_file:
