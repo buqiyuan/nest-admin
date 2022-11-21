@@ -43,8 +43,8 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${PORT}:7001'
-      - '${WS_PORT}:7002'
+      - '${PORT}:${PORT}'
+      - '${WS_PORT}:${WS_PORT}'
     # 当前服务启动之前先要把depends_on指定的服务启动起来才行
     depends_on:
       - mysql

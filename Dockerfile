@@ -3,15 +3,20 @@
 # 使用 as 来为某一阶段命名
 FROM node:lts-alpine as builder
 
+ENV PROJECT_DIR=/nest-admin \
+    MYSQL_HOST=mysql \
+    PORT=7001 \
+    WS_PORT=7002
+
 # WORKDIR指令用于设置Dockerfile中的RUN、CMD和ENTRYPOINT指令执行命令的工作目录(默认为/目录)，该指令在Dockerfile文件中可以出现多次，
 # 如果使用相对路径则为相对于WORKDIR上一次的值，
 # 例如WORKDIR /data，WORKDIR logs，RUN pwd最终输出的当前目录是/data/logs。
 # cd 到 /nest-admin
-WORKDIR /nest-admin
+WORKDIR $PROJECT_DIR
 
 # set timezone
-RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
-RUN echo 'Asia/Shanghai' > /etc/timezone
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && echo 'Asia/Shanghai' > /etc/timezone
 
 # mirror acceleration
 # RUN npm config set registry https://registry.npmmirror.com
@@ -19,20 +24,19 @@ RUN echo 'Asia/Shanghai' > /etc/timezone
 # RUN npm config rm proxy && npm config rm https-proxy
 
 # install & build
-COPY ./ ./
-RUN chmod +x ./wait-for-it.sh
-RUN apk update && apk add bash
-RUN yarn install
-RUN yarn build
-# clean dev dep
-RUN yarn global add pm2
+COPY ./ $PROJECT_DIR
+RUN chmod +x ./wait-for-it.sh \
+    && apk update && apk add bash \
+    && yarn install \
+    && yarn build \
+    # same as npm prune --production
+    && yarn install --production \
+    && yarn global add pm2
 
-# httpserver set port
-EXPOSE 7001
-# websokcet set port
-EXPOSE 7002
+# EXPOSE port
+EXPOSE $PORT $WS_PORT
 
 # 容器启动时执行的命令，类似npm run start
 # CMD ["yarn", "start:prod"]
 # CMD ["pm2-runtime", "ecosystem.config.js"]
-ENTRYPOINT ./wait-for-it.sh mysql:3306 -- pm2-runtime ecosystem.config.js
+ENTRYPOINT ./wait-for-it.sh $MYSQL_HOST:$MYSQL_PORT -- pm2-runtime ecosystem.config.js
