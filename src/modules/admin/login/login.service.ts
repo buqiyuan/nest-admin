@@ -86,6 +86,7 @@ export class LoginService {
     if (user.id === 1) {
       const oldToken = await this.getRedisTokenById(user.id);
       if (oldToken) {
+        this.logService.saveLoginLog(user.id, ip, ua);
         return oldToken;
       }
     }

@@ -2,7 +2,7 @@ version: '3'
 
 services:
   nest-admin-web:
-    image: buqiyuan/vue3-antd-admin:latest
+    image: buqiyuan/vue3-antd-admin:stable
     container_name: nest-admin-web
     volumes:
       - ./deploy/web:/etc/nginx/conf.d

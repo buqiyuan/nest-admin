@@ -24,7 +24,9 @@ export class SysLogService {
    * 记录登录日志
    */
   async saveLoginLog(uid: number, ip: string, ua: string): Promise<void> {
-    const loginLocation = await this.utilService.getLocation(ip);
+    const loginLocation = await this.utilService.getLocation(
+      ip.split(',').at(-1).trim(),
+    );
     await this.loginLogRepository.save({
       ip,
       loginLocation,
@@ -67,6 +69,7 @@ export class SysLogService {
     const parser = new UAParser();
     return result.map((e) => {
       const u = parser.setUA(e.login_log_ua).getResult();
+
       return {
         id: e.login_log_id,
         ip: e.login_log_ip,
