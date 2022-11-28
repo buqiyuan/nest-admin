@@ -43,3 +43,6 @@ docs/sample/mysql/
 # environment
 .env
 .env.production
+
+# Dev data
+/__data/

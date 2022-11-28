@@ -1,6 +1,16 @@
 version: '3'
 
 services:
+  nest-admin-web:
+    image: buqiyuan/vue3-antd-admin:latest
+    container_name: nest-admin-web
+    volumes:
+      - ./deploy/web:/etc/nginx/conf.d
+    ports:
+      - '80:80'
+    restart: always
+    networks:
+      - nest_admin_net
   mysql:
     image: mysql:latest
     container_name: nest-admin-mysql
@@ -12,8 +22,8 @@ services:
       - '${MYSQL_PORT}:3306'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
     volumes:
-      - ./docs/sample/mysql/:/var/lib/mysql/ # ./docs/sample/mysql/路径可以替换成自己的路径
-      - ./sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本
+      - ./__data/mysql/:/var/lib/mysql/ # ./__data/mysql/ 路径可以替换成自己的路径
+      - ./deploy/sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本，若 ./__data/mysql/ 文件夹存在数据，则不会执行初始化脚本
     networks:
       - nest_admin_net
 
@@ -43,7 +53,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${PORT}:${PORT}'
+      - '${SERVER_PORT}:${SERVER_PORT}'
       - '${WS_PORT}:${WS_PORT}'
     # 当前服务启动之前先要把depends_on指定的服务启动起来才行
     depends_on:

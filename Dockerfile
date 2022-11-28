@@ -5,7 +5,7 @@ FROM node:lts-alpine as builder
 
 ENV PROJECT_DIR=/nest-admin \
     MYSQL_HOST=mysql \
-    PORT=7001 \
+    SERVER_PORT=7001 \
     WS_PORT=7002
 
 # WORKDIR指令用于设置Dockerfile中的RUN、CMD和ENTRYPOINT指令执行命令的工作目录(默认为/目录)，该指令在Dockerfile文件中可以出现多次，
@@ -34,7 +34,7 @@ RUN chmod +x ./wait-for-it.sh \
     && yarn global add pm2
 
 # EXPOSE port
-EXPOSE $PORT $WS_PORT
+EXPOSE $SERVER_PORT $WS_PORT
 
 # 容器启动时执行的命令，类似npm run start
 # CMD ["yarn", "start:prod"]

@@ -47,4 +47,12 @@ export default class SysMenu extends BaseEntity {
   @Column({ name: 'is_show', type: 'boolean', nullable: true, default: true })
   @ApiProperty()
   isShow: boolean;
+
+  @Column({ name: 'is_ext', type: 'boolean', nullable: true, default: false })
+  @ApiProperty()
+  isExt: boolean;
+
+  @Column({ name: 'open_mode', type: 'tinyint', nullable: true, default: 1 })
+  @ApiProperty()
+  openMode: number;
 }

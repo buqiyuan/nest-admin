@@ -18,7 +18,7 @@ import { setupSwagger } from './setup-swagger';
 import { LoggerService } from './shared/logger/logger.service';
 import { SocketIoAdapter } from '@/modules/ws/socket-io.adapter';
 
-const PORT = process.env.PORT;
+const SERVER_PORT = process.env.SERVER_PORT;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
@@ -59,7 +59,7 @@ async function bootstrap() {
   // swagger
   setupSwagger(app);
   // start
-  await app.listen(PORT, '0.0.0.0');
+  await app.listen(SERVER_PORT, '0.0.0.0');
   const serverUrl = await app.getUrl();
   Logger.log(`api服务已经启动,请访问: ${serverUrl}`);
   Logger.log(`API文档已生成,请访问: ${serverUrl}/${process.env.SWAGGER_PATH}/`);

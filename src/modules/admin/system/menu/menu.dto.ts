@@ -48,6 +48,15 @@ export class CreateMenuDto {
   @ValidateIf((o) => o.type === 1)
   readonly keepalive: boolean = true;
 
+  @ApiProperty({ description: '是否外链', required: false, default: false })
+  @IsBoolean()
+  readonly isExt: boolean = true;
+
+  @ApiProperty({ description: '外链打开方式', required: false, default: 1 })
+  @IsIn([1, 2])
+  @ValidateIf((o) => o.isExt === true)
+  readonly openMode: number;
+
   @ApiProperty({ description: '菜单图标', required: false })
   @IsString()
   @IsOptional()

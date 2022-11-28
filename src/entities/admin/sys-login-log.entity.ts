@@ -16,6 +16,16 @@ export default class SysLoginLog extends BaseEntity {
   @ApiProperty()
   ip: string;
 
+  /* 登录地点 */
+  @Column({
+    name: 'login_location',
+    comment: '登录地点',
+    length: 255,
+    default: '',
+  })
+  @ApiProperty()
+  loginLocation: string;
+
   @Column({ type: 'datetime', nullable: true })
   @ApiProperty()
   time: Date;

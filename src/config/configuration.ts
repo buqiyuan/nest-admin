@@ -47,11 +47,15 @@ export const getConfiguration = () =>
         process.env.MYSQL_PASSWORD || process.env.MYSQL_ROOT_PASSWORD || '',
       database: process.env.MYSQL_DATABASE,
       entities: [__dirname + '/../**/entities/*.entity.{ts,js}'],
+      migrations: ['dist/src/migrations/**/*.js'],
       autoLoadEntities: true,
       /** https://typeorm.io/migrations */
-      synchronize: false,
+      synchronize: true,
       logging: ['error'],
       timezone: '+08:00', // 东八区
+      cli: {
+        migrationsDir: 'src/migrations',
+      },
     } as MysqlConnectionOptions,
     redis: {
       host: process.env.REDIS_HOST, // default value
@@ -89,4 +93,6 @@ export const getConfiguration = () =>
 
 export type ConfigurationType = ReturnType<typeof getConfiguration>;
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 export type ConfigurationKeyPaths = Record<NestedKeyOf<ConfigurationType>, any>;

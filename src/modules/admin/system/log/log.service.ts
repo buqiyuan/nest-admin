@@ -6,6 +6,7 @@ import SysUser from 'src/entities/admin/sys-user.entity';
 import { In, Repository } from 'typeorm';
 import { UAParser } from 'ua-parser-js';
 import { LoginLogInfo, TaskLogInfo } from './log.class';
+import { UtilService } from '@/shared/services/util.service';
 
 @Injectable()
 export class SysLogService {
@@ -16,14 +17,17 @@ export class SysLogService {
     private taskLogRepository: Repository<SysTaskLog>,
     @InjectRepository(SysUser)
     private userRepository: Repository<SysUser>,
+    private readonly utilService: UtilService,
   ) {}
 
   /**
    * 记录登录日志
    */
   async saveLoginLog(uid: number, ip: string, ua: string): Promise<void> {
+    const loginLocation = await this.utilService.getLocation(ip);
     await this.loginLogRepository.save({
       ip,
+      loginLocation,
       userId: uid,
       ua,
     });
@@ -70,6 +74,7 @@ export class SysLogService {
         browser: `${u.browser.name} ${u.browser.version}`,
         time: e.login_log_created_at,
         username: e.user_username,
+        loginLocation: e.login_log_login_location,
       };
     });
   }

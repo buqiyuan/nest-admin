@@ -3,6 +3,6 @@ import { config } from 'dotenv';
 import { DataSource } from 'typeorm';
 import { getConfiguration } from './configuration';
 
-config();
+config({ path: '.env.development' });
 
-export const AppDataSource = new DataSource(getConfiguration().database);
+export default new DataSource(getConfiguration().database);
