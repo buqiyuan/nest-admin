@@ -24,7 +24,12 @@ export default class SysMenu extends BaseEntity {
   @ApiProperty()
   perms: string;
 
-  @Column({ type: 'tinyint', default: 0 })
+  @Column({
+    type: 'tinyint',
+    width: 1,
+    default: 0,
+    comment: '类型: 0=目录 1=菜单 2=权限',
+  })
   @ApiProperty()
   type: number;
 

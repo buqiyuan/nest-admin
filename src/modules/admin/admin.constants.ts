@@ -10,7 +10,7 @@ export const QINIU_CONFIG = 'admin_module:qiniu_config';
 export const SYS_TASK_QUEUE_NAME = 'admin_module:sys-task';
 export const SYS_TASK_QUEUE_PREFIX = 'admin:sys:task';
 
-export const FORBIDDEN_OP_MENU_ID_INDEX = 78;
+export const FORBIDDEN_OP_MENU_ID_INDEX = 90;
 
 export const ADMIN_PREFIX = 'admin';
 export const QINIU_API = 'http://api.qiniu.com';
