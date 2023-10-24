@@ -90,25 +90,22 @@ export class LoginService {
         return oldToken;
       }
     }
+    const redis = await this.redisService.getRedis();
+    const pv = Number(await redis.get(`admin:passwordVersion:${user.id}`)) || 1;
+
     const jwtSign = this.jwtService.sign(
       {
         uid: parseInt(user.id.toString()),
-        pv: 1,
+        pv,
       },
       // {
       //   expiresIn: '24h',
       // },
     );
-    await this.redisService
-      .getRedis()
-      .set(`admin:passwordVersion:${user.id}`, 1);
+    await redis.set(`admin:passwordVersion:${user.id}`, pv);
     // Token设置过期时间 24小时
-    await this.redisService
-      .getRedis()
-      .set(`admin:token:${user.id}`, jwtSign, 'EX', 60 * 60 * 24);
-    await this.redisService
-      .getRedis()
-      .set(`admin:perms:${user.id}`, JSON.stringify(perms));
+    await redis.set(`admin:token:${user.id}`, jwtSign, 'EX', 60 * 60 * 24);
+    await redis.set(`admin:perms:${user.id}`, JSON.stringify(perms));
     await this.logService.saveLoginLog(user.id, ip, ua);
     return jwtSign;
   }
