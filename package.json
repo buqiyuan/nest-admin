@@ -1,6 +1,6 @@
 {
   "name": "nest-admin",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "simple and efficient authority management system with separation of front and backends",
   "author": "buqiyuan",
   "private": true,
