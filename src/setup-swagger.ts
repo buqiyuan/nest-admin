@@ -1,39 +1,44 @@
-import { INestApplication } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { INestApplication, Logger } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 
-import { ADMIN_PREFIX } from './modules/admin/admin.constants';
-import { ConfigurationKeyPaths } from '@/config/configuration';
+import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator'
+import { CommonEntity } from './common/entity/common.entity'
+import { ResOp, TreeResult } from './common/model/response.model'
+import { IAppConfig, ISwaggerConfig } from './config'
+import { Pagination } from './helper/paginate/pagination'
 
-export function setupSwagger(app: INestApplication): void {
-  const configService: ConfigService<ConfigurationKeyPaths> =
-    app.get(ConfigService);
+export function setupSwagger(
+  app: INestApplication,
+  configService: ConfigService,
+): void {
+  const { name, port } = configService.get<IAppConfig>('app')!
+  const { enable, path } = configService.get<ISwaggerConfig>('swagger')!
 
-  // 默认为启用
-  const enable = configService.get<boolean>('swagger.enable', true);
+  if (!enable)
+    return
 
-  // 判断是否需要启用
-  if (!enable) {
-    return;
-  }
+  const documentBuilder = new DocumentBuilder()
+    .setTitle(name)
+    .setDescription(`${name} API document`)
+    .setVersion('1.0')
 
-  const swaggerConfig = new DocumentBuilder()
-    .setTitle(configService.get<string>('swagger.title'))
-    .setDescription(configService.get<string>('swagger.desc'))
-    .setLicense('MIT', 'https://github.com/buqiyuan/nest-admin')
-    // JWT鉴权
-    .addSecurity(ADMIN_PREFIX, {
-      description: '后台管理接口授权',
-      type: 'apiKey',
-      in: 'header',
-      name: 'Authorization',
-    })
-    .build();
-  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  // auth security
+  documentBuilder.addSecurity(API_SECURITY_AUTH, {
+    description: 'Auth',
+    type: 'apiKey',
+    in: 'header',
+    name: 'Authorization',
+  })
 
-  SwaggerModule.setup(
-    configService.get<string>('swagger.path', '/swagger-api'),
-    app,
-    document,
-  );
+  const document = SwaggerModule.createDocument(app, documentBuilder.build(), {
+    ignoreGlobalPrefix: false,
+    extraModels: [CommonEntity, ResOp, Pagination, TreeResult],
+  })
+
+  SwaggerModule.setup(path, app, document)
+
+  // started log
+  const logger = new Logger('SwaggerModule')
+  logger.log(`Document running on http://127.0.0.1:${port}/${path}`)
 }

@@ -1,91 +1,63 @@
-import './polyfill';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 
-import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { BullModule } from '@nestjs/bull';
-import {
-  ConfigurationKeyPaths,
-  getConfiguration,
-} from './config/configuration';
-import { AdminModule } from './modules/admin/admin.module';
-import { SharedModule } from './shared/shared.module';
-import { MissionModule } from './mission/mission.module';
-import { WSModule } from './modules/ws/ws.module';
-import { LoggerModule } from './shared/logger/logger.module';
-import {
-  LoggerModuleOptions,
-  WinstonLogLevel,
-} from './shared/logger/logger.interface';
-import { TypeORMLoggerService } from './shared/logger/typeorm-logger.service';
-import { LOGGER_MODULE_OPTIONS } from './shared/logger/logger.constants';
+import { ConfigModule } from '@nestjs/config'
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
+
+import * as config from '~/config'
+import { SharedModule } from '~/shared/shared.module'
+
+import { AllExceptionsFilter } from './common/filters/any-exception.filter'
+
+import { IdempotenceInterceptor } from './common/interceptors/idempotence.interceptor'
+import { TimeoutInterceptor } from './common/interceptors/timeout.interceptor'
+import { TransformInterceptor } from './common/interceptors/transform.interceptor'
+import { AuthModule } from './modules/auth/auth.module'
+import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
+import { RbacGuard } from './modules/auth/guards/rbac.guard'
+import { HealthModule } from './modules/health/health.module'
+import { SseModule } from './modules/sse/sse.module'
+import { SystemModule } from './modules/system/system.module'
+import { TasksModule } from './modules/tasks/tasks.module'
+import { TodoModule } from './modules/todo/todo.module'
+import { ToolsModule } from './modules/tools/tools.module'
+import { DatabaseModule } from './shared/database/database.module'
+
+import { SocketModule } from './socket/socket.module'
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [getConfiguration],
       envFilePath: [`.env.${process.env.NODE_ENV}`, '.env'],
+      load: [...Object.values(config)],
     }),
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule, LoggerModule],
-      useFactory: (
-        configService: ConfigService<ConfigurationKeyPaths>,
-        loggerOptions: LoggerModuleOptions,
-      ) => ({
-        autoLoadEntities: true,
-        type: configService.get<any>('database.type'),
-        host: configService.get<string>('database.host'),
-        port: configService.get<number>('database.port'),
-        username: configService.get<string>('database.username'),
-        password: configService.get<string>('database.password'),
-        database: configService.get<string>('database.database'),
-        synchronize: configService.get<boolean>('database.synchronize'),
-        logging: configService.get('database.logging'),
-        timezone: configService.get('database.timezone'), // 时区
-        // 自定义日志
-        logger: new TypeORMLoggerService(
-          configService.get('database.logging'),
-          loggerOptions,
-        ),
-      }),
-      inject: [ConfigService, LOGGER_MODULE_OPTIONS],
-    }),
-    BullModule.forRoot({}),
-    // custom logger
-    LoggerModule.forRootAsync(
-      {
-        imports: [ConfigModule],
-        useFactory: (configService: ConfigService) => {
-          return {
-            level: configService.get<WinstonLogLevel>('logger.level'),
-            consoleLevel: configService.get<WinstonLogLevel>(
-              'logger.consoleLevel',
-            ),
-            timestamp: configService.get<boolean>('logger.timestamp'),
-            maxFiles: configService.get<string>('logger.maxFiles'),
-            maxFileSize: configService.get<string>('logger.maxFileSize'),
-            disableConsoleAtProd: configService.get<boolean>(
-              'logger.disableConsoleAtProd',
-            ),
-            dir: configService.get<string>('logger.dir'),
-            errorLogName: configService.get<string>('logger.errorLogName'),
-            appLogName: configService.get<string>('logger.appLogName'),
-          };
-        },
-        inject: [ConfigService],
-      },
-      // global module
-      true,
-    ),
-    // custom module
     SharedModule,
-    // mission module
-    MissionModule.forRoot(),
-    // application modules import
-    AdminModule,
-    // websocket module
-    WSModule,
+    DatabaseModule,
+
+    AuthModule,
+    SystemModule,
+    TasksModule.forRoot(),
+    ToolsModule,
+    SocketModule,
+    HealthModule,
+    SseModule,
+
+    // biz
+
+    // end biz
+
+    TodoModule,
+  ],
+  providers: [
+    { provide: APP_FILTER, useClass: AllExceptionsFilter },
+
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_INTERCEPTOR, useFactory: () => new TimeoutInterceptor(15 * 1000) },
+    { provide: APP_INTERCEPTOR, useClass: IdempotenceInterceptor },
+
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RbacGuard },
   ],
 })
 export class AppModule {}
