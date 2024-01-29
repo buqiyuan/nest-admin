@@ -19,7 +19,7 @@ services:
       - .env
       - .env.production
     ports:
-      - '${MYSQL_PORT}:3306'
+      - '${DB_PORT}:3306'
     command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
     volumes:
       - ./__data/mysql/:/var/lib/mysql/ # ./__data/mysql/ 路径可以替换成自己的路径
@@ -53,8 +53,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${SERVER_PORT}:${SERVER_PORT}'
-      - '${WS_PORT}:${WS_PORT}'
+      - '${APP_PORT}:${APP_PORT}' 
     # 当前服务启动之前先要把depends_on指定的服务启动起来才行
     depends_on:
       - mysql
