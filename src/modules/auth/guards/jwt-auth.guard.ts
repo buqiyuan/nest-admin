@@ -1,5 +1,6 @@
 import {
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -10,6 +11,7 @@ import { isEmpty, isNil } from 'lodash'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
+import { envBoolean } from '~/global/env'
 import { AuthService } from '~/modules/auth/auth.service'
 
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
@@ -33,6 +35,9 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     ])
     const request = context.switchToHttp().getRequest<FastifyRequest>()
     // const response = context.switchToHttp().getResponse<FastifyReply>()
+    // TODO 仅起演示作用
+    if (request.method !== 'GET' && !request.url.includes('/auth/login') && envBoolean('IS_DEMO'))
+      throw new ForbiddenException('演示模式下不允许操作')
 
     const isSse = request.headers.accept === 'text/event-stream'
 

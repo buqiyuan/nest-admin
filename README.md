@@ -9,7 +9,7 @@
 ### 演示地址
 
 - [http://buqiyuan.gitee.io/vue3-antdv-admin/](http://buqiyuan.gitee.io/vue3-antdv-admin/)
-- [Swagger Api 文档](https://nest-api.buqiyuan.site/swagger-api)
+- [Swagger Api 文档](https://nest-api.buqiyuan.site/api-docs)
 
 ### 项目启动前的准备工作
 
@@ -19,26 +19,32 @@
   - 开发环境: [.env.development](https://github.com/buqiyuan/nest-admin/blob/main/.env.development)
   - 生产环境: [.env.production](https://github.com/buqiyuan/nest-admin/blob/main/.env.production)
 
+### 环境要求
+- `nodejs` `16.20.2`+
+- `docker` `20.x`+ ，其中 `docker compose`版本需要 `2.17.0`+
+- `mysql` `8.x`+
+- 使用 [`pnpm`](https://pnpm.io/zh/) 包管理器安装项目依赖
+
 演示环境账号密码：
 
 |   账号    |  密码  |    权限    |
 | :-------: | :----: | :--------: |
-| rootadmin | 123456 | 超级管理员 |
+| admin | a123456 | 超级管理员 |
 
-> 所有新建的用户初始密码都为 123456
+> 所有新建的用户初始密码都为 a123456
 
 本地部署账号密码：
 
 |   账号    |  密码  |    权限    |
 | :-------: | :----: | :--------: |
-| rootadmin | 123456 | 超级管理员 |
+| admin | a123456 | 超级管理员 |
 
 ## 快速体验
 
 启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 
 ```bash
-yarn docker:up
+pnpm docker:up
 # or
 docker compose --env-file .env.production up -d --no-build
 ```
@@ -46,15 +52,23 @@ docker compose --env-file .env.production up -d --no-build
 停止并删除所有容器
 
 ```bash
-yarn docker:down
+pnpm docker:down
 # or
 docker compose --env-file .env.production down
+```
+
+删除镜像
+
+```bash
+pnpm docker:rmi
+# or
+docker rmi buqiyuan/nest-admin-server:stable 
 ```
 
 查看实时日志输出
 
 ```bash
-yarn docker:logs
+pnpm docker:logs
 # or
 docker compose --env-file .env.production logs -f
 
@@ -82,7 +96,7 @@ docker compose  --env-file .env.development run -d --service-ports redis
 ```bash
 cd nest-admin
 
-yarn install
+pnpm install
 
 ```
 
@@ -90,13 +104,13 @@ yarn install
   启动成功后，通过 http://localhost:7001/swagger-api/ 访问。
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 - 打包
 
 ```bash
-yarn build
+pnpm build
 ```
 
 ### 系统截图

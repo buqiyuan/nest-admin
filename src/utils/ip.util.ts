@@ -52,11 +52,15 @@ export function getIp(request: FastifyRequest | IncomingMessage) {
 export async function getIpAddress(ip: string) {
   if (isLAN(ip))
     return '内网IP'
-  let { data } = await axios.get(
-    `https://whois.pconline.com.cn/ipJson.jsp?ip=${ip}&json=true`,
-    { responseType: 'arraybuffer' },
-  )
-  data = new TextDecoder('gbk').decode(data)
-  data = JSON.parse(data)
-  return data.addr.trim().split(' ').at(0)
+  try {
+    let { data } = await axios.get(
+      `https://whois.pconline.com.cn/ipJson.jsp?ip=${ip}&json=true`,
+      { responseType: 'arraybuffer' },
+    )
+    data = new TextDecoder('gbk').decode(data)
+    data = JSON.parse(data)
+    return data.addr.trim().split(' ').at(0)
+  } catch (error) {
+    return '第三方接口请求失败'
+  }
 }

@@ -19,6 +19,11 @@ import { isEmpty } from 'lodash'
 import { PagerDto } from '~/common/dto/pager.dto'
 
 export class UserDto {
+  @ApiProperty({ description: '头像' })
+  @IsOptional()
+  @IsString()
+   avatar?: string
+
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
   @Matches(/^[a-z0-9A-Z\W_]+$/)
