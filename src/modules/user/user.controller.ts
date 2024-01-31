@@ -6,14 +6,14 @@ import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { MenuService } from '~/modules/system/menu/menu.service'
 
-import { Perm, PermissionMap } from '../auth/decorators/permission.decorator'
+import { Perm, definePermission } from '../auth/decorators/permission.decorator'
 
 import { UserPasswordDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 
-export const permissions: PermissionMap<'system:user'> = {
+export const permissions = definePermission('system:user', {
   LIST: 'system:user:list',
   CREATE: 'system:user:create',
   READ: 'system:user:read',
@@ -22,7 +22,7 @@ export const permissions: PermissionMap<'system:user'> = {
 
   PASSWORD_UPDATE: 'system:user:password:update',
   PASSWORD_RESET: 'system:user:pass:reset',
-} as const
+} as const)
 
 @ApiTags('System - 用户模块')
 @ApiSecurityAuth()

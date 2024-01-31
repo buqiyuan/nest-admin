@@ -5,19 +5,19 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { ParamConfigEntity } from '~/modules/system/param-config/param-config.entity'
 
 import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 import { ParamConfigService } from './param-config.service'
 
-export const permissions: PermissionMap<'system:param-config'> = {
+export const permissions = definePermission('system:param-config', {
   LIST: 'system:param-config:list',
   CREATE: 'system:param-config:create',
   READ: 'system:param-config:read',
   UPDATE: 'system:param-config:update',
   DELETE: 'system:param-config:delete',
-} as const
+} as const)
 
 @ApiTags('System - 参数配置模块')
 @ApiSecurityAuth()

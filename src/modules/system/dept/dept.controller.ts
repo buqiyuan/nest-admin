@@ -7,19 +7,19 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { DeptEntity } from '~/modules/system/dept/dept.entity'
 
 import { DeptDto, DeptQueryDto } from './dept.dto'
 import { DeptService } from './dept.service'
 
-export const permissions: PermissionMap<'system:dept'> = {
+export const permissions = definePermission('system:dept', {
   LIST: 'system:dept:list',
   CREATE: 'system:dept:create',
   READ: 'system:dept:read',
   UPDATE: 'system:dept:update',
   DELETE: 'system:dept:delete',
-} as const
+} as const)
 
 @ApiSecurityAuth()
 @ApiTags('System - 部门模块')

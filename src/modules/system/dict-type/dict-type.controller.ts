@@ -6,19 +6,19 @@ import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { DictTypeEntity } from '~/modules/system/dict-type/dict-type.entity'
 
 import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'
 
-export const permissions: PermissionMap<'system:dict-type'> = {
+export const permissions = definePermission('system:dict-type', {
   LIST: 'system:dict-type:list',
   CREATE: 'system:dict-type:create',
   READ: 'system:dict-type:read',
   UPDATE: 'system:dict-type:update',
   DELETE: 'system:dict-type:delete',
-} as const
+} as const)
 
 @ApiTags('System - 字典类型模块')
 @ApiSecurityAuth()

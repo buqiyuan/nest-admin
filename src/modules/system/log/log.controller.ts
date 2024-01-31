@@ -4,7 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 
 import {
   CaptchaLogQueryDto,
@@ -18,11 +18,11 @@ import { CaptchaLogService } from './services/captcha-log.service'
 import { LoginLogService } from './services/login-log.service'
 import { TaskLogService } from './services/task-log.service'
 
-export const permissions: PermissionMap = {
+export const permissions = definePermission('system:log', {
   TaskList: 'system:log:task:list',
   LogList: 'system:log:login:list',
   CaptchaList: 'system:log:captcha:list',
-}
+} as const)
 
 @ApiSecurityAuth()
 @ApiTags('System - 日志模块')

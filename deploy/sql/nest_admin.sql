@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 29/01/2024 09:56:28
+ Date: 31/01/2024 19:08:21
 */
 
 SET NAMES utf8mb4;
@@ -145,7 +145,7 @@ CREATE TABLE `sys_dict_item` (
 BEGIN;
 INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (1, '2024-01-29 01:24:51.846135', '2024-01-29 02:23:19.000000', 1, 1, '男', '1', 0, 1, '性别男', 1, 3);
 INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (2, '2024-01-29 01:32:58.458741', '2024-01-29 01:58:20.000000', 1, 1, '女', '0', 1, 1, '性别女', 1, 2);
-INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (3, '2024-01-29 01:59:17.805394', '2024-01-29 01:59:17.805394', 1, 1, '人妖王', '3', NULL, 1, '安布里奥·伊万科夫', 1, 0);
+INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (3, '2024-01-29 01:59:17.805394', '2024-01-29 14:37:18.000000', 1, 1, '人妖王', '3', NULL, 1, '安布里奥·伊万科夫', 1, 0);
 INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (5, '2024-01-29 02:13:01.782466', '2024-01-29 02:13:01.782466', 1, 1, '显示', '1', NULL, 1, '显示菜单', 2, 0);
 INSERT INTO `sys_dict_item` (`id`, `created_at`, `updated_at`, `create_by`, `update_by`, `label`, `value`, `order`, `status`, `remark`, `type_id`, `orderNo`) VALUES (6, '2024-01-29 02:13:31.134721', '2024-01-29 02:13:31.134721', 1, 1, '隐藏', '0', NULL, 1, '隐藏菜单', 2, 0);
 COMMIT;
@@ -192,15 +192,12 @@ CREATE TABLE `sys_login_log` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_3029712e0df6a28edaee46fd470` (`user_id`),
   CONSTRAINT `FK_3029712e0df6a28edaee46fd470` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_login_log
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_login_log` (`id`, `ip`, `ua`, `address`, `provider`, `created_at`, `updated_at`, `user_id`) VALUES (1, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36', '内网IP', NULL, '2024-01-29 09:05:58.330039', '2024-01-29 09:05:58.330039', 1);
-INSERT INTO `sys_login_log` (`id`, `ip`, `ua`, `address`, `provider`, `created_at`, `updated_at`, `user_id`) VALUES (2, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36', '内网IP', NULL, '2024-01-29 09:07:38.217629', '2024-01-29 09:07:38.217629', 1);
-INSERT INTO `sys_login_log` (`id`, `ip`, `ua`, `address`, `provider`, `created_at`, `updated_at`, `user_id`) VALUES (3, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36', '内网IP', NULL, '2024-01-29 09:08:03.786805', '2024-01-29 09:08:03.786805', 1);
 COMMIT;
 
 -- ----------------------------
@@ -226,7 +223,7 @@ CREATE TABLE `sys_menu` (
   `ext_open_mode` tinyint NOT NULL DEFAULT '1',
   `active_menu` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=113 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=115 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_menu
@@ -244,8 +241,8 @@ INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`,
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (10, 9, '/system/task', '任务管理', '', 1, '', 0, 'system/schedule/task/index', 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-17 03:14:39.000000', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (11, 9, '/system/task/log', '任务日志', 'system:task:list', 1, '', 0, 'system/schedule/log/index', 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-17 03:15:01.000000', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (12, NULL, '/document', '文档', '', 0, 'ion:tv-outline', 2, '', 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-27 18:53:42.514264', 0, 1, NULL);
-INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (14, 12, 'https://www.typeorm.org/', 'Typeorm中文文档', NULL, 1, 'ep:document', 3, NULL, 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-29 09:29:32.000000', 1, 1, NULL);
-INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (15, 12, 'https://docs.nestjs.cn/', 'Nest.js中文文档', '', 1, 'ep:document', 4, NULL, 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-19 02:52:13.000000', 1, 2, NULL);
+INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (14, 12, 'https://www.typeorm.org/', 'Typeorm中文文档(外链)', NULL, 1, '', 3, NULL, 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-30 18:39:53.000000', 1, 1, NULL);
+INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (15, 12, 'https://docs.nestjs.cn/', 'Nest.js中文文档(内嵌)', '', 1, '', 4, NULL, 1, 1, 1, '2023-11-10 00:31:44.023393', '2024-01-30 18:40:43.000000', 1, 2, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (20, 2, NULL, '新增', 'system:user:create', 2, '', 0, NULL, 1, 1, 1, '2023-11-10 00:31:44.023393', '2023-11-10 00:31:44.034474', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (21, 2, '', '删除', 'system:user:delete', 2, '', 0, '', 1, 1, 1, '2023-11-10 00:31:44.023393', '2023-11-10 00:31:44.034474', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (22, 2, '', '更新', 'system:user:update', 2, '', 0, '', 1, 1, 1, '2023-11-10 00:31:44.023393', '2023-11-10 00:31:44.034474', 0, 1, NULL);
@@ -294,12 +291,12 @@ INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`,
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (88, 86, NULL, '新增', 'system:param-config:create', 2, '', 255, NULL, 1, 1, 1, '2024-01-10 17:39:57.543510', '2024-01-10 17:39:57.543510', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (89, 86, NULL, '更新', 'system:param-config:update', 2, '', 255, NULL, 1, 1, 1, '2024-01-10 17:40:27.355944', '2024-01-10 17:40:27.355944', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (92, 86, NULL, '删除', 'system:param-config:delete', 2, '', 255, NULL, 1, 1, 1, '2024-01-10 17:57:32.059887', '2024-01-10 17:57:32.059887', 0, 1, NULL);
-INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (107, 1, 'system/dict-item/:id', '字典项管理', 'system:dict-item:list', 1, 'ant-design:facebook-outlined', 255, 'system/dict-item/index', 0, 0, 1, '2024-01-28 09:21:17.409532', '2024-01-28 22:30:45.000000', 0, 1, '字典管理');
+INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (107, 1, 'system/dict-item/:id', '字典项管理', 'system:dict-item:list', 1, 'ant-design:facebook-outlined', 255, 'system/dict-item/index', 0, 0, 1, '2024-01-28 09:21:17.409532', '2024-01-30 13:09:47.000000', 0, 1, '字典管理');
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (108, 107, NULL, '新增', 'system:dict-item:create', 2, '', 255, NULL, 1, 1, 1, '2024-01-28 09:22:39.401758', '2024-01-28 22:38:36.000000', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (109, 107, NULL, '更新', 'system:dict-item:update', 2, '', 255, NULL, 1, 1, 1, '2024-01-28 09:26:43.911886', '2024-01-28 09:26:43.911886', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (110, 107, NULL, '删除', 'system:dict-item:delete', 2, '', 255, NULL, 1, 1, 1, '2024-01-28 09:27:28.535225', '2024-01-28 09:27:28.535225', 0, 1, NULL);
 INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (111, 107, NULL, '查询', 'system:dict-item:info', 2, '', 255, NULL, 1, 1, 1, '2024-01-28 09:27:43.894820', '2024-01-28 09:27:43.894820', 0, 1, NULL);
-INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (112, 12, 'https://antdv.com/components/overview-cn', 'ant-design-vue', NULL, 1, 'ant-design:ant-design-outlined', 255, NULL, 1, 1, 1, '2024-01-29 09:23:08.407723', '2024-01-29 09:26:47.000000', 1, 1, NULL);
+INSERT INTO `sys_menu` (`id`, `parent_id`, `path`, `name`, `permission`, `type`, `icon`, `order_no`, `component`, `keep_alive`, `show`, `status`, `created_at`, `updated_at`, `is_ext`, `ext_open_mode`, `active_menu`) VALUES (112, 12, 'https://antdv.com/components/overview-cn', 'antdv文档(内嵌)', NULL, 1, '', 255, NULL, 1, 1, 1, '2024-01-29 09:23:08.407723', '2024-01-30 18:41:19.000000', 1, 2, NULL);
 COMMIT;
 
 -- ----------------------------
@@ -325,8 +322,8 @@ CREATE TABLE `sys_role` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`, `default`) VALUES (1, 'admin', '管理员', '超级管理员', 1, '2023-11-10 00:31:44.058463', '2024-01-28 21:08:39.000000', NULL);
-INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`, `default`) VALUES (2, 'user', '用户', '', 1, '2023-11-10 00:31:44.058463', '2024-01-23 22:29:35.000000', 1);
-INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`, `default`) VALUES (9, 'test', '测试', NULL, 1, '2024-01-23 22:46:52.408827', '2024-01-23 22:46:52.408827', NULL);
+INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`, `default`) VALUES (2, 'user', '用户', '', 1, '2023-11-10 00:31:44.058463', '2024-01-30 18:44:45.000000', 1);
+INSERT INTO `sys_role` (`id`, `value`, `name`, `remark`, `status`, `created_at`, `updated_at`, `default`) VALUES (9, 'test', '测试', NULL, 1, '2024-01-23 22:46:52.408827', '2024-01-30 01:04:52.000000', NULL);
 COMMIT;
 
 -- ----------------------------
@@ -415,9 +412,6 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 109);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 110);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (1, 111);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 1);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 2);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 3);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 4);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 5);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 6);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 7);
@@ -428,17 +422,6 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 11);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 12);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 14);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 15);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 20);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 21);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 22);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 23);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 24);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 25);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 26);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 27);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 28);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 30);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 31);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 32);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 34);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 35);
@@ -456,17 +439,11 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 50);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 51);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 52);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 53);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 54);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 56);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 57);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 58);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 59);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 60);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 61);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 62);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 63);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 64);
-INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 65);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 68);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 69);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 70);
@@ -475,6 +452,12 @@ INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 87);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 88);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 89);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 92);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 107);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 108);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 109);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 110);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 111);
+INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (2, 112);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 1);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 2);
 INSERT INTO `sys_role_menus` (`role_id`, `menu_id`) VALUES (9, 3);
@@ -557,8 +540,8 @@ CREATE TABLE `sys_task` (
 -- Records of sys_task
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (2, '定时清空登录日志', 'LogClearJob.clearLoginLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2023-11-10 00:31:44.197779', '2024-01-29 09:49:03.000000');
-INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (3, '定时清空任务日志', 'LogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2023-11-10 00:31:44.197779', '2024-01-29 09:49:03.000000');
+INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (2, '定时清空登录日志', 'LogClearJob.clearLoginLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2023-11-10 00:31:44.197779', '2024-01-31 18:08:02.000000');
+INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (3, '定时清空任务日志', 'LogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2023-11-10 00:31:44.197779', '2024-01-31 18:08:02.000000');
 INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (4, '访问百度首页', 'HttpRequestJob.handle', 0, 0, NULL, NULL, 1, '* * * * * ?', NULL, '{\"url\":\"https://www.baidu.com\",\"method\":\"get\"}', NULL, '访问百度首页', '2023-11-10 00:31:44.197779', '2023-11-10 00:31:44.206935');
 INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (5, '发送邮箱', 'EmailJob.send', 0, 0, NULL, NULL, -1, '0 0 0 1 * ?', NULL, '{\"subject\":\"这是标题\",\"to\":\"zeyu57@163.com\",\"content\":\"这是正文\"}', NULL, '每月发送邮箱', '2023-11-10 00:31:44.197779', '2023-11-10 00:31:44.206935');
 COMMIT;
@@ -610,7 +593,7 @@ CREATE TABLE `sys_user` (
   UNIQUE KEY `IDX_9e7164b2f1ea1348bc0eb0a7da` (`username`) USING BTREE,
   KEY `FK_96bde34263e2ae3b46f011124ac` (`dept_id`),
   CONSTRAINT `FK_96bde34263e2ae3b46f011124ac` FOREIGN KEY (`dept_id`) REFERENCES `sys_dept` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_user
@@ -618,7 +601,7 @@ CREATE TABLE `sys_user` (
 BEGIN;
 INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (1, 'admin', 'a11571e778ee85e82caae2d980952546', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', '1743369777@qq.com', '10086', '管理员', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-29 09:49:43.000000', 'bqy', 1);
 INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (2, 'user', 'dbd89546dec743f82bb9073d6ac39361', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', 'luffy@qq.com', '10010', '王路飞', 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-29 09:49:57.000000', 'luffy', 8);
-INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (8, 'kuizuo', 'f03fa2a99595127b9a39587421d471f6', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', 'nami@qq.com', '10000', '小贼猫', 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-29 09:51:09.000000', 'nami', 7);
+INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (8, 'dev', 'f03fa2a99595127b9a39587421d471f6', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', 'nami@qq.com', '10000', '小贼猫', 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-30 02:45:37.263189', 'nami', 7);
 COMMIT;
 
 -- ----------------------------
@@ -683,7 +666,7 @@ CREATE TABLE `tool_storage` (
   `size` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of tool_storage
@@ -710,10 +693,16 @@ CREATE TABLE `user_access_tokens` (
 -- Records of user_access_tokens
 -- ----------------------------
 BEGIN;
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('29bb6340-9459-477f-988e-fcb63a70f35f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY0OTA0NTh9.ErbnrgrOnzPYsvr33GWD-UXHnOeDtZmuShmrprnKPWk', '2024-01-30 09:07:38', '2024-01-29 09:07:38.177071', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('776b0fd3-ac4f-49dc-a075-6e5d5a6c6723', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY0OTA0ODN9.rSLP2fWdK3QFS4QCDJPSCpIT2jDYM4EZQdFVuDEOfns', '2024-01-30 09:08:04', '2024-01-29 09:08:03.754790', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('77cf1667-2b5d-43a4-992e-47ab7f86f113', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY0NzY2MjJ9.iyN84WrSEsnsl2rDWcKjXiGjP6WgdR5Lm7SohS0kCss', '2024-01-30 05:17:02', '2024-01-29 05:17:02.246915', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('c32d67fe-906f-4a06-8fd8-2a742402b5a9', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY0OTAzNTh9.rILBdZ3SpM7H9tEuSPB4IfKKdK3wKwmPvBDQVsLwQvk', '2024-01-30 09:05:58', '2024-01-29 09:05:58.298959', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('11abf43e-42f3-4960-aa5d-cc15b90b0a2c', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NDg3NDB9.8ZJyZB4I4LstTE39UysoRatN2v6x-zq0kay_5DQmds4', '2024-01-31 01:19:01', '2024-01-29 17:19:00.531003', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('18e148a0-371c-40e8-bdf8-f7eacdac5582', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsInB2IjoxLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcwNjY0MDI2OH0.SmiPEepE74HNp1U8o2XKLk_TmIBbR-42Q7Md_KN-ZIA', '2024-02-01 02:44:29', '2024-01-30 18:44:28.754795', 2);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('1f585858-4cb9-4b80-8793-324be3586265', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2NzE1MjB9.qti25se6TekENfF8X4YabRtY9QVJxsyrr-9DwweGR48', '2024-02-01 11:25:21', '2024-01-31 03:25:20.955596', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('7b9afb99-d032-4fa2-8c57-0a391a96e96d', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2NzI3NjN9.RBxCFeRzz_NznW-cvZIF1nUorplzU7CoJnWNpHCcmws', '2024-02-01 11:46:03', '2024-01-31 11:46:03.219408', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('94f42fff-b796-4ae3-b396-5e7dde1eceed', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTU0NTh9.2-QHQfsDAfIAqfj12MO0iKkx776CKB3sRlyL2soSuZk', '2024-01-31 03:10:58', '2024-01-29 19:10:58.424300', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('952a60b1-e192-46e8-bea1-e605ca919e10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTQ4NzB9.1vtp8ED-nXhsGshyv-wmcUn7jyDGGb7mrywGke6gb0Y', '2024-01-31 03:01:11', '2024-01-29 19:01:10.552652', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('b054539a-f56b-474e-98b2-0cdba182df82', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1Nzc4MTR9.591DlOrw72ZaOiGHUdoyMkawE53EN4oTt_BNh11yhUw', '2024-01-31 09:23:34', '2024-01-30 01:23:34.306263', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('c13b50e1-e732-4617-94a3-95484d5bdeb3', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTg4OTZ9.KSkbfBDxwoUhK7krE_ULtzHXxWJ5gSLKq7JVhwIzl0U', '2024-01-31 04:08:16', '2024-01-29 20:08:16.077540', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('ea600b6d-5456-4bf8-9140-bc8983133868', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1ODA0MTZ9.QL8a7N4-lz4fqyVCkw-3W_IIKkJhGyYvOIPULgly9ao', '2024-01-31 10:06:57', '2024-01-30 02:06:56.744244', 1);
+INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('ef3d7154-77f7-4aea-92dc-1f45ded4787e', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2MzY2OTB9.ECFByaqSi6RtwP2PIq0gYHL95d7rhrpELo-GXt1s3No', '2024-02-01 01:44:51', '2024-01-30 17:44:50.616743', 1);
 COMMIT;
 
 -- ----------------------------
@@ -735,10 +724,16 @@ CREATE TABLE `user_refresh_tokens` (
 -- Records of user_refresh_tokens
 -- ----------------------------
 BEGIN;
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('25488e0c-e5b7-45be-a1df-f130383f1ef3', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoidmRhYjRvSV9DTnR2WFBJOGxkZXB5IiwiaWF0IjoxNzA2NDkwMzU4fQ.0Pp7mvps7CyHDDhD3lSivryYVHs3FGJl2M0yz3GcEO0', '2024-02-28 09:05:58', '2024-01-29 09:05:58.319239', 'c32d67fe-906f-4a06-8fd8-2a742402b5a9');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('ad863c0e-5f4d-48a7-b209-adbafaa86f57', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiVGxRRXlic0t0enk2dENzSTJKc3R5IiwiaWF0IjoxNzA2NDc2NjIyfQ.vrqfLM3UTNMxDw2uvkgQ0vAzYlr1BJ5ojtGRmXzeeik', '2024-02-28 05:17:02', '2024-01-29 05:17:02.260343', '77cf1667-2b5d-43a4-992e-47ab7f86f113');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('c25921d7-2678-4c1d-a7b9-b71262ca86b3', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiRG52RE9Ka01aSnRMT3ZIV1J6M3dTIiwiaWF0IjoxNzA2NDkwNDU4fQ.eC5yeqlKK8fEUycM57qEHPqS2LnwG6RWVbR9XZzmGMs', '2024-02-28 09:07:38', '2024-01-29 09:07:38.203276', '29bb6340-9459-477f-988e-fcb63a70f35f');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('f4e9d570-ce33-419c-b2e6-c558e3a86f66', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiMGE1UWFmNVRxajVsQXdHbTNuRkZnIiwiaWF0IjoxNzA2NDkwNDgzfQ.9SlRXJWhOLOJqFvlQ3Q8tt8XnLUKCYvS5sEVSPHQE-Q', '2024-02-28 09:08:04', '2024-01-29 09:08:03.774803', '776b0fd3-ac4f-49dc-a075-6e5d5a6c6723');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('0d15984b-e90c-49ec-bbd2-708e845e6efc', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiWm1MeDRuN1BUcVFoMnBxbTd5N05yIiwiaWF0IjoxNzA2NjQwMjY4fQ.Pxg5hsu_b1pkB3M6lKhQM74KP4z8bChnqURhapEpC3o', '2024-03-01 02:44:29', '2024-01-30 18:44:28.769214', '18e148a0-371c-40e8-bdf8-f7eacdac5582');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('27474833-c600-4996-9aab-0fb5e2f5dc16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiWE4xSXMwSmJFbTc2bkoyVXZWeGNPIiwiaWF0IjoxNzA2NjcxNTIwfQ.pmh8Dh2lJ3-aK7ex_D8EYKmI8E0kr7RIpXHiDjQGFO8', '2024-03-01 11:25:21', '2024-01-31 03:25:20.980609', '1f585858-4cb9-4b80-8793-324be3586265');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('2a1613ac-cbc0-4ba6-abbd-a661ff4ffe83', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDl6TkVKS3dHT0dEd0VVYmtyd0xTIiwiaWF0IjoxNzA2NTU1NDU4fQ.-7UizjAfryGiKiiJfqFSCmk2UhhXyLR92cPXqykg41A', '2024-02-29 03:10:58', '2024-01-29 19:10:58.431454', '94f42fff-b796-4ae3-b396-5e7dde1eceed');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('7335ca18-8cd2-49d1-93ce-d982920e0839', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiczlSaEYzeF9RZ2V4QkhSZU9DMHUwIiwiaWF0IjoxNzA2NjcyNzYzfQ.7HI8t4nsh0QpJ03epdQxmbczOU86uipoa810L6nIlOg', '2024-03-01 11:46:03', '2024-01-31 11:46:03.232849', '7b9afb99-d032-4fa2-8c57-0a391a96e96d');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('8a687c6d-2d81-4242-8346-e6986d83cd20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiUm5GakhTbHZySVhQa2tBdmcyVUdMIiwiaWF0IjoxNzA2NTU0ODcwfQ.vFxa9hYAX76mVb7d2p1leVmyqJFavEfaTwgGtm8I3r4', '2024-02-29 03:01:11', '2024-01-29 19:01:10.573832', '952a60b1-e192-46e8-bea1-e605ca919e10');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('a456c76c-da69-40da-86c9-80eb3f593e5b', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiTE10R2dPUFRwVl9JaXd3QmI4Y0c2IiwiaWF0IjoxNzA2NTU4ODk2fQ.2FV9q0DKya9PfbitzMoHxs_nOeoJNwkGlTO_f5Q8jQE', '2024-02-29 04:08:16', '2024-01-29 20:08:16.143104', 'c13b50e1-e732-4617-94a3-95484d5bdeb3');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('b12f6c86-b918-4cb0-8202-02d7cc51fb7f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiSWpfWnZ4Q2wtQUlsbHlSRkdRWXFNIiwiaWF0IjoxNzA2NTc3ODE0fQ.hWi4eV82qtuqImvSHsJfjeX4OCPDM3ceEHkXlyUhSgQ', '2024-02-29 09:23:34', '2024-01-30 01:23:34.321765', 'b054539a-f56b-474e-98b2-0cdba182df82');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('b265538c-6cb7-4ca7-b030-112924a55fd7', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiSHo5YXUyNGRIOEtTZE1mOG5LYVRKIiwiaWF0IjoxNzA2NjM2NjkwfQ.2AleMUVJ672IEBGifZXo_2zBwlNFsIjyBWcH3FxKLPs', '2024-03-01 01:44:51', '2024-01-30 17:44:50.670675', 'ef3d7154-77f7-4aea-92dc-1f45ded4787e');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('c7ec67b4-f0a8-4df7-a471-b26dce877691', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZVRGREo0eHAtaHpQTDNzNWxZN1VOIiwiaWF0IjoxNzA2NTQ4NzQwfQ.R3zG4iZuAUXwufQ7oxJNLtiuAToa7s-xIgzo8ohn1iw', '2024-02-29 01:19:01', '2024-01-29 17:19:00.548520', '11abf43e-42f3-4960-aa5d-cc15b90b0a2c');
+INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('e790e4be-66ca-451a-8c0a-ed4119ec303f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiTVN2YUg1OTV2cEh4bUlqQTlTT2JQIiwiaWF0IjoxNzA2NTgwNDE2fQ.iuFcmcKDRcJ2rCxy1Um_i_BNMFmo8KWznROhPb4u38M', '2024-02-29 10:06:57', '2024-01-30 02:06:56.817014', 'ea600b6d-5456-4bf8-9140-bc8983133868');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

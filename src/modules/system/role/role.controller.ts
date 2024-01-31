@@ -14,7 +14,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { PagerDto } from '~/common/dto/pager.dto'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
 import { MenuService } from '../menu/menu.service'
@@ -23,13 +23,13 @@ import { RoleDto, RoleUpdateDto } from './role.dto'
 import { RoleInfo } from './role.model'
 import { RoleService } from './role.service'
 
-export const permissions: PermissionMap<'system:role'> = {
+export const permissions = definePermission('system:role', {
   LIST: 'system:role:list',
   CREATE: 'system:role:create',
   READ: 'system:role:read',
   UPDATE: 'system:role:update',
   DELETE: 'system:role:delete',
-} as const
+} as const)
 
 @ApiTags('System - 角色模块')
 @ApiSecurityAuth()

@@ -14,19 +14,19 @@ import { flattenDeep } from 'lodash'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission, getDefinePermissions } from '~/modules/auth/decorators/permission.decorator'
 
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
 import { MenuItemInfo } from './menu.model'
 import { MenuService } from './menu.service'
 
-export const permissions: PermissionMap<'system:menu'> = {
+export const permissions = definePermission('system:menu', {
   LIST: 'system:menu:list',
   CREATE: 'system:menu:create',
   READ: 'system:menu:read',
   UPDATE: 'system:menu:update',
   DELETE: 'system:menu:delete',
-} as const
+} as const)
 
 @ApiTags('System - 菜单权限模块')
 @ApiSecurityAuth()
@@ -94,5 +94,11 @@ export class MenuController {
     await this.menuService.deleteMenuItem(flattenDeep([id, childMenus]))
     // 刷新在线用户权限
     await this.menuService.refreshOnlineUserPerms()
+  }
+
+  @Get('permissions')
+  @ApiOperation({ summary: '获取后端定义的所有权限集' })
+  async getPermissions(): Promise<string[]> {
+    return getDefinePermissions()
   }
 }

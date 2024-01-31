@@ -8,15 +8,15 @@ import {
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus'
 
-import { Perm, PermissionMap } from '../auth/decorators/permission.decorator'
+import { Perm, definePermission } from '../auth/decorators/permission.decorator'
 
-export const PermissionHealth: PermissionMap<'app:health'> = {
+export const PermissionHealth = definePermission('app:health', {
   NETWORK: 'app:health:network',
   DB: 'app:health:database',
   MH: 'app:health:memory-heap',
   MR: 'app:health:memory-rss',
   DISK: 'app:health:disk',
-} as const
+} as const)
 
 @ApiTags('Health - 健康检查')
 @Controller('health')

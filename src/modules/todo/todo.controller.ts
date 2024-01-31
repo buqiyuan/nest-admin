@@ -14,7 +14,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 
 import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, PermissionMap } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { Resource } from '~/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '~/modules/auth/guards/resource.guard'
@@ -23,13 +23,13 @@ import { TodoEntity } from '~/modules/todo/todo.entity'
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { TodoService } from './todo.service'
 
-export const permissions: PermissionMap<'todo'> = {
+export const permissions = definePermission('todo', {
   LIST: 'todo:list',
   CREATE: 'todo:create',
   READ: 'todo:read',
   UPDATE: 'todo:update',
   DELETE: 'todo:delete',
-} as const
+} as const)
 
 @ApiTags('Business - Todo模块')
 @UseGuards(ResourceGuard)
@@ -65,9 +65,7 @@ export class TodoController {
   @Perm(permissions.UPDATE)
   @Resource(TodoEntity)
   async update(
-    @IdParam() id: number,
-    @Body() dto: TodoUpdateDto,
-  ): Promise<void> {
+    @IdParam() id: number, @Body() dto: TodoUpdateDto): Promise<void> {
     await this.todoService.update(id, dto)
   }
 
