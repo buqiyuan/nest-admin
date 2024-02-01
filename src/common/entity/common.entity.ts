@@ -9,6 +9,16 @@ import {
   VirtualColumn,
 } from 'typeorm'
 
+// 如果觉得前端转换时间太麻烦，并且不考虑通用性的话，可以在服务端进行转换，eg: @UpdateDateColumn({ name: 'updated_at', transformer })
+// const transformer: ValueTransformer = {
+//   to(value) {
+//     return value
+//   },
+//   from(value) {
+//     return dayjs(value).format('YYYY-MM-DD HH:mm:ss')
+//   },
+// }
+
 export abstract class CommonEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number

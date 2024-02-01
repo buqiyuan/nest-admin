@@ -14,11 +14,11 @@ import { DeptDto, DeptQueryDto } from './dept.dto'
 import { DeptService } from './dept.service'
 
 export const permissions = definePermission('system:dept', {
-  LIST: 'system:dept:list',
-  CREATE: 'system:dept:create',
-  READ: 'system:dept:read',
-  UPDATE: 'system:dept:update',
-  DELETE: 'system:dept:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiSecurityAuth()

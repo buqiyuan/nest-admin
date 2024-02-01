@@ -13,11 +13,11 @@ import { DictTypeDto, DictTypeQueryDto } from './dict-type.dto'
 import { DictTypeService } from './dict-type.service'
 
 export const permissions = definePermission('system:dict-type', {
-  LIST: 'system:dict-type:list',
-  CREATE: 'system:dict-type:create',
-  READ: 'system:dict-type:read',
-  UPDATE: 'system:dict-type:update',
-  DELETE: 'system:dict-type:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('System - 字典类型模块')

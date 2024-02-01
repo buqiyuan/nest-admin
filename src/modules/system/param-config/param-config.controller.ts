@@ -12,11 +12,11 @@ import { ParamConfigDto, ParamConfigQueryDto } from './param-config.dto'
 import { ParamConfigService } from './param-config.service'
 
 export const permissions = definePermission('system:param-config', {
-  LIST: 'system:param-config:list',
-  CREATE: 'system:param-config:create',
-  READ: 'system:param-config:read',
-  UPDATE: 'system:param-config:update',
-  DELETE: 'system:param-config:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('System - 参数配置模块')

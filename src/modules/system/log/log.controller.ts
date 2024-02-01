@@ -19,9 +19,9 @@ import { LoginLogService } from './services/login-log.service'
 import { TaskLogService } from './services/task-log.service'
 
 export const permissions = definePermission('system:log', {
-  TaskList: 'system:log:task:list',
-  LogList: 'system:log:login:list',
-  CaptchaList: 'system:log:captcha:list',
+  TaskList: 'task:list',
+  LogList: 'login:list',
+  CaptchaList: 'captcha:list',
 } as const)
 
 @ApiSecurityAuth()

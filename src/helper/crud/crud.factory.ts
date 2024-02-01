@@ -17,13 +17,11 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { PagerDto } from '~/common/dto/pager.dto'
 
-import { PermissionMap } from '~/modules/auth/decorators/permission.decorator'
-
 import { BaseService } from './base.service'
 
 export function BaseCrudFactory<
   E extends new (...args: any[]) => any,
->({ entity, dto, permissions }: { entity: E, dto?: Type<any>, permissions?: PermissionMap }): Type<any> {
+>({ entity, dto, permissions }: { entity: E, dto?: Type<any>, permissions?: Record<string, string> }): Type<any> {
   const prefix = entity.name.toLowerCase().replace(/entity$/, '')
   const pluralizeName = pluralize(prefix) as string
 

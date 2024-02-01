@@ -13,11 +13,11 @@ import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
 import { DictItemService } from './dict-item.service'
 
 export const permissions = definePermission('system:dict-item', {
-  LIST: 'system:dict-item:list',
-  CREATE: 'system:dict-item:create',
-  READ: 'system:dict-item:read',
-  UPDATE: 'system:dict-item:update',
-  DELETE: 'system:dict-item:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('System - 字典项模块')

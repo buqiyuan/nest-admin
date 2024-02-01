@@ -24,11 +24,11 @@ import { RoleInfo } from './role.model'
 import { RoleService } from './role.service'
 
 export const permissions = definePermission('system:role', {
-  LIST: 'system:role:list',
-  CREATE: 'system:role:create',
-  READ: 'system:role:read',
-  UPDATE: 'system:role:update',
-  DELETE: 'system:role:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('System - 角色模块')

@@ -14,14 +14,14 @@ import { UserEntity } from './user.entity'
 import { UserService } from './user.service'
 
 export const permissions = definePermission('system:user', {
-  LIST: 'system:user:list',
-  CREATE: 'system:user:create',
-  READ: 'system:user:read',
-  UPDATE: 'system:user:update',
-  DELETE: 'system:user:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 
-  PASSWORD_UPDATE: 'system:user:password:update',
-  PASSWORD_RESET: 'system:user:pass:reset',
+  PASSWORD_UPDATE: 'password:update',
+  PASSWORD_RESET: 'pass:reset',
 } as const)
 
 @ApiTags('System - 用户模块')

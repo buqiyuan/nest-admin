@@ -24,11 +24,11 @@ import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto'
 import { TodoService } from './todo.service'
 
 export const permissions = definePermission('todo', {
-  LIST: 'todo:list',
-  CREATE: 'todo:create',
-  READ: 'todo:read',
-  UPDATE: 'todo:update',
-  DELETE: 'todo:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('Business - Todo模块')

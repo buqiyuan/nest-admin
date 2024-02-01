@@ -11,11 +11,11 @@ import {
 import { Perm, definePermission } from '../auth/decorators/permission.decorator'
 
 export const PermissionHealth = definePermission('app:health', {
-  NETWORK: 'app:health:network',
-  DB: 'app:health:database',
-  MH: 'app:health:memory-heap',
-  MR: 'app:health:memory-rss',
-  DISK: 'app:health:disk',
+  NETWORK: 'network',
+  DB: 'database',
+  MH: 'memory-heap',
+  MR: 'memory-rss',
+  DISK: 'disk',
 } as const)
 
 @ApiTags('Health - 健康检查')

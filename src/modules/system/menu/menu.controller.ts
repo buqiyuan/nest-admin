@@ -21,11 +21,11 @@ import { MenuItemInfo } from './menu.model'
 import { MenuService } from './menu.service'
 
 export const permissions = definePermission('system:menu', {
-  LIST: 'system:menu:list',
-  CREATE: 'system:menu:create',
-  READ: 'system:menu:read',
-  UPDATE: 'system:menu:update',
-  DELETE: 'system:menu:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 } as const)
 
 @ApiTags('System - 菜单权限模块')

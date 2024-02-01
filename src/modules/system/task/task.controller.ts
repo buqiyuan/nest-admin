@@ -12,15 +12,15 @@ import { TaskDto, TaskQueryDto, TaskUpdateDto } from './task.dto'
 import { TaskService } from './task.service'
 
 export const permissions = definePermission('system:task', {
-  LIST: 'system:task:list',
-  CREATE: 'system:task:create',
-  READ: 'system:task:read',
-  UPDATE: 'system:task:update',
-  DELETE: 'system:task:delete',
+  LIST: 'list',
+  CREATE: 'create',
+  READ: 'read',
+  UPDATE: 'update',
+  DELETE: 'delete',
 
-  ONCE: 'system:task:once',
-  START: 'system:task:start',
-  STOP: 'system:task:stop',
+  ONCE: 'once',
+  START: 'start',
+  STOP: 'stop',
 } as const)
 
 @ApiTags('System - 任务调度模块')
