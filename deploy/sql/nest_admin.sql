@@ -11,7 +11,7 @@
  Target Server Version : 80030 (8.0.30)
  File Encoding         : 65001
 
- Date: 31/01/2024 19:08:21
+ Date: 03/02/2024 21:46:50
 */
 
 SET NAMES utf8mb4;
@@ -192,12 +192,13 @@ CREATE TABLE `sys_login_log` (
   PRIMARY KEY (`id`) USING BTREE,
   KEY `FK_3029712e0df6a28edaee46fd470` (`user_id`),
   CONSTRAINT `FK_3029712e0df6a28edaee46fd470` FOREIGN KEY (`user_id`) REFERENCES `sys_user` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_login_log
 -- ----------------------------
 BEGIN;
+INSERT INTO `sys_login_log` (`id`, `ip`, `ua`, `address`, `provider`, `created_at`, `updated_at`, `user_id`) VALUES (17, '127.0.0.1', 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36', '内网IP', NULL, '2024-01-31 23:07:31.696585', '2024-01-31 23:07:31.696585', 1);
 COMMIT;
 
 -- ----------------------------
@@ -315,7 +316,7 @@ CREATE TABLE `sys_role` (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE KEY `IDX_223de54d6badbe43a5490450c3` (`name`) USING BTREE,
   UNIQUE KEY `IDX_05edc0a51f41bb16b7d8137da9` (`value`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Records of sys_role
@@ -540,8 +541,8 @@ CREATE TABLE `sys_task` (
 -- Records of sys_task
 -- ----------------------------
 BEGIN;
-INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (2, '定时清空登录日志', 'LogClearJob.clearLoginLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2023-11-10 00:31:44.197779', '2024-01-31 18:08:02.000000');
-INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (3, '定时清空任务日志', 'LogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2023-11-10 00:31:44.197779', '2024-01-31 18:08:02.000000');
+INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (2, '定时清空登录日志', 'LogClearJob.clearLoginLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:2:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":2}', '定时清空登录日志', '2023-11-10 00:31:44.197779', '2024-02-03 21:01:27.000000');
+INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (3, '定时清空任务日志', 'LogClearJob.clearTaskLog', 0, 1, NULL, NULL, 0, '0 0 3 ? * 1', 0, '', '{\"count\":1,\"key\":\"__default__:3:::0 0 3 ? * 1\",\"cron\":\"0 0 3 ? * 1\",\"jobId\":3}', '定时清空任务日志', '2023-11-10 00:31:44.197779', '2024-02-03 21:01:27.000000');
 INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (4, '访问百度首页', 'HttpRequestJob.handle', 0, 0, NULL, NULL, 1, '* * * * * ?', NULL, '{\"url\":\"https://www.baidu.com\",\"method\":\"get\"}', NULL, '访问百度首页', '2023-11-10 00:31:44.197779', '2023-11-10 00:31:44.206935');
 INSERT INTO `sys_task` (`id`, `name`, `service`, `type`, `status`, `start_time`, `end_time`, `limit`, `cron`, `every`, `data`, `job_opts`, `remark`, `created_at`, `updated_at`) VALUES (5, '发送邮箱', 'EmailJob.send', 0, 0, NULL, NULL, -1, '0 0 0 1 * ?', NULL, '{\"subject\":\"这是标题\",\"to\":\"zeyu57@163.com\",\"content\":\"这是正文\"}', NULL, '每月发送邮箱', '2023-11-10 00:31:44.197779', '2023-11-10 00:31:44.206935');
 COMMIT;
@@ -601,7 +602,7 @@ CREATE TABLE `sys_user` (
 BEGIN;
 INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (1, 'admin', 'a11571e778ee85e82caae2d980952546', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', '1743369777@qq.com', '10086', '管理员', 'xQYCspvFb8cAW6GG1pOoUGTLqsuUSO3d', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-29 09:49:43.000000', 'bqy', 1);
 INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (2, 'user', 'dbd89546dec743f82bb9073d6ac39361', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', 'luffy@qq.com', '10010', '王路飞', 'qlovDV7pL5dPYPI3QgFFo1HH74nP6sJe', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-29 09:49:57.000000', 'luffy', 8);
-INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (8, 'dev', 'f03fa2a99595127b9a39587421d471f6', 'https://thirdqq.qlogo.cn/g?b=qq&s=100&nk=1743369777', 'nami@qq.com', '10000', '小贼猫', 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-01-30 02:45:37.263189', 'nami', 7);
+INSERT INTO `sys_user` (`id`, `username`, `password`, `avatar`, `email`, `phone`, `remark`, `psalt`, `status`, `qq`, `created_at`, `updated_at`, `nickname`, `dept_id`) VALUES (8, 'developer', 'f03fa2a99595127b9a39587421d471f6', '/upload/cfd0d14459bc1a47-202402032141838.jpeg', 'nami@qq.com', '10000', '小贼猫', 'NbGM1z9Vhgo7f4dd2I7JGaGP12RidZdE', 1, '1743369777', '2023-11-10 00:31:44.104382', '2024-02-03 21:41:18.000000', '娜美', 7);
 COMMIT;
 
 -- ----------------------------
@@ -666,12 +667,13 @@ CREATE TABLE `tool_storage` (
   `size` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `user_id` int DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- ----------------------------
 -- Records of tool_storage
 -- ----------------------------
 BEGIN;
+INSERT INTO `tool_storage` (`id`, `created_at`, `updated_at`, `name`, `fileName`, `ext_name`, `path`, `type`, `size`, `user_id`) VALUES (78, '2024-02-03 21:41:16.851178', '2024-02-03 21:41:16.851178', 'cfd0d14459bc1a47-202402032141838.jpeg', 'cfd0d14459bc1a47.jpeg', 'jpeg', '/upload/cfd0d14459bc1a47-202402032141838.jpeg', '图片', '33.92 KB', 1);
 COMMIT;
 
 -- ----------------------------
@@ -693,16 +695,6 @@ CREATE TABLE `user_access_tokens` (
 -- Records of user_access_tokens
 -- ----------------------------
 BEGIN;
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('11abf43e-42f3-4960-aa5d-cc15b90b0a2c', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NDg3NDB9.8ZJyZB4I4LstTE39UysoRatN2v6x-zq0kay_5DQmds4', '2024-01-31 01:19:01', '2024-01-29 17:19:00.531003', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('18e148a0-371c-40e8-bdf8-f7eacdac5582', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjIsInB2IjoxLCJyb2xlcyI6WyJ1c2VyIl0sImlhdCI6MTcwNjY0MDI2OH0.SmiPEepE74HNp1U8o2XKLk_TmIBbR-42Q7Md_KN-ZIA', '2024-02-01 02:44:29', '2024-01-30 18:44:28.754795', 2);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('1f585858-4cb9-4b80-8793-324be3586265', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2NzE1MjB9.qti25se6TekENfF8X4YabRtY9QVJxsyrr-9DwweGR48', '2024-02-01 11:25:21', '2024-01-31 03:25:20.955596', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('7b9afb99-d032-4fa2-8c57-0a391a96e96d', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2NzI3NjN9.RBxCFeRzz_NznW-cvZIF1nUorplzU7CoJnWNpHCcmws', '2024-02-01 11:46:03', '2024-01-31 11:46:03.219408', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('94f42fff-b796-4ae3-b396-5e7dde1eceed', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTU0NTh9.2-QHQfsDAfIAqfj12MO0iKkx776CKB3sRlyL2soSuZk', '2024-01-31 03:10:58', '2024-01-29 19:10:58.424300', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('952a60b1-e192-46e8-bea1-e605ca919e10', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTQ4NzB9.1vtp8ED-nXhsGshyv-wmcUn7jyDGGb7mrywGke6gb0Y', '2024-01-31 03:01:11', '2024-01-29 19:01:10.552652', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('b054539a-f56b-474e-98b2-0cdba182df82', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1Nzc4MTR9.591DlOrw72ZaOiGHUdoyMkawE53EN4oTt_BNh11yhUw', '2024-01-31 09:23:34', '2024-01-30 01:23:34.306263', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('c13b50e1-e732-4617-94a3-95484d5bdeb3', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1NTg4OTZ9.KSkbfBDxwoUhK7krE_ULtzHXxWJ5gSLKq7JVhwIzl0U', '2024-01-31 04:08:16', '2024-01-29 20:08:16.077540', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('ea600b6d-5456-4bf8-9140-bc8983133868', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY1ODA0MTZ9.QL8a7N4-lz4fqyVCkw-3W_IIKkJhGyYvOIPULgly9ao', '2024-01-31 10:06:57', '2024-01-30 02:06:56.744244', 1);
-INSERT INTO `user_access_tokens` (`id`, `value`, `expired_at`, `created_at`, `user_id`) VALUES ('ef3d7154-77f7-4aea-92dc-1f45ded4787e', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsInB2IjoxLCJyb2xlcyI6WyJhZG1pbiJdLCJpYXQiOjE3MDY2MzY2OTB9.ECFByaqSi6RtwP2PIq0gYHL95d7rhrpELo-GXt1s3No', '2024-02-01 01:44:51', '2024-01-30 17:44:50.616743', 1);
 COMMIT;
 
 -- ----------------------------
@@ -724,16 +716,6 @@ CREATE TABLE `user_refresh_tokens` (
 -- Records of user_refresh_tokens
 -- ----------------------------
 BEGIN;
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('0d15984b-e90c-49ec-bbd2-708e845e6efc', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiWm1MeDRuN1BUcVFoMnBxbTd5N05yIiwiaWF0IjoxNzA2NjQwMjY4fQ.Pxg5hsu_b1pkB3M6lKhQM74KP4z8bChnqURhapEpC3o', '2024-03-01 02:44:29', '2024-01-30 18:44:28.769214', '18e148a0-371c-40e8-bdf8-f7eacdac5582');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('27474833-c600-4996-9aab-0fb5e2f5dc16', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiWE4xSXMwSmJFbTc2bkoyVXZWeGNPIiwiaWF0IjoxNzA2NjcxNTIwfQ.pmh8Dh2lJ3-aK7ex_D8EYKmI8E0kr7RIpXHiDjQGFO8', '2024-03-01 11:25:21', '2024-01-31 03:25:20.980609', '1f585858-4cb9-4b80-8793-324be3586265');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('2a1613ac-cbc0-4ba6-abbd-a661ff4ffe83', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZDl6TkVKS3dHT0dEd0VVYmtyd0xTIiwiaWF0IjoxNzA2NTU1NDU4fQ.-7UizjAfryGiKiiJfqFSCmk2UhhXyLR92cPXqykg41A', '2024-02-29 03:10:58', '2024-01-29 19:10:58.431454', '94f42fff-b796-4ae3-b396-5e7dde1eceed');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('7335ca18-8cd2-49d1-93ce-d982920e0839', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiczlSaEYzeF9RZ2V4QkhSZU9DMHUwIiwiaWF0IjoxNzA2NjcyNzYzfQ.7HI8t4nsh0QpJ03epdQxmbczOU86uipoa810L6nIlOg', '2024-03-01 11:46:03', '2024-01-31 11:46:03.232849', '7b9afb99-d032-4fa2-8c57-0a391a96e96d');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('8a687c6d-2d81-4242-8346-e6986d83cd20', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiUm5GakhTbHZySVhQa2tBdmcyVUdMIiwiaWF0IjoxNzA2NTU0ODcwfQ.vFxa9hYAX76mVb7d2p1leVmyqJFavEfaTwgGtm8I3r4', '2024-02-29 03:01:11', '2024-01-29 19:01:10.573832', '952a60b1-e192-46e8-bea1-e605ca919e10');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('a456c76c-da69-40da-86c9-80eb3f593e5b', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiTE10R2dPUFRwVl9JaXd3QmI4Y0c2IiwiaWF0IjoxNzA2NTU4ODk2fQ.2FV9q0DKya9PfbitzMoHxs_nOeoJNwkGlTO_f5Q8jQE', '2024-02-29 04:08:16', '2024-01-29 20:08:16.143104', 'c13b50e1-e732-4617-94a3-95484d5bdeb3');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('b12f6c86-b918-4cb0-8202-02d7cc51fb7f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiSWpfWnZ4Q2wtQUlsbHlSRkdRWXFNIiwiaWF0IjoxNzA2NTc3ODE0fQ.hWi4eV82qtuqImvSHsJfjeX4OCPDM3ceEHkXlyUhSgQ', '2024-02-29 09:23:34', '2024-01-30 01:23:34.321765', 'b054539a-f56b-474e-98b2-0cdba182df82');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('b265538c-6cb7-4ca7-b030-112924a55fd7', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiSHo5YXUyNGRIOEtTZE1mOG5LYVRKIiwiaWF0IjoxNzA2NjM2NjkwfQ.2AleMUVJ672IEBGifZXo_2zBwlNFsIjyBWcH3FxKLPs', '2024-03-01 01:44:51', '2024-01-30 17:44:50.670675', 'ef3d7154-77f7-4aea-92dc-1f45ded4787e');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('c7ec67b4-f0a8-4df7-a471-b26dce877691', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZVRGREo0eHAtaHpQTDNzNWxZN1VOIiwiaWF0IjoxNzA2NTQ4NzQwfQ.R3zG4iZuAUXwufQ7oxJNLtiuAToa7s-xIgzo8ohn1iw', '2024-02-29 01:19:01', '2024-01-29 17:19:00.548520', '11abf43e-42f3-4960-aa5d-cc15b90b0a2c');
-INSERT INTO `user_refresh_tokens` (`id`, `value`, `expired_at`, `created_at`, `accessTokenId`) VALUES ('e790e4be-66ca-451a-8c0a-ed4119ec303f', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiTVN2YUg1OTV2cEh4bUlqQTlTT2JQIiwiaWF0IjoxNzA2NTgwNDE2fQ.iuFcmcKDRcJ2rCxy1Um_i_BNMFmo8KWznROhPb4u38M', '2024-02-29 10:06:57', '2024-01-30 02:06:56.817014', 'ea600b6d-5456-4bf8-9140-bc8983133868');
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

@@ -24,7 +24,7 @@ export class SseService {
 
   removeClient(uid: number): void {
     const client = clientMap.get(uid)
-    client.complete()
+    client?.complete()
     clientMap.delete(uid)
   }
 

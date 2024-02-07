@@ -14,6 +14,7 @@ export function Perm(permission: string | string[]) {
   return applyDecorators(SetMetadata(PERMISSION_KEY, permission))
 }
 
+/** (此举非必需)保存通过 definePermission 定义的所有权限，可用于前端开发人员开发阶段的 ts 类型提示，避免前端权限定义与后端定义不匹配 */
 let permissions: string[] = []
 /**
  * 定义权限，同时收集所有被定义的权限
