@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 
 import { DataSource, LoggerOptions } from 'typeorm'
 
-import { IDatabaseConfig } from '~/config'
+import { ConfigKeyPaths, IDatabaseConfig } from '~/config'
 
 import { env } from '~/global/env'
 
@@ -19,7 +19,7 @@ const providers = [EntityExistConstraint, UniqueConstraint]
   imports: [
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
         let loggerOptions: LoggerOptions = env('DB_LOGGING') as 'all'
 
         try {

@@ -6,7 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { redisStore } from 'cache-manager-ioredis-yet'
 import { RedisOptions } from 'ioredis'
 
-import { IRedisConfig } from '~/config'
+import { ConfigKeyPaths, IRedisConfig } from '~/config'
 
 import { CacheService } from './cache.service'
 import { RedisSubPub } from './redis-subpub'
@@ -17,7 +17,7 @@ const providers: Provider[] = [
   CacheService,
   {
     provide: REDIS_PUBSUB,
-    useFactory: (configService: ConfigService) => {
+    useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
       const redisOptions: RedisOptions = configService.get<IRedisConfig>('redis')
       return new RedisSubPub(redisOptions)
     },
@@ -32,7 +32,7 @@ const providers: Provider[] = [
     // cache
     CacheModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
         const redisOptions: RedisOptions = configService.get<IRedisConfig>('redis')
 
         return {
@@ -47,7 +47,7 @@ const providers: Provider[] = [
     // redis
     NestRedisModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService<ConfigKeyPaths>) => ({
         readyLog: true,
         config: configService.get<IRedisConfig>('redis'),
       }),

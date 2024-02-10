@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { IRedisConfig } from '~/config'
+import { ConfigKeyPaths, IRedisConfig } from '~/config'
 
 import { LogModule } from '../log/log.module'
 
@@ -22,7 +22,7 @@ const providers = [TaskService, TaskConsumer]
     TypeOrmModule.forFeature([TaskEntity]),
     BullModule.registerQueueAsync({
       name: SYS_TASK_QUEUE_NAME,
-      useFactory: (configService: ConfigService) => ({
+      useFactory: (configService: ConfigService<ConfigKeyPaths>) => ({
         redis: configService.get<IRedisConfig>('redis'),
         prefix: SYS_TASK_QUEUE_PREFIX,
       }),

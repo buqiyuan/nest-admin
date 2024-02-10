@@ -5,7 +5,7 @@ import { JwtModule } from '@nestjs/jwt'
 import { PassportModule } from '@nestjs/passport'
 import { TypeOrmModule } from '@nestjs/typeorm'
 
-import { ISecurityConfig } from '~/config'
+import { ConfigKeyPaths, ISecurityConfig } from '~/config'
 import { isDev } from '~/global/env'
 
 import { LogModule } from '../system/log/log.module'
@@ -40,7 +40,7 @@ const strategies = [LocalStrategy, JwtStrategy]
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => {
+      useFactory: (configService: ConfigService<ConfigKeyPaths>) => {
         const { jwtSecret, jwtExprire }
           = configService.get<ISecurityConfig>('security')
 

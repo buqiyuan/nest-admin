@@ -5,12 +5,12 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger'
 import { API_SECURITY_AUTH } from './common/decorators/swagger.decorator'
 import { CommonEntity } from './common/entity/common.entity'
 import { ResOp, TreeResult } from './common/model/response.model'
-import { IAppConfig, ISwaggerConfig } from './config'
+import { ConfigKeyPaths, IAppConfig, ISwaggerConfig } from './config'
 import { Pagination } from './helper/paginate/pagination'
 
 export function setupSwagger(
   app: INestApplication,
-  configService: ConfigService,
+  configService: ConfigService<ConfigKeyPaths>,
 ): void {
   const { name, port } = configService.get<IAppConfig>('app')!
   const { enable, path } = configService.get<ISwaggerConfig>('swagger')!

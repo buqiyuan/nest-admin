@@ -6,13 +6,14 @@ import dayjs from 'dayjs'
 import { LessThan } from 'typeorm'
 
 import { CronOnce } from '~/common/decorators/cron-once.decorator'
+import { ConfigKeyPaths } from '~/config'
 import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
 
 @Injectable()
 export class CronService {
   private logger: Logger = new Logger(CronService.name)
   constructor(
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService<ConfigKeyPaths>,
   ) {}
 
   @CronOnce(CronExpression.EVERY_DAY_AT_MIDNIGHT)

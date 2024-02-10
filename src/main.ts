@@ -18,7 +18,7 @@ import { AppModule } from './app.module'
 import { fastifyApp } from './common/adapters/fastify.adapter'
 import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
-import type { IAppConfig } from './config'
+import type { ConfigKeyPaths, IAppConfig } from './config'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
 import { LoggerService } from './shared/logger/logger.service'
@@ -36,7 +36,7 @@ async function bootstrap() {
     },
   )
 
-  const configService = app.get(ConfigService)
+  const configService = app.get(ConfigService<ConfigKeyPaths>)
 
   const { port, globalPrefix } = configService.get<IAppConfig>('app')!
 
