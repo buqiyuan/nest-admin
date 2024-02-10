@@ -41,4 +41,9 @@ export enum ErrorEnum {
   EXECUTED_MISSION_NOT_FOUND = '1302:所执行的任务不存在',
   MISSION_EXECUTION_FAILED = '1303:任务执行失败',
   MISSION_NOT_FOUND = '1304:任务不存在',
+
+  // OSS相关
+  OSS_FILE_OR_DIR_EXIST = '1401:当前创建的文件或目录已存在',
+  OSS_NO_OPERATION_REQUIRED = '1402:无需操作',
+  OSS_EXCEE_MAXIMUM_QUANTITY = '1403:已超出支持的最大处理数量',
 }

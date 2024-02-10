@@ -7,6 +7,8 @@ import { config, createLogger, format, transports } from 'winston'
 
 import 'winston-daily-rotate-file'
 
+import { ConfigKeyPaths } from '~/config'
+
 export enum LogLevel {
   ERROR = 'error',
   WARN = 'warn',
@@ -22,7 +24,7 @@ export class LoggerService extends ConsoleLogger {
   constructor(
     context: string,
     options: ConsoleLoggerOptions,
-    private configService: ConfigService,
+    private configService: ConfigService<ConfigKeyPaths>,
   ) {
     super(context, options)
     this.initWinston()

@@ -1,4 +1,4 @@
-import { nanoid } from 'nanoid'
+import { customAlphabet, nanoid } from 'nanoid'
 
 import { md5 } from './crypto.util'
 
@@ -15,6 +15,17 @@ export function generateUUID(size: number = 21): string {
 
 export function generateShortUUID(): string {
   return nanoid(10)
+}
+
+/**
+ * 生成一个随机的值
+ */
+export function generateRandomValue(
+  length: number,
+  placeholder = '1234567890qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM',
+): string {
+  const customNanoid = customAlphabet(placeholder, length)
+  return customNanoid()
 }
 
 /**

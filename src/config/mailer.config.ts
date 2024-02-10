@@ -2,7 +2,9 @@ import { ConfigType, registerAs } from '@nestjs/config'
 
 import { env, envNumber } from '~/global/env'
 
-export const MailerConfig = registerAs('mailer', () => ({
+export const mailerRegToken = 'mailer'
+
+export const MailerConfig = registerAs(mailerRegToken, () => ({
   host: env('SMTP_HOST'),
   port: envNumber('SMTP_PORT'),
   ignoreTLS: true,

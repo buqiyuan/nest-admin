@@ -3,7 +3,7 @@ import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 
-import * as config from '~/config'
+import config from '~/config'
 import { SharedModule } from '~/shared/shared.module'
 
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module'
 import { JwtAuthGuard } from './modules/auth/guards/jwt-auth.guard'
 import { RbacGuard } from './modules/auth/guards/rbac.guard'
 import { HealthModule } from './modules/health/health.module'
+import { NetdiskModule } from './modules/netdisk/netdisk.module'
 import { SseModule } from './modules/sse/sse.module'
 import { SystemModule } from './modules/system/system.module'
 import { TasksModule } from './modules/tasks/tasks.module'
@@ -41,6 +42,7 @@ import { SocketModule } from './socket/socket.module'
     SocketModule,
     HealthModule,
     SseModule,
+    NetdiskModule,
 
     // biz
 

@@ -2,7 +2,9 @@ import { ConfigType, registerAs } from '@nestjs/config'
 
 import { env, envNumber } from '~/global/env'
 
-export const AppConfig = registerAs('app', () => ({
+export const appRegToken = 'app'
+
+export const AppConfig = registerAs(appRegToken, () => ({
   name: env('APP_NAME'),
   port: envNumber('APP_PORT', 3000),
   baseUrl: env('APP_BASE_URL'),

@@ -1,23 +1,21 @@
-import { Module, type Provider } from '@nestjs/common'
+import { Module } from '@nestjs/common'
 
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { RouterModule } from '@nestjs/core'
 
-import { UserEntity } from '../user/user.entity'
+import { EmailModule } from './email/email.module'
+import { StorageModule } from './storage/storage.module'
+import { UploadModule } from './upload/upload.module'
 
-import { EmailController } from './email/email.controller'
-import { StorageController } from './storage/storage.controller'
-
-import { Storage } from './storage/storage.entity'
-import { StorageService } from './storage/storage.service'
-import { UploadController } from './upload/upload.controller'
-import { UploadService } from './upload/upload.service'
-
-const providers: Provider[] = [StorageService, UploadService]
+const modules = [StorageModule, EmailModule, UploadModule]
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Storage, UserEntity])],
-  controllers: [EmailController, StorageController, UploadController],
-  providers,
-  exports: [TypeOrmModule, ...providers],
+  imports: [...modules, RouterModule.register([
+    {
+      path: 'tools',
+      module: ToolsModule,
+      children: [...modules],
+    },
+  ])],
+  exports: [...modules],
 })
 export class ToolsModule {}

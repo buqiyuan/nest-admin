@@ -21,9 +21,10 @@ const dataSourceOptions: DataSourceOptions = {
   migrations: ['dist/migrations/*{.ts,.js}'],
   subscribers: ['dist/modules/**/*.subscriber{.ts,.js}'],
 }
+export const dbRegToken = 'database'
 
 export const DatabaseConfig = registerAs(
-  'database',
+  dbRegToken,
   (): DataSourceOptions => dataSourceOptions,
 )
 

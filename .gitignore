@@ -72,3 +72,4 @@ out
 __data
 
 public/upload
+types/env.d.ts
