@@ -24,7 +24,7 @@ export interface AllConfigType {
   [ossRegToken]: IOssConfig
 }
 
-export type ConfigKeyPaths = Record<NestedKeyOf<AllConfigType>, any>
+export type ConfigKeyPaths = RecordNamePaths<AllConfigType>
 
 export default {
   AppConfig,

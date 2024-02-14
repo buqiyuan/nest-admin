@@ -1,6 +1,5 @@
 import {
   ExecutionContext,
-  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common'
@@ -11,8 +10,9 @@ import { isEmpty, isNil } from 'lodash'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { envBoolean } from '~/global/env'
 import { AuthService } from '~/modules/auth/auth.service'
+
+import { checkIsDemoMode } from '~/utils'
 
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
@@ -35,9 +35,10 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     ])
     const request = context.switchToHttp().getRequest<FastifyRequest>()
     // const response = context.switchToHttp().getResponse<FastifyReply>()
-    // TODO 仅起演示作用
-    if (request.method !== 'GET' && !request.url.includes('/auth/login') && envBoolean('IS_DEMO'))
-      throw new ForbiddenException('演示模式下不允许操作')
+
+    // TODO 此处代码的作用是判断如果在演示环境下，则拒绝用户的增删改操作，去掉此代码不影响正常的业务逻辑
+    if (request.method !== 'GET' && !request.url.includes('/auth/login'))
+      checkIsDemoMode()
 
     const isSse = request.headers.accept === 'text/event-stream'
 

@@ -1,3 +1,6 @@
+import { ForbiddenException } from '@nestjs/common'
+
+import { envBoolean } from '~/global/env'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 import { isExternal } from '~/utils/is.util'
 
@@ -146,4 +149,10 @@ function filterMenuToTable(menus: MenuEntity[], parentMenu) {
 
 export function generatorMenu(menu: MenuEntity[]) {
   return filterMenuToTable(menu, null)
+}
+
+/** 检测是否为演示环境, 如果为演示环境，则拒绝该操作 */
+export function checkIsDemoMode() {
+  if (envBoolean('IS_DEMO'))
+    throw new ForbiddenException('演示模式下不允许操作')
 }

@@ -12,7 +12,6 @@ import {
 import * as qiniu from 'qiniu'
 
 import { ConfigKeyPaths } from '~/config'
-import { IOssConfig } from '~/config/oss.config'
 import { OSS_API } from '~/constants/oss.constant'
 
 import { CountInfo, FlowInfo, HitInfo, SpaceInfo } from './overview.dto'
@@ -22,7 +21,7 @@ export class NetDiskOverviewService {
   private mac: qiniu.auth.digest.Mac
   private readonly FORMAT = 'yyyyMMddHHmmss'
   private get qiniuConfig() {
-    return this.configService.get<IOssConfig>('oss')
+    return this.configService.get('oss', { infer: true })
   }
 
   constructor(

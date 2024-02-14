@@ -7,7 +7,6 @@ import * as qiniu from 'qiniu'
 import { auth, conf, rs } from 'qiniu'
 
 import { ConfigKeyPaths } from '~/config'
-import { IOssConfig } from '~/config/oss.config'
 import { NETDISK_COPY_SUFFIX, NETDISK_DELIMITER, NETDISK_HANDLE_MAX_ITEM, NETDISK_LIMIT } from '~/constants/oss.constant'
 
 import { AccountInfo } from '~/modules/user/user.model'
@@ -25,7 +24,7 @@ export class NetDiskManageService {
   private bucketManager: rs.BucketManager
 
   private get qiniuConfig() {
-    return this.configService.get<IOssConfig>('oss')
+    return this.configService.get('oss', { infer: true })
   }
 
   constructor(

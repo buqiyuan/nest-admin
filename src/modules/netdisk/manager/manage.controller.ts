@@ -11,6 +11,8 @@ import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
 import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 
+import { checkIsDemoMode } from '~/utils'
+
 import { SFileInfoDetail, SFileList, UploadToken } from './manage.class'
 import {
   DeleteDto,
@@ -69,6 +71,8 @@ export class NetDiskManageController {
   @ApiOkResponse({ type: UploadToken })
   @Perm(permissions.TOKEN)
   async token(@AuthUser() user: IAuthUser): Promise<UploadToken> {
+    checkIsDemoMode()
+
     return {
       token: this.manageService.createUploadToken(`${user.uid}`),
     }

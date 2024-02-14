@@ -18,7 +18,7 @@ import { AppModule } from './app.module'
 import { fastifyApp } from './common/adapters/fastify.adapter'
 import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
-import type { ConfigKeyPaths, IAppConfig } from './config'
+import type { ConfigKeyPaths } from './config'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
 import { LoggerService } from './shared/logger/logger.service'
@@ -38,7 +38,7 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService<ConfigKeyPaths>)
 
-  const { port, globalPrefix } = configService.get<IAppConfig>('app')!
+  const { port, globalPrefix } = configService.get('app', { infer: true })
 
   // class-validator 的 DTO 类中注入 nest 容器的依赖 (用于自定义验证器)
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
