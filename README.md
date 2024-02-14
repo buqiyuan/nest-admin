@@ -46,7 +46,7 @@
 ```bash
 pnpm docker:up
 # or
-docker compose --env-file .env.production up -d --no-build
+docker compose --env-file .env --env-file .env.production up -d --no-build
 ```
 
 停止并删除所有容器
@@ -54,7 +54,7 @@ docker compose --env-file .env.production up -d --no-build
 ```bash
 pnpm docker:down
 # or
-docker compose --env-file .env.production down
+docker compose --env-file .env --env-file .env.production down
 ```
 
 删除镜像
@@ -70,7 +70,7 @@ docker rmi buqiyuan/nest-admin-server:stable
 ```bash
 pnpm docker:logs
 # or
-docker compose --env-file .env.production logs -f
+docker compose --env-file .env --env-file .env.production logs -f
 
 ```
 
@@ -86,9 +86,9 @@ git clone https://github.com/buqiyuan/nest-admin
 
 ```bash
 # 启动MySql服务
-docker compose  --env-file .env.development run -d --service-ports mysql
+docker compose --env-file .env --env-file .env.development run -d --service-ports mysql
 # 启动Redis服务
-docker compose  --env-file .env.development run -d --service-ports redis
+docker compose --env-file .env --env-file .env.development run -d --service-ports redis
 ```
 
 - 安装依赖
