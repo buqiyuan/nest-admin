@@ -28,11 +28,11 @@
     "test:watch": "jest --watch",
     "doc": "compodoc -p tsconfig.json -s",
     "gen-env-types": "npx tsx scripts/genEnvTypes.ts",
-    "typeorm": "NODE_ENV=development typeorm -d ./dist/config/database.config.js",
-    "migration:create": "typeorm migration:create",
-    "migration:generate": "typeorm -- migration:generate",
-    "migration:run": "typeorm -- migration:run",
-    "migration:revert": "typeorm -- migration:revert",
+    "typeorm": "npm run build && NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
+    "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
+    "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
+    "migration:run": "npm run typeorm -- migration:run",
+    "migration:revert": "npm run typeorm -- migration:revert",
     "cleanlog": "rimraf logs",
     "docker:build:dev": "docker compose --env-file .env --env-file .env.development up --build",
     "docker:build": "docker compose --env-file .env --env-file .env.production up --build",
@@ -77,6 +77,7 @@
     "cron": "^3.1.6",
     "cron-parser": "^4.9.0",
     "crypto-js": "^4.2.0",
+    "date-fns": "^3.3.1",
     "dayjs": "^1.11.10",
     "dotenv": "16.4.4",
     "handlebars": "^4.7.8",
@@ -101,7 +102,7 @@
     "typeorm": "0.3.17",
     "ua-parser-js": "^1.0.37",
     "winston": "^3.11.0",
-    "winston-daily-rotate-file": "^4.7.1"
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^2.6.4",

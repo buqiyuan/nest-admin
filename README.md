@@ -113,6 +113,22 @@ pnpm dev
 pnpm build
 ```
 
+## 数据库迁移
+
+1. 更新数据库(或初始化数据)
+```bash
+pnpm migration:run
+```
+2. 生成迁移
+```bash
+pnpm migration:generate
+```
+3. 回滚到最后一次更新
+```bash
+pnpm migration:revert
+```
+详细请参考[官方文档](https://typeorm.io/migrations)
+
 ### 系统截图
 
 ![](https://s1.ax1x.com/2021/12/11/oTi1nf.png)

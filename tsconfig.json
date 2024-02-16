@@ -2,6 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "target": "ES2022",
+    "lib": ["ESNext"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": "./",

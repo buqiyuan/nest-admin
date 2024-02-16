@@ -4,6 +4,7 @@ dist
 *-dist
 .cache
 .history
+.vercel/
 
 .turbo
 .local
