@@ -1,0 +1,14 @@
+name: Daily Curl Request
+
+on:
+  schedule:
+    - cron: "*/12 * * * *"
+
+jobs:
+  run-curl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Curl Request
+        # because: https://docs.render.com/free#spinning-down-on-idle
+        run: curl https://nest-admin-093x.onrender.com/api/auth/captcha/img

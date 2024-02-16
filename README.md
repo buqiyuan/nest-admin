@@ -8,7 +8,8 @@
 
 ### 演示地址
 
-- [http://buqiyuan.gitee.io/vue3-antdv-admin/](http://buqiyuan.gitee.io/vue3-antdv-admin/)
+- [http://buqiyuan.gitee.io/vue3-antdv-admin/](http://buqiyuan.gitee.io/vue3-antdv-admin/) (只读，完整地预览项目的初始效果)
+- [https://vue3-antd-admin.vercel.app/](https://vue3-antd-admin.vercel.app/) (可随意CRUD，非项目的初始状态，可能需翻墙浏览, 白嫖的国外服务器资源，不保熟)
 - [Swagger Api 文档](https://nest-api.buqiyuan.site/api-docs)
 
 ### 项目启动前的准备工作
