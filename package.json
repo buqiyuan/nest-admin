@@ -28,7 +28,7 @@
     "test:watch": "jest --watch",
     "doc": "compodoc -p tsconfig.json -s",
     "gen-env-types": "npx tsx scripts/genEnvTypes.ts",
-    "typeorm": "npm run build && NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
+    "typeorm": "NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
     "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
     "migration:run": "npm run typeorm -- migration:run",

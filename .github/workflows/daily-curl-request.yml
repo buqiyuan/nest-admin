@@ -2,7 +2,7 @@ name: Daily Curl Request
 
 on:
   schedule:
-    - cron: "*/12 * * * *"
+    - cron: "*/5 * * * *"
 
 jobs:
   run-curl:
@@ -11,4 +11,4 @@ jobs:
     steps:
       - name: Run Curl Request
         # because: https://docs.render.com/free#spinning-down-on-idle
-        run: curl https://nest-admin-093x.onrender.com/api/auth/captcha/img
+        run: curl https://nest-admin-093x.onrender.com
