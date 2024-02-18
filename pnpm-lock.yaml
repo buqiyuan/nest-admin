@@ -113,9 +113,6 @@ dependencies:
   crypto-js:
     specifier: ^4.2.0
     version: 4.2.0
-  date-fns:
-    specifier: ^3.3.1
-    version: 3.3.1
   dayjs:
     specifier: ^1.11.10
     version: 1.11.10
@@ -177,8 +174,8 @@ dependencies:
     specifier: ^1.4.0
     version: 1.4.0
   systeminformation:
-    specifier: ^5.21.24
-    version: 5.21.24
+    specifier: ^5.22.0
+    version: 5.22.0
   typeorm:
     specifier: 0.3.17
     version: 0.3.17(ioredis@5.3.2)(mysql2@3.9.1)(ts-node@10.9.2)
@@ -4830,10 +4827,6 @@ packages:
     engines: {node: '>=0.11'}
     dependencies:
       '@babel/runtime': 7.23.9
-    dev: false
-
-  /date-fns@3.3.1:
-    resolution: {integrity: sha512-y8e109LYGgoQDveiEBD3DYXKba1jWf5BA8YU1FL5Tvm0BTdEfy54WLCwnuYWZNnzzvALy/QQ4Hov+Q9RVRv+Zw==}
     dev: false
 
   /dayjs@1.11.10:
@@ -10679,8 +10672,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /systeminformation@5.21.24:
-    resolution: {integrity: sha512-xQada8ByGGFoRXJaUptGgddn3i7IjtSdqNdCKzB8xkzsM7pHnfLYBWxkPdGzhZ0Z/l+W1yo+aZQZ74d2isj8kw==}
+  /systeminformation@5.22.0:
+    resolution: {integrity: sha512-oAP80ymt8ssrAzjX8k3frbL7ys6AotqC35oikG6/SG15wBw+tG9nCk4oPaXIhEaAOAZ8XngxUv3ORq2IuR3r4Q==}
     engines: {node: '>=8.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true

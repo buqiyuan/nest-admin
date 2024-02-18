@@ -1,14 +1,7 @@
 import { HttpService } from '@nestjs/axios'
 import { Injectable } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
-import {
-  format,
-  fromUnixTime,
-  getDate,
-  getMonth,
-  getYear,
-  parseISO,
-} from 'date-fns'
+import dayjs from 'dayjs'
 import * as qiniu from 'qiniu'
 
 import { ConfigKeyPaths } from '~/config'
@@ -19,7 +12,7 @@ import { CountInfo, FlowInfo, HitInfo, SpaceInfo } from './overview.dto'
 @Injectable()
 export class NetDiskOverviewService {
   private mac: qiniu.auth.digest.Mac
-  private readonly FORMAT = 'yyyyMMddHHmmss'
+  private readonly FORMAT = 'YYYYMMDDHHmmss'
   private get qiniuConfig() {
     return this.configService.get('oss', { infer: true })
   }
@@ -34,13 +27,47 @@ export class NetDiskOverviewService {
     )
   }
 
+  /** 获取格式化后的起始和结束时间 */
+  getStartAndEndDate(start: Date, end = new Date()) {
+    return [dayjs(start).format(this.FORMAT), dayjs(end).format(this.FORMAT)]
+  }
+
+  /**
+   * 获取数据统计接口路径
+   * @see: https://developer.qiniu.com/kodo/3906/statistic-interface
+   */
+  getStatisticUrl(type: string, queryParams = {}) {
+    const defaultParams = {
+      $bucket: this.qiniuConfig.bucket,
+      g: 'day',
+    }
+    const searchParams = new URLSearchParams({ ...defaultParams, ...queryParams })
+    return decodeURIComponent(`${OSS_API}/v6/${type}?${searchParams}`)
+  }
+
+  /** 获取统计数据 */
+  getStatisticData(url: string) {
+    const accessToken = qiniu.util.generateAccessTokenV2(
+      this.mac,
+      url,
+      'GET',
+      'application/x-www-form-urlencoded',
+    )
+    return this.httpService.axiosRef.get(url, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Authorization': `${accessToken}`,
+      },
+    })
+  }
+
   /**
    * 获取当天零时
    */
   getZeroHourToDay(current: Date): Date {
-    const month = getMonth(current)
-    const year = getYear(current)
-    const date = getDate(current)
+    const year = dayjs(current).year()
+    const month = dayjs(current).month()
+    const date = dayjs(current).date()
     return new Date(year, month, date, 0)
   }
 
@@ -48,8 +75,8 @@ export class NetDiskOverviewService {
    * 获取当月1号零时
    */
   getZeroHourAnd1Day(current: Date): Date {
-    const month = getMonth(current)
-    const year = getYear(current)
+    const year = dayjs(current).year()
+    const month = dayjs(current).month()
     return new Date(year, month, 1, 0)
   }
 
@@ -57,26 +84,14 @@ export class NetDiskOverviewService {
    * 该接口可以获取标准存储的当前存储量。可查询当天计量，统计延迟大概 5 分钟。
    * https://developer.qiniu.com/kodo/3908/statistic-space
    */
-  async getSpace(start: Date, end = new Date()): Promise<SpaceInfo> {
-    const beginDate = format(start, this.FORMAT)
-    const endDate = format(end, this.FORMAT)
-    const url = `${OSS_API}/v6/space?bucket=${this.qiniuConfig.bucket}&g=day&begin=${beginDate}&end=${endDate}`
-    const accessToken = qiniu.util.generateAccessTokenV2(
-      this.mac,
-      url,
-      'GET',
-      'application/x-www-form-urlencoded',
-    )
-    const { data } = await this.httpService.axiosRef.get(url, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `${accessToken}`,
-      },
-    })
+  async getSpace(beginDate: Date, endDate = new Date()): Promise<SpaceInfo> {
+    const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
+    const url = this.getStatisticUrl('space', { begin, end })
+    const { data } = await this.getStatisticData(url)
     return {
       datas: data.datas,
       times: data.times.map((e) => {
-        return getDate(fromUnixTime(e))
+        return dayjs.unix(e).date()
       }),
     }
   }
@@ -85,25 +100,13 @@ export class NetDiskOverviewService {
    * 该接口可以获取标准存储的文件数量。可查询当天计量，统计延迟大概 5 分钟。
    * https://developer.qiniu.com/kodo/3914/count
    */
-  async getCount(start: Date, end = new Date()): Promise<CountInfo> {
-    const beginDate = format(start, this.FORMAT)
-    const endDate = format(end, this.FORMAT)
-    const url = `${OSS_API}/v6/count?bucket=${this.qiniuConfig.bucket}&g=day&begin=${beginDate}&end=${endDate}`
-    const accessToken = qiniu.util.generateAccessTokenV2(
-      this.mac,
-      url,
-      'GET',
-      'application/x-www-form-urlencoded',
-    )
-    const { data } = await this.httpService.axiosRef.get(url, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `${accessToken}`,
-      },
-    })
+  async getCount(beginDate: Date, endDate = new Date()): Promise<CountInfo> {
+    const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
+    const url = this.getStatisticUrl('count', { begin, end })
+    const { data } = await this.getStatisticData(url)
     return {
       times: data.times.map((e) => {
-        return getDate(fromUnixTime(e))
+        return dayjs.unix(e).date()
       }),
       datas: data.datas,
     }
@@ -114,26 +117,14 @@ export class NetDiskOverviewService {
    * 该接口可以获取外网流出流量、CDN回源流量统计和 GET 请求次数。可查询当天计量，统计延迟大概 5 分钟。
    * https://developer.qiniu.com/kodo/3820/blob-io
    */
-  async getFlow(start: Date, end = new Date()): Promise<FlowInfo> {
-    const beginDate = format(start, this.FORMAT)
-    const endDate = format(end, this.FORMAT)
-    const url = `${OSS_API}/v6/blob_io?$bucket=${this.qiniuConfig.bucket}&g=day&$ftype=0&begin=${beginDate}&end=${endDate}&$src=origin&select=flow`
-    const accessToken = qiniu.util.generateAccessTokenV2(
-      this.mac,
-      url,
-      'GET',
-      'application/x-www-form-urlencoded',
-    )
-    const { data } = await this.httpService.axiosRef.get(url, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `${accessToken}`,
-      },
-    })
+  async getFlow(beginDate: Date, endDate = new Date()): Promise<FlowInfo> {
+    const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
+    const url = this.getStatisticUrl('blob_io', { begin, end, $ftype: 0, $src: 'origin', select: 'flow' })
+    const { data } = await this.getStatisticData(url)
     const times = []
     const datas = []
     data.forEach((e) => {
-      times.push(getDate(parseISO(e.time)))
+      times.push(dayjs(e.time).date())
       datas.push(e.values.flow)
     })
     return {
@@ -147,26 +138,14 @@ export class NetDiskOverviewService {
    * 该接口可以获取外网流出流量、CDN回源流量统计和 GET 请求次数。可查询当天计量，统计延迟大概 5 分钟。
    * https://developer.qiniu.com/kodo/3820/blob-io
    */
-  async getHit(start: Date, end = new Date()): Promise<HitInfo> {
-    const beginDate = format(start, this.FORMAT)
-    const endDate = format(end, this.FORMAT)
-    const url = `${OSS_API}/v6/blob_io?$bucket=${this.qiniuConfig.bucket}&g=day&$ftype=0&begin=${beginDate}&end=${endDate}&$src=origin&$src=inner&select=hit`
-    const accessToken = qiniu.util.generateAccessTokenV2(
-      this.mac,
-      url,
-      'GET',
-      'application/x-www-form-urlencoded',
-    )
-    const { data } = await this.httpService.axiosRef.get(url, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-        'Authorization': `${accessToken}`,
-      },
-    })
+  async getHit(beginDate: Date, endDate = new Date()): Promise<HitInfo> {
+    const [begin, end] = this.getStartAndEndDate(beginDate, endDate)
+    const url = this.getStatisticUrl('blob_io', { begin, end, $ftype: 0, $src: 'inner', select: 'hit' })
+    const { data } = await this.getStatisticData(url)
     const times = []
     const datas = []
     data.forEach((e) => {
-      times.push(getDate(parseISO(e.time)))
+      times.push(dayjs(e.time).date())
       datas.push(e.values.hit)
     })
     return {
