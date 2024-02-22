@@ -3,6 +3,10 @@
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
   "compilerOptions": {
+    "deleteOutDir": true,
+    "assets": [
+      { "include": "assets/**/*", "outDir": "dist", "watchAssets": true }
+    ],
     "plugins": [{
       "name": "@nestjs/swagger",
       "options": {
