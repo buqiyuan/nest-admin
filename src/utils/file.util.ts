@@ -65,13 +65,21 @@ export function fileRename(fileName: string) {
   return `${name}-${time}${extName}`
 }
 
-export function getFilePath(name: string) {
-  return `/upload/${name}`
+export function getFilePath(name: string, currentDate: string, type: string) {
+  return `/upload/${currentDate}/${type}/${name}`
 }
 
-export function saveLocalFile(buffer: Buffer, name: string) {
-  const filePath = path.join(__dirname, '../../', 'public/upload', name)
-  const writeStream = fs.createWriteStream(filePath)
+export async function saveLocalFile(buffer: Buffer, name: string, currentDate: string, type: string) {
+  const filePath = path.join(__dirname, '../../', 'public/upload/', `${currentDate}/`, `${type}/`)
+  try {
+    // 判断是否有该文件夹
+    await fs.promises.stat(filePath)
+  }
+  catch (error) {
+    // 没有该文件夹就创建
+    await fs.promises.mkdir(filePath, { recursive: true })
+  }
+  const writeStream = fs.createWriteStream(filePath + name)
   writeStream.write(buffer)
 }
 

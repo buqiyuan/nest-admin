@@ -6,7 +6,7 @@ import { IsDefined } from 'class-validator'
 import { IsFile } from './file.constraint'
 
 export class FileUploadDto {
-  @ApiProperty({ type: Buffer, format: 'binary', description: '文件' })
+  @ApiProperty({ type: 'string', format: 'binary', description: '文件' })
   @IsDefined()
   @IsFile(
     {

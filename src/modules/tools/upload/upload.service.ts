@@ -1,6 +1,7 @@
 import { MultipartFile } from '@fastify/multipart'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
+import dayjs from 'dayjs'
 import { isNil } from 'lodash'
 import { Repository } from 'typeorm'
 
@@ -34,9 +35,10 @@ export class UploadService {
     const extName = getExtname(fileName)
     const type = getFileType(extName)
     const name = fileRename(fileName)
-    const path = getFilePath(name)
+    const currentDate = dayjs().format('YYYY-MM-DD')
+    const path = getFilePath(name, currentDate, type)
 
-    saveLocalFile(await file.toBuffer(), name)
+    saveLocalFile(await file.toBuffer(), name, currentDate, type)
 
     await this.storageRepository.save({
       name,
