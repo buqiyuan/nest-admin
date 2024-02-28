@@ -43,7 +43,7 @@
 
 ## 项目启动前的准备工作
 
-- sql 文件：[/deploy/sql/init.sql](https://github.com/buqiyuan/nest-admin/tree/main/deploy/sql) 用于数据库初始化
+- sql 文件：[/deploy/sql/nest_admin.sql](https://github.com/buqiyuan/nest-admin/tree/main/deploy/sql/nest_admin.sql) 用于数据库初始化
 - 项目相关配置，如：配置 mysql 和 redis 连接
   - 公共配置: [.env](https://github.com/buqiyuan/nest-admin/blob/main/.env)
   - 开发环境: [.env.development](https://github.com/buqiyuan/nest-admin/blob/main/.env.development)

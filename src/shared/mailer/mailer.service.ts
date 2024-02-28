@@ -96,7 +96,6 @@ export class MailerService {
     content: string,
     type: 'text' | 'html' = 'text',
   ): Promise<any> {
-    console.log('不肯', to, subject)
     if (type === 'text') {
       return this.mailerService.sendMail({
         to,
