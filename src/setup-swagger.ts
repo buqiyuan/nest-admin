@@ -25,10 +25,10 @@ export function setupSwagger(
 
   // auth security
   documentBuilder.addSecurity(API_SECURITY_AUTH, {
-    description: 'Auth',
-    type: 'apiKey',
-    in: 'header',
-    name: 'Authorization',
+    description: '输入令牌（Enter the token）',
+    type: 'http',
+    scheme: 'bearer',
+    bearerFormat: 'JWT',
   })
 
   const document = SwaggerModule.createDocument(app, documentBuilder.build(), {
@@ -36,7 +36,11 @@ export function setupSwagger(
     extraModels: [CommonEntity, ResOp, Pagination, TreeResult],
   })
 
-  SwaggerModule.setup(path, app, document)
+  SwaggerModule.setup(path, app, document, {
+    swaggerOptions: {
+      persistAuthorization: true, // 保持登录
+    },
+  })
 
   // started log
   const logger = new Logger('SwaggerModule')
