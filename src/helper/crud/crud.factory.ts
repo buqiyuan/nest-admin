@@ -30,6 +30,10 @@ export function BaseCrudFactory<
   class Dto extends dto {}
   class UpdateDto extends PartialType(Dto) {}
   class QueryDto extends IntersectionType(PagerDto, PartialType(Dto)) {}
+  
+  Object.defineProperty(Dto, 'name', { value: pluralizeName })
+  Object.defineProperty(UpdateDto, 'name', { value: pluralizeName + 'UpdateDto' })
+  Object.defineProperty(QueryDto, 'name', { value: pluralizeName + 'QueryDto' })
 
   permissions = permissions ?? {
     LIST: `${prefix}:list`,
