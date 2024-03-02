@@ -11,6 +11,7 @@ import {
   Query,
 } from '@nestjs/common'
 import { ApiBody, IntersectionType, PartialType } from '@nestjs/swagger'
+import { upperFirst } from 'lodash'
 import pluralize from 'pluralize'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
@@ -27,9 +28,15 @@ export function BaseCrudFactory<
 
   dto = dto ?? class extends entity {}
 
-  class Dto extends dto {}
-  class UpdateDto extends PartialType(Dto) {}
-  class QueryDto extends IntersectionType(PagerDto, PartialType(Dto)) {}
+  class Dto extends dto {
+    static name = upperFirst(`${pluralizeName}Dto`)
+  }
+  class UpdateDto extends PartialType(Dto) {
+    static name = upperFirst(`${pluralizeName}UpdateDto`)
+  }
+  class QueryDto extends IntersectionType(PagerDto, PartialType(Dto)) {
+    static name = upperFirst(`${pluralizeName}QueryDto`)
+  }
 
   permissions = permissions ?? {
     LIST: `${prefix}:list`,
