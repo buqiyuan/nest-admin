@@ -16,7 +16,7 @@ export class SseController implements BeforeApplicationShutdown {
   constructor(private readonly sseService: SseService) {}
 
   private closeAllConnect() {
-    this.sseService.sendToAll({
+    this.sseService.sendToAllUser({
       type: 'close',
       data: 'bye~',
     })
@@ -36,11 +36,11 @@ export class SseController implements BeforeApplicationShutdown {
   sse(@Param('uid', ParseIntPipe) uid: number, @Req() req: FastifyRequest, @Res() res: FastifyReply): Observable<MessageEvent> {
     this.replyMap.set(uid, res)
 
-    const subscription = interval(10000).subscribe(() => {
-      this.sseService.sendToClient(uid, { type: 'ping' })
-    })
-
     return new Observable((subscriber) => {
+      // 定时推送，保持连接
+      const subscription = interval(10000).subscribe(() => {
+        subscriber.next({ type: 'ping' })
+      })
       // console.log(`user-${uid}已连接`)
       this.sseService.addClient(uid, subscriber)
 

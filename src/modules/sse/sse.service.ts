@@ -30,7 +30,7 @@ export class SseService {
       clients?.splice(targetIndex, 1).at(0)?.complete()
   }
 
-  removeAllClient(uid: number): void {
+  removeClients(uid: number): void {
     const clients = clientMap.get(uid)
     clients?.forEach((client) => {
       client?.complete()
@@ -38,16 +38,16 @@ export class SseService {
     clientMap.delete(uid)
   }
 
-  sendToClient(uid: number, data: MessageEvent): void {
+  sendToClients(uid: number, data: MessageEvent): void {
     const clients = clientMap.get(uid)
     clients?.forEach((client) => {
       client?.next?.(data)
     })
   }
 
-  sendToAll(data: MessageEvent): void {
+  sendToAllUser(data: MessageEvent): void {
     clientMap.forEach((client, uid) => {
-      this.sendToClient(uid, data)
+      this.sendToClients(uid, data)
     })
   }
 
@@ -59,7 +59,7 @@ export class SseService {
   async noticeClientToUpdateMenusByUserIds(uid: number | number[]) {
     const userIds = [].concat(uid) as number[]
     userIds.forEach((uid) => {
-      this.sendToClient(uid, { type: 'updatePermsAndMenus' })
+      this.sendToClients(uid, { type: 'updatePermsAndMenus' })
     })
   }
 
