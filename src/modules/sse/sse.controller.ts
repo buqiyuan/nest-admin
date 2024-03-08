@@ -1,5 +1,5 @@
 import { BeforeApplicationShutdown, Controller, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
-import { ApiTags } from '@nestjs/swagger'
+import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { Observable, interval } from 'rxjs'
 
@@ -31,6 +31,7 @@ export class SseController implements BeforeApplicationShutdown {
     this.closeAllConnect()
   }
 
+  @ApiOperation({ summary: '服务端推送消息' })
   @Sse(':uid')
   sse(@Param('uid', ParseIntPipe) uid: number, @Req() req: FastifyRequest, @Res() res: FastifyReply): Observable<MessageEvent> {
     this.replyMap.set(uid, res)
@@ -39,16 +40,17 @@ export class SseController implements BeforeApplicationShutdown {
       this.sseService.sendToClient(uid, { type: 'ping' })
     })
 
-    // 当客户端断开连接时
-    req.raw.on('close', () => {
-      subscription.unsubscribe()
-      this.sseService.removeClient(uid)
-      this.replyMap.delete(uid)
-      // console.log(`user-${uid}已关闭`)
-    })
-
     return new Observable((subscriber) => {
+      // console.log(`user-${uid}已连接`)
       this.sseService.addClient(uid, subscriber)
+
+      // 当客户端断开连接时
+      req.raw.on('close', () => {
+        subscription.unsubscribe()
+        this.sseService.removeClient(uid, subscriber)
+        this.replyMap.delete(uid)
+      // console.log(`user-${uid}已关闭`)
+      })
     })
   }
 }

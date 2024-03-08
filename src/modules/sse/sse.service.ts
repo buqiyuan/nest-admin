@@ -14,28 +14,40 @@ export interface MessageEvent {
   retry?: number
 }
 
-const clientMap: Map<number, Subscriber<MessageEvent>> = new Map()
+const clientMap: Map<number, Subscriber<MessageEvent>[]> = new Map()
 
 @Injectable()
 export class SseService {
   addClient(uid: number, subscriber: Subscriber<MessageEvent>) {
-    clientMap.set(uid, subscriber)
+    const clients = clientMap.get(uid) || []
+    clientMap.set(uid, clients.concat(subscriber))
   }
 
-  removeClient(uid: number): void {
-    const client = clientMap.get(uid)
-    client?.complete()
+  removeClient(uid: number, subscriber: Subscriber<MessageEvent>): void {
+    const clients = clientMap.get(uid)
+    const targetIndex = clients?.findIndex(client => client === subscriber)
+    if (targetIndex !== -1)
+      clients?.splice(targetIndex, 1).at(0)?.complete()
+  }
+
+  removeAllClient(uid: number): void {
+    const clients = clientMap.get(uid)
+    clients?.forEach((client) => {
+      client?.complete()
+    })
     clientMap.delete(uid)
   }
 
   sendToClient(uid: number, data: MessageEvent): void {
-    const client = clientMap.get(uid)
-    client?.next?.(data)
+    const clients = clientMap.get(uid)
+    clients?.forEach((client) => {
+      client?.next?.(data)
+    })
   }
 
   sendToAll(data: MessageEvent): void {
-    clientMap.forEach((client) => {
-      client.next(data)
+    clientMap.forEach((client, uid) => {
+      this.sendToClient(uid, data)
     })
   }
 
