@@ -53,7 +53,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
 
       const validJwt = async () => {
         try {
-          const ok = await this.jwtService.verify(token)
+          const ok = await this.jwtService.verifyAsync(token)
 
           if (!ok)
             return false

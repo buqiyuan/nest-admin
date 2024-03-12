@@ -46,7 +46,9 @@ const strategies = [LocalStrategy, JwtStrategy]
 
         return {
           secret: jwtSecret,
-          expires: jwtExprire,
+          signOptions: {
+            expiresIn: `${jwtExprire}s`,
+          },
           ignoreExpiration: isDev,
         }
       },

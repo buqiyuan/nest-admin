@@ -1,11 +1,12 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 
 import Redis from 'ioredis'
 import { isEmpty } from 'lodash'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
+import { ISecurityConfig, SecurityConfig } from '~/config'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { genAuthPVKey, genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
 
@@ -28,6 +29,7 @@ export class AuthService {
     private userService: UserService,
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
+    @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
   ) {}
 
   async validateUser(credential: string, password: string): Promise<any> {
@@ -73,7 +75,7 @@ export class AuthService {
     // 包含access_token和refresh_token
     const token = await this.tokenService.generateAccessToken(user.id, roles)
 
-    await this.redis.set(genAuthTokenKey(user.id), token.accessToken)
+    await this.redis.set(genAuthTokenKey(user.id), token.accessToken, 'EX', this.securityConfig.jwtExprire)
 
     // 设置密码版本号 当密码修改时，版本号+1
     await this.redis.set(genAuthPVKey(user.id), 1)

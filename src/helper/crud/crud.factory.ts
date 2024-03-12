@@ -29,13 +29,13 @@ export function BaseCrudFactory<
   dto = dto ?? class extends entity {}
 
   class Dto extends dto {
-    static name = upperFirst(`${pluralizeName}Dto`)
+    static readonly name = upperFirst(`${pluralizeName}Dto`)
   }
   class UpdateDto extends PartialType(Dto) {
-    static name = upperFirst(`${pluralizeName}UpdateDto`)
+    static readonly name = upperFirst(`${pluralizeName}UpdateDto`)
   }
   class QueryDto extends IntersectionType(PagerDto, PartialType(Dto)) {
-    static name = upperFirst(`${pluralizeName}QueryDto`)
+    static readonly name = upperFirst(`${pluralizeName}QueryDto`)
   }
 
   permissions = permissions ?? {

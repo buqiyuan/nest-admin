@@ -42,7 +42,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
     const isSse = request.headers.accept === 'text/event-stream'
 
-    if (isSse && !request.headers.authorization?.startsWith('Bearer')) {
+    if (isSse && !request.headers.authorization?.startsWith('Bearer ')) {
       const { token } = request.query as Record<string, string>
       if (token)
         request.headers.authorization = `Bearer ${token}`
@@ -68,7 +68,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
         : await this.tokenService.checkAccessToken(Authorization!)
 
       if (!accessToken)
-        throw new UnauthorizedException('令牌无效')
+        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
     // SSE 请求

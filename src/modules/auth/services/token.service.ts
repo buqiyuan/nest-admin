@@ -23,8 +23,7 @@ export class TokenService {
 
   /**
    * 根据accessToken刷新AccessToken与RefreshToken
-   * @param accessTokenSign
-   * @param response
+   * @param accessToken
    */
   async refreshToken(accessToken: AccessTokenEntity) {
     const { user, refreshToken } = accessToken
@@ -60,7 +59,7 @@ export class TokenService {
       roles,
     }
 
-    const jwtSign = this.jwtService.sign(payload)
+    const jwtSign = await this.jwtService.signAsync(payload)
 
     // 生成accessToken
     const accessToken = new AccessTokenEntity()
@@ -94,7 +93,7 @@ export class TokenService {
       uuid: generateUUID(),
     }
 
-    const refreshTokenSign = this.jwtService.sign(refreshTokenPayload, {
+    const refreshTokenSign = await this.jwtService.signAsync(refreshTokenPayload, {
       secret: this.securityConfig.refreshSecret,
     })
 
@@ -116,7 +115,7 @@ export class TokenService {
    */
   async checkAccessToken(value: string) {
     return AccessTokenEntity.findOne({
-      where: { value },
+      where: { value: value.replace('Bearer ', '') },
       relations: ['user', 'refreshToken'],
       cache: true,
     })
@@ -155,6 +154,6 @@ export class TokenService {
    * @param token
    */
   async verifyAccessToken(token: string): Promise<IAuthUser> {
-    return this.jwtService.verify(token)
+    return this.jwtService.verifyAsync(token)
   }
 }
