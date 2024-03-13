@@ -9,7 +9,7 @@ import { EntityManager, In, Like, Repository } from 'typeorm'
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { ROOT_ROLE_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
-import { genAuthPVKey, genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
+import { genAuthPVKey, genAuthPermKey, genAuthTokenKey, genOnlineUserKey } from '~/helper/genRedisKey'
 
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
@@ -19,6 +19,7 @@ import { QQService } from '~/shared/helper/qq.service'
 
 import { md5, randomValue } from '~/utils'
 
+import { AccessTokenEntity } from '../auth/entities/access-token.entity'
 import { DeptEntity } from '../system/dept/dept.entity'
 import { ParamConfigService } from '../system/param-config/param-config.service'
 import { RoleEntity } from '../system/role/role.entity'
@@ -296,10 +297,16 @@ export class UserService {
   /**
    * 禁用用户
    */
-  async forbidden(uid: number): Promise<void> {
+  async forbidden(uid: number, accessToken?: string): Promise<void> {
     await this.redis.del(genAuthPVKey(uid))
     await this.redis.del(genAuthTokenKey(uid))
     await this.redis.del(genAuthPermKey(uid))
+    if (accessToken) {
+      const token = await AccessTokenEntity.findOne({
+        where: { value: accessToken },
+      })
+      this.redis.del(genOnlineUserKey(token.id))
+    }
   }
 
   /**

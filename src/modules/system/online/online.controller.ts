@@ -1,5 +1,7 @@
-import { Body, Controller, Get, Headers, Post } from '@nestjs/common'
+import { Body, Controller, Get, Post, Req } from '@nestjs/common'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+
+import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
@@ -25,8 +27,8 @@ export class OnlineController {
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiResult({ type: [OnlineUserInfo] })
   @Perm(permissions.LIST)
-  async list(@Headers('authorization') authorization: string): Promise<OnlineUserInfo[]> {
-    return this.onlineService.listOnlineUser(authorization?.replace('Bearer ', ''))
+  async list(@Req() req: FastifyRequest): Promise<OnlineUserInfo[]> {
+    return this.onlineService.listOnlineUser(req.accessToken)
   }
 
   @Post('kick')

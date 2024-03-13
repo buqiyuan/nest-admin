@@ -119,11 +119,11 @@ export class AuthService {
    */
   async clearLoginStatus(user: IAuthUser, accessToken: string): Promise<void> {
     const exp = user.exp ? (user.exp - Date.now() / 1000).toFixed(0) : this.securityConfig.jwtExprire
-    this.redis.set(genTokenBlacklistKey(accessToken), accessToken, 'EX', exp)
+    await this.redis.set(genTokenBlacklistKey(accessToken), accessToken, 'EX', exp)
     if (this.appConfig.multiDeviceLogin)
       await this.tokenService.removeAccessToken(accessToken)
     else
-      await this.userService.forbidden(user.uid)
+      await this.userService.forbidden(user.uid, accessToken)
   }
 
   /**
