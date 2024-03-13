@@ -58,8 +58,7 @@ export class UserController {
   @Put(':id')
   @ApiOperation({ summary: '更新用户' })
   @Perm(permissions.UPDATE)
-  async update(
-    @IdParam() id: number, @Body() dto: UserUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body() dto: UserUpdateDto): Promise<void> {
     await this.userService.update(id, dto)
     await this.menuService.refreshPerms(id)
   }

@@ -1,7 +1,8 @@
-import 'fastify';
+import 'fastify'
 
 declare module 'fastify' {
   interface FastifyRequest {
-    user?: IAuthUser;
+    user?: IAuthUser
+    accessToken: string
   }
 }

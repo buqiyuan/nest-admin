@@ -1,9 +1,11 @@
-import { BeforeApplicationShutdown, Controller, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
+import { BeforeApplicationShutdown, Controller, Headers, Ip, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { Observable, interval } from 'rxjs'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+
+import { OnlineService } from '../system/online/online.service'
 
 import { MessageEvent, SseService } from './sse.service'
 
@@ -13,7 +15,7 @@ import { MessageEvent, SseService } from './sse.service'
 export class SseController implements BeforeApplicationShutdown {
   private replyMap: Map<number, FastifyReply> = new Map()
 
-  constructor(private readonly sseService: SseService) {}
+  constructor(private readonly sseService: SseService, private onlineService: OnlineService) {}
 
   private closeAllConnect() {
     this.sseService.sendToAllUser({
@@ -33,8 +35,16 @@ export class SseController implements BeforeApplicationShutdown {
 
   @ApiOperation({ summary: '服务端推送消息' })
   @Sse(':uid')
-  sse(@Param('uid', ParseIntPipe) uid: number, @Req() req: FastifyRequest, @Res() res: FastifyReply): Observable<MessageEvent> {
+  async sse(
+    @Param('uid', ParseIntPipe) uid: number, @Req()
+req: FastifyRequest, @Res()
+res: FastifyReply, @Ip()
+ip: string, @Headers('user-agent')
+ua: string, @Headers('authorization')
+authorization: string,
+  ): Promise<Observable<MessageEvent>> {
     this.replyMap.set(uid, res)
+    this.onlineService.addOnlineUser(req.accessToken, ip, ua)
 
     return new Observable((subscriber) => {
       // 定时推送，保持连接
@@ -49,7 +59,8 @@ export class SseController implements BeforeApplicationShutdown {
         subscription.unsubscribe()
         this.sseService.removeClient(uid, subscriber)
         this.replyMap.delete(uid)
-      // console.log(`user-${uid}已关闭`)
+        this.onlineService.removeOnlineUser(req.accessToken)
+        console.log(`user-${uid}已关闭`)
       })
     })
   }

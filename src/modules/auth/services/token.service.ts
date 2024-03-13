@@ -1,8 +1,12 @@
+import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import dayjs from 'dayjs'
 
+import Redis from 'ioredis'
+
 import { ISecurityConfig, SecurityConfig } from '~/config'
+import { genOnlineUserKey } from '~/helper/genRedisKey'
 import { RoleService } from '~/modules/system/role/role.service'
 import { UserEntity } from '~/modules/user/user.entity'
 import { generateUUID } from '~/utils'
@@ -18,6 +22,7 @@ export class TokenService {
   constructor(
     private jwtService: JwtService,
     private roleService: RoleService,
+    @InjectRedis() private redis: Redis,
     @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
   ) {}
 
@@ -115,7 +120,7 @@ export class TokenService {
    */
   async checkAccessToken(value: string) {
     return AccessTokenEntity.findOne({
-      where: { value: value.replace('Bearer ', '') },
+      where: { value },
       relations: ['user', 'refreshToken'],
       cache: true,
     })
@@ -129,8 +134,10 @@ export class TokenService {
     const accessToken = await AccessTokenEntity.findOne({
       where: { value },
     })
-    if (accessToken)
+    if (accessToken) {
+      this.redis.del(genOnlineUserKey(accessToken.id))
       await accessToken.remove()
+    }
   }
 
   /**
@@ -144,7 +151,8 @@ export class TokenService {
     })
     if (refreshToken) {
       if (refreshToken.accessToken)
-        await refreshToken.accessToken.remove()
+        this.redis.del(genOnlineUserKey(refreshToken.accessToken.id))
+      await refreshToken.accessToken.remove()
       await refreshToken.remove()
     }
   }

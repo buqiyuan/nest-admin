@@ -1,27 +1,20 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty, OmitType } from '@nestjs/swagger'
 
-export class OnlineUserInfo {
-  @ApiProperty({ description: '最近的一条登录日志ID' })
-  id: number
+import { LoginLogInfo } from '../log/models/log.model'
 
-  @ApiProperty({ description: '登录IP' })
-  ip: string
+export class OnlineUserInfo extends OmitType(LoginLogInfo, ['id'] as const) {
+  @ApiProperty({ description: 'tokenId' })
+  tokenId: string
 
-  @ApiProperty({ description: '登录地点' })
-  address: string
+  @ApiProperty({ description: '部门名称' })
+  deptName: string
 
-  @ApiProperty({ description: '用户名' })
-  username: string
+  @ApiProperty({ description: '用户ID' })
+  uid: number
 
-  @ApiProperty({ description: '是否当前' })
-  isCurrent: boolean
+  @ApiProperty({ description: '是否为当前登录用户' })
+  isCurrent?: boolean
 
-  @ApiProperty({ description: '系统' })
-  os: string
-
-  @ApiProperty({ description: '浏览器' })
-  browser: string
-
-  @ApiProperty({ description: '是否禁用' })
-  disable: boolean
+  @ApiProperty({ description: '不允许踢当前用户或超级管理员下线' })
+  disable?: boolean
 }

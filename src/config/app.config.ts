@@ -1,6 +1,6 @@
 import { ConfigType, registerAs } from '@nestjs/config'
 
-import { env, envNumber } from '~/global/env'
+import { env, envBoolean, envNumber } from '~/global/env'
 
 export const appRegToken = 'app'
 
@@ -10,6 +10,8 @@ export const AppConfig = registerAs(appRegToken, () => ({
   baseUrl: env('APP_BASE_URL'),
   globalPrefix: env('GLOBAL_PREFIX', 'api'),
   locale: env('APP_LOCALE', 'zh-CN'),
+  /** 是否允许多端登录 */
+  multiDeviceLogin: envBoolean('MULTI_DEVICE_LOGIN', true),
 
   logger: {
     level: env('LOGGER_LEVEL'),

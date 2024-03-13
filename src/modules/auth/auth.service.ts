@@ -6,9 +6,9 @@ import { isEmpty } from 'lodash'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 
-import { ISecurityConfig, SecurityConfig } from '~/config'
+import { AppConfig, IAppConfig, ISecurityConfig, SecurityConfig } from '~/config'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { genAuthPVKey, genAuthPermKey, genAuthTokenKey } from '~/helper/genRedisKey'
+import { genAuthPVKey, genAuthPermKey, genAuthTokenKey, genTokenBlacklistKey } from '~/helper/genRedisKey'
 
 import { UserService } from '~/modules/user/user.service'
 
@@ -30,6 +30,7 @@ export class AuthService {
     private loginLogService: LoginLogService,
     private tokenService: TokenService,
     @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
+    @Inject(AppConfig.KEY) private appConfig: IAppConfig,
   ) {}
 
   async validateUser(credential: string, password: string): Promise<any> {
@@ -104,11 +105,6 @@ export class AuthService {
     await this.loginLogService.create(uid, ip, ua)
   }
 
-  async logout(uid: number) {
-    // 删除token
-    await this.userService.forbidden(uid)
-  }
-
   /**
    * 重置密码
    */
@@ -121,8 +117,13 @@ export class AuthService {
   /**
    * 清除登录状态信息
    */
-  async clearLoginStatus(uid: number): Promise<void> {
-    await this.userService.forbidden(uid)
+  async clearLoginStatus(user: IAuthUser, accessToken: string): Promise<void> {
+    const exp = user.exp ? (user.exp - Date.now() / 1000).toFixed(0) : this.securityConfig.jwtExprire
+    this.redis.set(genTokenBlacklistKey(accessToken), accessToken, 'EX', exp)
+    if (this.appConfig.multiDeviceLogin)
+      await this.tokenService.removeAccessToken(accessToken)
+    else
+      await this.userService.forbidden(user.uid)
   }
 
   /**
