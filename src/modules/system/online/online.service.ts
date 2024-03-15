@@ -32,10 +32,6 @@ export class OnlineService {
   ) {}
 
   async addOnlineUser(value: string, ip: string, ua: string) {
-    const parser = new UAParser()
-    const uaResult = parser.setUA(ua).getResult()
-    const address = await getIpAddress(ip)
-
     const token = await AccessTokenEntity.findOne({
       where: { value },
       relations: {
@@ -45,6 +41,15 @@ export class OnlineService {
       },
       cache: true,
     })
+
+    if (!token)
+      return
+
+    const tokenPaload = await this.tokenService.verifyAccessToken(value)
+    const exp = ~~(tokenPaload.exp - Date.now() / 1000)
+    const parser = new UAParser()
+    const uaResult = parser.setUA(ua).getResult()
+    const address = await getIpAddress(ip)
 
     const result: OnlineUserInfo = {
       ip,
@@ -57,7 +62,7 @@ export class OnlineService {
       username: token.user.username,
       time: token.created_at.toString(),
     }
-    this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', this.securityConfig.jwtExprire)
+    this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', exp)
   }
 
   async removeOnlineUser(value: string) {

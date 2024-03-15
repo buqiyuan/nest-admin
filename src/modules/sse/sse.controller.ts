@@ -15,7 +15,7 @@ import { MessageEvent, SseService } from './sse.service'
 export class SseController implements BeforeApplicationShutdown {
   private replyMap: Map<number, FastifyReply> = new Map()
 
-  constructor(private readonly sseService: SseService, private onlineService: OnlineService) {}
+  constructor(private readonly sseService: SseService, private onlineService: OnlineService) { }
 
   private closeAllConnect() {
     this.sseService.sendToAllUser({
@@ -36,12 +36,11 @@ export class SseController implements BeforeApplicationShutdown {
   @ApiOperation({ summary: '服务端推送消息' })
   @Sse(':uid')
   async sse(
-    @Param('uid', ParseIntPipe) uid: number, @Req()
-req: FastifyRequest, @Res()
-res: FastifyReply, @Ip()
-ip: string, @Headers('user-agent')
-ua: string, @Headers('authorization')
-authorization: string,
+    @Param('uid', ParseIntPipe) uid: number,
+    @Req() req: FastifyRequest,
+    @Res() res: FastifyReply,
+    @Ip() ip: string,
+    @Headers('user-agent') ua: string,
   ): Promise<Observable<MessageEvent>> {
     this.replyMap.set(uid, res)
     this.onlineService.addOnlineUser(req.accessToken, ip, ua)
