@@ -1,12 +1,12 @@
 import { InjectRedis } from '@liaoliaots/nestjs-redis'
-import { Inject, Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common'
 
 import Redis from 'ioredis'
 
+import { throttle } from 'lodash'
 import { UAParser } from 'ua-parser-js'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ISecurityConfig, SecurityConfig } from '~/config'
 import { ErrorEnum } from '~/constants/error-code.constant'
 
 import { genOnlineUserKey } from '~/helper/genRedisKey'
@@ -14,6 +14,7 @@ import { AuthService } from '~/modules/auth/auth.service'
 import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
 
 import { TokenService } from '~/modules/auth/services/token.service'
+import { SseService } from '~/modules/sse/sse.service'
 import { getIpAddress } from '~/utils'
 
 import { UserService } from '../../user/user.service'
@@ -27,9 +28,14 @@ export class OnlineService {
     private readonly userService: UserService,
     private authService: AuthService,
     private tokenService: TokenService,
-    @Inject(SecurityConfig.KEY) private securityConfig: ISecurityConfig,
-
+    private sseService: SseService,
   ) {}
+
+  /** 在线用户数量变动时，通知前端实时更新在线用户数量或列表, 3 秒内最多推送一次，避免频繁触发 */
+  updateOnlineUserCount = throttle(async () => {
+    const keys = await this.redis.keys(genOnlineUserKey('*'))
+    this.sseService.sendToAllUser({ type: 'updateOnlineUserCount', data: keys.length })
+  }, 3000)
 
   async addOnlineUser(value: string, ip: string, ua: string) {
     const token = await AccessTokenEntity.findOne({
@@ -62,7 +68,8 @@ export class OnlineService {
       username: token.user.username,
       time: token.created_at.toString(),
     }
-    this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', exp)
+    await this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', exp)
+    this.updateOnlineUserCount()
   }
 
   async removeOnlineUser(value: string) {
@@ -71,7 +78,14 @@ export class OnlineService {
       relations: ['user'],
       cache: true,
     })
-    this.redis.del(genOnlineUserKey(token?.id))
+    await this.redis.del(genOnlineUserKey(token?.id))
+    this.updateOnlineUserCount()
+  }
+
+  /** 移除所有在线用户 */
+  async clearOnlineUser() {
+    const keys = await this.redis.keys(genOnlineUserKey('*'))
+    await this.redis.del(keys)
   }
 
   /**

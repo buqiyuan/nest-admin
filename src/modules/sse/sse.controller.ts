@@ -47,7 +47,7 @@ export class SseController implements BeforeApplicationShutdown {
 
     return new Observable((subscriber) => {
       // 定时推送，保持连接
-      const subscription = interval(10000).subscribe(() => {
+      const subscription = interval(12000).subscribe(() => {
         subscriber.next({ type: 'ping' })
       })
       // console.log(`user-${uid}已连接`)

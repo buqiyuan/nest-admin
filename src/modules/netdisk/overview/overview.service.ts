@@ -1,10 +1,9 @@
 import { HttpService } from '@nestjs/axios'
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Inject, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 import * as qiniu from 'qiniu'
 
-import { ConfigKeyPaths } from '~/config'
+import { IOssConfig, OssConfig } from '~/config'
 import { OSS_API } from '~/constants/oss.constant'
 
 import { CountInfo, FlowInfo, HitInfo, SpaceInfo } from './overview.dto'
@@ -13,12 +12,9 @@ import { CountInfo, FlowInfo, HitInfo, SpaceInfo } from './overview.dto'
 export class NetDiskOverviewService {
   private mac: qiniu.auth.digest.Mac
   private readonly FORMAT = 'YYYYMMDDHHmmss'
-  private get qiniuConfig() {
-    return this.configService.get('oss', { infer: true })
-  }
 
   constructor(
-    private configService: ConfigService<ConfigKeyPaths>,
+    @Inject(OssConfig.KEY) private qiniuConfig: IOssConfig,
     private readonly httpService: HttpService,
   ) {
     this.mac = new qiniu.auth.digest.Mac(
@@ -37,8 +33,9 @@ export class NetDiskOverviewService {
    * @see: https://developer.qiniu.com/kodo/3906/statistic-interface
    */
   getStatisticUrl(type: string, queryParams = {}) {
+    const bucketKey = type === 'blob_io' ? '$bucket' : 'bucket'
     const defaultParams = {
-      $bucket: this.qiniuConfig.bucket,
+      [bucketKey]: this.qiniuConfig.bucket,
       g: 'day',
     }
     const searchParams = new URLSearchParams({ ...defaultParams, ...queryParams })

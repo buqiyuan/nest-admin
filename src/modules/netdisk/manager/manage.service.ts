@@ -1,12 +1,11 @@
 import { basename, extname } from 'node:path'
 
-import { Injectable } from '@nestjs/common'
-import { ConfigService } from '@nestjs/config'
+import { Inject, Injectable } from '@nestjs/common'
 import { isEmpty } from 'lodash'
 import * as qiniu from 'qiniu'
 import { auth, conf, rs } from 'qiniu'
 
-import { ConfigKeyPaths } from '~/config'
+import { IOssConfig, OssConfig } from '~/config'
 import { NETDISK_COPY_SUFFIX, NETDISK_DELIMITER, NETDISK_HANDLE_MAX_ITEM, NETDISK_LIMIT } from '~/constants/oss.constant'
 
 import { AccountInfo } from '~/modules/user/user.model'
@@ -23,12 +22,8 @@ export class NetDiskManageService {
   private mac: auth.digest.Mac
   private bucketManager: rs.BucketManager
 
-  private get qiniuConfig() {
-    return this.configService.get('oss', { infer: true })
-  }
-
   constructor(
-    private configService: ConfigService<ConfigKeyPaths>,
+    @Inject(OssConfig.KEY) private qiniuConfig: IOssConfig,
     private userService: UserService,
   ) {
     this.mac = new qiniu.auth.digest.Mac(

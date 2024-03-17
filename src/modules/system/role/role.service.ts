@@ -7,7 +7,6 @@ import { PagerDto } from '~/common/dto/pager.dto'
 import { ROOT_ROLE_ID } from '~/constants/system.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
-import { SseService } from '~/modules/sse/sse.service'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
@@ -21,8 +20,6 @@ export class RoleService {
     @InjectRepository(MenuEntity)
     private menuRepository: Repository<MenuEntity>,
     @InjectEntityManager() private entityManager: EntityManager,
-    private sseService: SseService,
-
   ) {}
 
   /**

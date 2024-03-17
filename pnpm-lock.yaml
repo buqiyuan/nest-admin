@@ -25,7 +25,7 @@ dependencies:
     version: 1.10.3(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(nodemailer@6.9.12)
   '@nestjs/axios':
     specifier: ^3.0.2
-    version: 3.0.2(@nestjs/common@10.3.3)(axios@1.6.7)(rxjs@7.8.1)
+    version: 3.0.2(@nestjs/common@10.3.3)(axios@1.6.8)(rxjs@7.8.1)
   '@nestjs/bull':
     specifier: ^10.1.0
     version: 10.1.0(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(bull@4.12.2)
@@ -84,8 +84,8 @@ dependencies:
     specifier: ^4.17.0
     version: 4.17.0
   axios:
-    specifier: ^1.6.7
-    version: 1.6.7
+    specifier: ^1.6.8
+    version: 1.6.8
   bull:
     specifier: ^4.12.2
     version: 4.12.2
@@ -174,8 +174,8 @@ dependencies:
     specifier: ^1.4.0
     version: 1.4.0
   systeminformation:
-    specifier: ^5.22.2
-    version: 5.22.2
+    specifier: ^5.22.3
+    version: 5.22.3
   typeorm:
     specifier: 0.3.17
     version: 0.3.17(ioredis@5.3.2)(mysql2@3.9.2)(ts-node@10.9.2)
@@ -191,8 +191,8 @@ dependencies:
 
 devDependencies:
   '@antfu/eslint-config':
-    specifier: ^2.8.2
-    version: 2.8.2(@vue/compiler-sfc@3.4.21)(eslint@8.57.0)(typescript@5.4.2)
+    specifier: ^2.8.3
+    version: 2.8.3(@vue/compiler-sfc@3.4.21)(eslint@8.57.0)(typescript@5.4.2)
   '@compodoc/compodoc':
     specifier: ^1.1.23
     version: 1.1.23(typescript@5.4.2)
@@ -239,8 +239,8 @@ devDependencies:
     specifier: ^15.2.2
     version: 15.2.2
   simple-git-hooks:
-    specifier: ^2.10.0
-    version: 2.10.0
+    specifier: ^2.11.0
+    version: 2.11.0
   source-map-support:
     specifier: ^0.5.21
     version: 0.5.21
@@ -358,8 +358,8 @@ packages:
       - chokidar
     dev: true
 
-  /@antfu/eslint-config@2.8.2(@vue/compiler-sfc@3.4.21)(eslint@8.57.0)(typescript@5.4.2):
-    resolution: {integrity: sha512-lmB7C0DE1dMwp9b+kRWCF/EP3Wc18DUeT+STuX9OskOherX3P/eQ5PxmOslBVZalD9/mbft0s257mQL+LxJ37A==}
+  /@antfu/eslint-config@2.8.3(@vue/compiler-sfc@3.4.21)(eslint@8.57.0)(typescript@5.4.2):
+    resolution: {integrity: sha512-M3l7KwDrtAaF90km8D0G0bhkEDl2/V4yh/Qi08uiFHoMAEzbqwF73HRIJxJgL1YwRcyUnJy7yEUkA04cI1GFEQ==}
     hasBin: true
     peerDependencies:
       '@unocss/eslint-plugin': '>=0.50.0'
@@ -400,6 +400,7 @@ packages:
     dependencies:
       '@antfu/eslint-define-config': 1.23.0-2
       '@antfu/install-pkg': 0.3.1
+      '@clack/prompts': 0.7.0
       '@eslint-types/jsdoc': 46.8.2-1
       '@eslint-types/typescript-eslint': 7.0.2
       '@eslint-types/unicorn': 51.0.1
@@ -430,7 +431,6 @@ packages:
       local-pkg: 0.5.0
       parse-gitignore: 2.0.0
       picocolors: 1.0.0
-      prompts: 2.4.2
       toml-eslint-parser: 0.9.3
       vue-eslint-parser: 9.4.2(eslint@8.57.0)
       yaml-eslint-parser: 1.2.2
@@ -1676,6 +1676,23 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
+  /@clack/core@0.3.4:
+    resolution: {integrity: sha512-H4hxZDXgHtWTwV3RAVenqcC4VbJZNegbBjlPvzOzCouXtS2y3sDvlO3IsbrPNWuLWPPlYVYPghQdSF64683Ldw==}
+    dependencies:
+      picocolors: 1.0.0
+      sisteransi: 1.0.5
+    dev: true
+
+  /@clack/prompts@0.7.0:
+    resolution: {integrity: sha512-0MhX9/B4iL6Re04jPrttDm+BsP8y6mS7byuv0BvXgdXhbV5PdlsHt55dvNsuBCPZ7xq1oTAOOuotR9NFbQyMSA==}
+    dependencies:
+      '@clack/core': 0.3.4
+      picocolors: 1.0.0
+      sisteransi: 1.0.5
+    dev: true
+    bundledDependencies:
+      - is-unicode-supported
+
   /@colors/colors@1.5.0:
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
@@ -2389,7 +2406,7 @@ packages:
       - encoding
     dev: false
 
-  /@nestjs/axios@3.0.2(@nestjs/common@10.3.3)(axios@1.6.7)(rxjs@7.8.1):
+  /@nestjs/axios@3.0.2(@nestjs/common@10.3.3)(axios@1.6.8)(rxjs@7.8.1):
     resolution: {integrity: sha512-Z6GuOUdNQjP7FX+OuV2Ybyamse+/e0BFdTWBX5JxpBDKA+YkdLynDgG6HTF04zy6e9zPa19UX0WA2VDoehwhXQ==}
     peerDependencies:
       '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0
@@ -2397,7 +2414,7 @@ packages:
       rxjs: ^6.0.0 || ^7.0.0
     dependencies:
       '@nestjs/common': 10.3.3(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.1)(rxjs@7.8.1)
-      axios: 1.6.7
+      axios: 1.6.8
       rxjs: 7.8.1
     dev: false
 
@@ -2762,7 +2779,7 @@ packages:
       typeorm:
         optional: true
     dependencies:
-      '@nestjs/axios': 3.0.2(@nestjs/common@10.3.3)(axios@1.6.7)(rxjs@7.8.1)
+      '@nestjs/axios': 3.0.2(@nestjs/common@10.3.3)(axios@1.6.8)(rxjs@7.8.1)
       '@nestjs/common': 10.3.3(class-transformer@0.5.1)(class-validator@0.14.1)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       '@nestjs/core': 10.3.3(@nestjs/common@10.3.3)(@nestjs/websockets@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)
       '@nestjs/typeorm': 10.0.2(@nestjs/common@10.3.3)(@nestjs/core@10.3.3)(reflect-metadata@0.2.1)(rxjs@7.8.1)(typeorm@0.3.17)
@@ -3961,8 +3978,8 @@ packages:
       - supports-color
     dev: false
 
-  /axios@1.6.7:
-    resolution: {integrity: sha512-/hDJGff6/c7u0hDkvkGxR/oy6CbCs8ziCsC7SqmhjfozqiJGc8Z11wrv9z9lYfY4K8l+H9TpjcMDX0xOZmx+RA==}
+  /axios@1.6.8:
+    resolution: {integrity: sha512-v/ZHtJDU39mDpyBoFVkETcd/uNdxrWRrg3bKpOKzXFA6Bvqopts6ALSMU3y6ijYxbw2B+wPrIv46egTzJXCLGQ==}
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
@@ -10093,8 +10110,8 @@ packages:
     resolution: {integrity: sha512-bzyZ1e88w9O1iNJbKnOlvYTrWPDl46O1bG0D3XInv+9tkPrxrN8jUUTiFlDkkmKWgn1M6CfIA13SuGqOa9Korw==}
     engines: {node: '>=14'}
 
-  /simple-git-hooks@2.10.0:
-    resolution: {integrity: sha512-TtCytVYfV77pILCkzVxpOSgYKHQyaO7fBI/iwG5bLGb0dIo/v/K1Y1IZ5DN40RQu6WNNJiN0gkuRvSYjxOhFog==}
+  /simple-git-hooks@2.11.0:
+    resolution: {integrity: sha512-Wab2uzjGJEL8Kx+2UY8waUSfkiolt2RbaAJWvPCjaAEXrrKoS7JqPk4STiIVl/yt3asZRUzFoK2ryhwvgh5rYw==}
     hasBin: true
     requiresBuild: true
     dev: true
@@ -10515,8 +10532,8 @@ packages:
       tslib: 2.6.2
     dev: true
 
-  /systeminformation@5.22.2:
-    resolution: {integrity: sha512-VsXY7i1UFZZhbNRv8QN6yTIqNL66/rXpMGb5xYzXx8jDYyEM0+tQpehpPdaxxvym+oYIHs9usUxDzRDNkabpVQ==}
+  /systeminformation@5.22.3:
+    resolution: {integrity: sha512-pTU7/kMQaYfUs929Uhl+C2heTNhKIgPuoiV5s2TMO3SLf10Zr7Rl/ZvVaiYWFbZVdFsZ+9tSXsybGdBQcr+xww==}
     engines: {node: '>=8.0.0'}
     os: [darwin, linux, win32, freebsd, openbsd, netbsd, sunos, android]
     hasBin: true
