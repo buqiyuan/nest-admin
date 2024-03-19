@@ -5,7 +5,7 @@
   "packageManager": "pnpm@8.10.2",
   "license": "MIT",
   "engines": {
-    "node": ">=18",
+    "node": ">=16.20.2",
     "pnpm": ">=8.1.0"
   },
   "scripts": {
@@ -36,6 +36,7 @@
     "cleanlog": "rimraf logs",
     "docker:build:dev": "docker compose --env-file .env --env-file .env.development up --build",
     "docker:build": "docker compose --env-file .env --env-file .env.production up --build",
+    "docker:prod:up": "docker compose -f docker-compose.prod.yml --env-file .env --env-file .env.production up -d --pull=always",
     "docker:up": "docker compose --env-file .env --env-file .env.production up -d --no-build",
     "docker:down": "docker compose --env-file .env --env-file .env.production down",
     "docker:rmi": "docker compose --env-file .env --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",

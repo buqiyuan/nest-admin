@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  nest-admin-server:
+    image: buqiyuan/nest-admin-server:stable
+    container_name: nest-admin-server
+    restart: always
+    env_file:
+      - .env
+      - .env.production
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    ports:
+      - '${APP_PORT}:${APP_PORT}'  
+    networks:
+      - nest_admin_net
+
+networks:
+  nest_admin_net:
+    name: nest_admin_net
