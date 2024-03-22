@@ -1,0 +1,29 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows: [Sync To Gitee]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to remote server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USERNAME }}
+          password: ${{ secrets.REMOTE_PASSWORD }}
+          port: ${{ secrets.REMOTE_PORT }} 
+          script: |
+            cd ${{ secrets.REMOTE_WORKDIR }}
+            git reset --hard origin/main
+            git pull
+            pnpm install
+            pnpm build
+            echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
+            echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.production
+            pnpm prod:pm2
+    

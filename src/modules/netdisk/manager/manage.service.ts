@@ -566,8 +566,8 @@ export class NetDiskManageService {
 
   /**
    * 删除文件夹
-   * @param dir 文件夹所在的上级目录
-   * @param name 文件目录名称
+   * @param fileList 需要操作的文件或文件夹
+   * @param dir 文件目录名称
    */
   async deleteMultiFileOrDir(
     fileList: FileOpItem[],

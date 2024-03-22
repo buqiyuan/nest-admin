@@ -4,8 +4,31 @@ import { envBoolean } from '~/global/env'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 import { isExternal } from '~/utils/is.util'
 
-function createRoute(menu: MenuEntity, _isRoot) {
-  const commonMeta = {
+import { uniqueSlash } from './tool.util'
+
+export interface RouteRecordRaw {
+  id: number
+  path: string
+  name: string
+  component?: string
+  redirect?: string
+  meta: {
+    title: string
+    icon: string
+    isExt: boolean
+    extOpenMode: number
+    type: number
+    orderNo: number
+    show: number
+    activeMenu: string
+    status: number
+    keepAlive: number
+  }
+  children?: RouteRecordRaw[]
+}
+
+function createRoute(menu: MenuEntity, _isRoot): RouteRecordRaw {
+  const commonMeta: RouteRecordRaw['meta'] = {
     title: menu.name,
     icon: menu.icon,
     isExt: menu.isExt,
@@ -50,8 +73,8 @@ function createRoute(menu: MenuEntity, _isRoot) {
   }
 }
 
-function filterAsyncRoutes(menus: MenuEntity[], parentRoute) {
-  const res = []
+function filterAsyncRoutes(menus: MenuEntity[], parentRoute: MenuEntity): RouteRecordRaw[] {
+  const res: RouteRecordRaw[] = []
 
   menus.forEach((menu) => {
     if (menu.type === 2 || !menu.status) {
@@ -59,7 +82,12 @@ function filterAsyncRoutes(menus: MenuEntity[], parentRoute) {
       return
     }
     // 根级别菜单渲染
-    let realRoute
+    let realRoute: RouteRecordRaw
+
+    const genFullPath = (path: string, parentPath) => {
+      return uniqueSlash(path.startsWith('/') ? path : `/${parentPath}/${path}`)
+    }
+
     if (!parentRoute && !menu.parentId && menu.type === 1) {
       // 根菜单
       realRoute = createRoute(menu, true)
@@ -69,7 +97,7 @@ function filterAsyncRoutes(menus: MenuEntity[], parentRoute) {
       const childRoutes = filterAsyncRoutes(menus, menu)
       realRoute = createRoute(menu, true)
       if (childRoutes && childRoutes.length > 0) {
-        realRoute.redirect = childRoutes[0].path
+        realRoute.redirect = genFullPath(childRoutes[0].path, realRoute.path)
         realRoute.children = childRoutes
       }
     }
@@ -87,11 +115,11 @@ function filterAsyncRoutes(menus: MenuEntity[], parentRoute) {
       && menu.type === 0
     ) {
       // 如果还是目录，继续递归
-      const childRoute = filterAsyncRoutes(menus, menu)
+      const childRoutes = filterAsyncRoutes(menus, menu)
       realRoute = createRoute(menu, false)
-      if (childRoute && childRoute.length > 0) {
-        realRoute.redirect = childRoute[0].path
-        realRoute.children = childRoute
+      if (childRoutes && childRoutes.length > 0) {
+        realRoute.redirect = genFullPath(childRoutes[0].path, realRoute.path)
+        realRoute.children = childRoutes
       }
     }
     // add curent route

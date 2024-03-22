@@ -66,7 +66,7 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
 
 /**
  * 数据唯一性验证
- * @param params Entity类或验证条件对象
+ * @param entity Entity类或验证条件对象
  * @param validationOptions
  */
 function IsUnique(

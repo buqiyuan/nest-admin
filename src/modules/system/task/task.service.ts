@@ -287,7 +287,6 @@ export class TaskService implements OnModuleInit {
 
   /**
    * 检测service是否有注解定义
-   * @param serviceName service
    */
   async checkHasMissionMeta(
     nameOrInstance: string | unknown,

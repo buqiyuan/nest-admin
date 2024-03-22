@@ -68,8 +68,7 @@ export class MenuController {
   @Put(':id')
   @ApiOperation({ summary: '更新菜单或权限' })
   @Perm(permissions.UPDATE)
-  async update(
-    @IdParam() id: number, @Body() dto: MenuUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body() dto: MenuUpdateDto): Promise<void> {
     // check
     await this.menuService.check(dto)
     if (dto.parentId === -1 || !dto.parentId)

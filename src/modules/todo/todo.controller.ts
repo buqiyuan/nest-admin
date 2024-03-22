@@ -64,8 +64,7 @@ export class TodoController {
   @ApiOperation({ summary: '更新Todo' })
   @Perm(permissions.UPDATE)
   @Resource(TodoEntity)
-  async update(
-    @IdParam() id: number, @Body() dto: TodoUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body()dto: TodoUpdateDto): Promise<void> {
     await this.todoService.update(id, dto)
   }
 

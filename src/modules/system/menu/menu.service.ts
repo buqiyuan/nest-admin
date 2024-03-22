@@ -72,7 +72,7 @@ export class MenuService {
   /**
    * 根据角色获取所有菜单
    */
-  async getMenus(uid: number): Promise<string[]> {
+  async getMenus(uid: number) {
     const roleIds = await this.roleService.getRoleIdsByUser(uid)
     let menus: MenuEntity[] = []
 

@@ -111,8 +111,8 @@ export class TypeORMLogger implements ITypeORMLogger {
   ): boolean {
     return (
       this.options === 'all'
-        || this.options === true
-        || (Array.isArray(this.options) && this.options.includes(level))
+      || this.options === true
+      || (Array.isArray(this.options) && this.options.includes(level))
     )
   }
 }

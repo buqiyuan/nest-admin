@@ -31,8 +31,7 @@ export class DeptController {
   @ApiOperation({ summary: '获取部门列表' })
   @ApiResult({ type: [DeptEntity] })
   @Perm(permissions.LIST)
-  async list(
-    @Query() dto: DeptQueryDto, @AuthUser('uid') uid: number): Promise<DeptEntity[]> {
+  async list(@Query() dto: DeptQueryDto, @AuthUser('uid')uid: number): Promise<DeptEntity[]> {
     return this.deptService.getDeptTree(uid, dto)
   }
 
@@ -54,7 +53,9 @@ export class DeptController {
   @ApiOperation({ summary: '更新部门' })
   @Perm(permissions.UPDATE)
   async update(
-    @IdParam() id: number, @Body() updateDeptDto: DeptDto): Promise<void> {
+    @IdParam() id: number, @Body()
+updateDeptDto: DeptDto,
+  ): Promise<void> {
     await this.deptService.update(id, updateDeptDto)
   }
 

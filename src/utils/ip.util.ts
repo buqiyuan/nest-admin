@@ -60,7 +60,8 @@ export async function getIpAddress(ip: string) {
     data = new TextDecoder('gbk').decode(data)
     data = JSON.parse(data)
     return data.addr.trim().split(' ').at(0)
-  } catch (error) {
+  }
+  catch (error) {
     return '第三方接口请求失败'
   }
 }

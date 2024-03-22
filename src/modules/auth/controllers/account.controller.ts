@@ -46,7 +46,7 @@ export class AccountController {
   @ApiOperation({ summary: '获取菜单列表' })
   @ApiResult({ type: [AccountMenus] })
   @AllowAnon()
-  async menu(@AuthUser() user: IAuthUser): Promise<string[]> {
+  async menu(@AuthUser() user: IAuthUser) {
     return this.authService.getMenus(user.uid)
   }
 

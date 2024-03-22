@@ -4,6 +4,7 @@ services:
   nest-admin-server:
     image: buqiyuan/nest-admin-server:stable
     container_name: nest-admin-server
+    pull_policy: always
     restart: always
     env_file:
       - .env
