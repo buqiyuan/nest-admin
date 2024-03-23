@@ -71,7 +71,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     try {
       result = await super.canActivate(context)
     }
-    catch (e) {
+    catch (err) {
       // 需要后置判断 这样携带了 token 的用户就能够解析到 request.user
       if (isPublic)
         return true
@@ -79,12 +79,16 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       if (isEmpty(token))
         throw new UnauthorizedException('未登录')
 
-      // 判断 token 是否存在, 如果不存在则认证失败
-      const accessToken = isNil(token)
+      // 在 handleRequest 中 user 为 null 时会抛出 UnauthorizedException
+      if (err instanceof UnauthorizedException)
+        throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+
+      // 判断 token 是否有效且存在, 如果不存在则认证失败
+      const isValid = isNil(token)
         ? undefined
         : await this.tokenService.checkAccessToken(token!)
 
-      if (!accessToken)
+      if (!isValid)
         throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 

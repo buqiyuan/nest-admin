@@ -1,4 +1,4 @@
-const { cpus } = require('os')
+const { cpus } = require('node:os')
 
 const cpuLen = cpus().length
 
@@ -11,7 +11,7 @@ module.exports = {
       exec_mode: 'cluster',
       watch: false,
       instances: cpuLen,
-      max_memory_restart: '520M',
+      max_memory_restart: '1G',
       args: '',
       env: {
         NODE_ENV: 'production',

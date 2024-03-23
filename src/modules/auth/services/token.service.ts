@@ -115,15 +115,23 @@ export class TokenService {
   }
 
   /**
-   * 检查accessToken是否存在
+   * 检查accessToken是否存在，并且是否处于有效期内
    * @param value
    */
   async checkAccessToken(value: string) {
-    return AccessTokenEntity.findOne({
-      where: { value },
-      relations: ['user', 'refreshToken'],
-      cache: true,
-    })
+    let isValid = false
+    try {
+      await this.verifyAccessToken(value)
+      const res = await AccessTokenEntity.findOne({
+        where: { value },
+        relations: ['user', 'refreshToken'],
+        cache: true,
+      })
+      isValid = Boolean(res)
+    }
+    catch (error) {}
+
+    return isValid
   }
 
   /**
