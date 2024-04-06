@@ -29,6 +29,7 @@
     "doc": "compodoc -p tsconfig.json -s",
     "gen-env-types": "npx tsx scripts/genEnvTypes.ts || true",
     "typeorm": "NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
+    "db": "rimraf ./src/generator & npx typeorm-model-generator -h 8.134.130.83 -d mysql -p 3306 -u lantron  -x Lantron888*** -e mysql -o ./src/generator --noConfig true --ce none --cp camel -a --name",
     "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
     "migration:run": "npm run typeorm -- migration:run",

@@ -31,13 +31,22 @@ export class UserController {
   constructor(
     private userService: UserService,
     private menuService: MenuService,
-  ) {}
+  ) {
+  }
 
   @Get()
   @ApiOperation({ summary: '获取用户列表' })
   @ApiResult({ type: [UserEntity], isPage: true })
   @Perm(permissions.LIST)
   async list(@Query() dto: UserQueryDto) {
+    return this.userService.list(dto)
+  }
+
+  @Get('getlist2')
+  @ApiOperation({ summary: '查询用户' })
+  @ApiResult({ type: [UserEntity], isPage: true })
+  @Perm(permissions.LIST)
+  async list2(@Query() dto: UserQueryDto) {
     return this.userService.list(dto)
   }
 

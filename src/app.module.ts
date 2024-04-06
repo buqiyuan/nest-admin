@@ -8,6 +8,7 @@ import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler'
 import config from '~/config'
 import { SharedModule } from '~/shared/shared.module'
 
+import { CarModule } from './car/car.module'
 import { AllExceptionsFilter } from './common/filters/any-exception.filter'
 
 import { IdempotenceInterceptor } from './common/interceptors/idempotence.interceptor'
@@ -63,6 +64,8 @@ import { SocketModule } from './socket/socket.module'
     // end biz
 
     TodoModule,
+
+    CarModule,
   ],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },

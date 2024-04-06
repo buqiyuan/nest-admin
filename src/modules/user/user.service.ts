@@ -42,7 +42,8 @@ export class UserService {
     @InjectEntityManager() private entityManager: EntityManager,
     private readonly paramConfigService: ParamConfigService,
     private readonly qqService: QQService,
-  ) {}
+  ) {
+  }
 
   async findUserById(id: number): Promise<UserEntity | undefined> {
     return this.userRepository
@@ -143,10 +144,10 @@ export class UserService {
    */
   async create({
     username,
-    password,
-    roleIds,
-    deptId,
-    ...data
+                 password,
+                 roleIds,
+                 deptId,
+                 ...data
   }: UserDto): Promise<void> {
     const exists = await this.userRepository.findOneBy({
       username,
@@ -266,12 +267,12 @@ export class UserService {
    */
   async list({
     page,
-    pageSize,
-    username,
-    nickname,
-    deptId,
-    email,
-    status,
+               pageSize,
+               username,
+               nickname,
+               deptId,
+               email,
+               status,
   }: UserQueryDto): Promise<Pagination<UserEntity>> {
     const queryBuilder = this.userRepository
       .createQueryBuilder('user')
