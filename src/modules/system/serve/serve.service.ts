@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common'
-import * as si from 'systeminformation'
+import { Injectable } from '@nestjs/common';
+import * as si from 'systeminformation';
 
-import { Disk, ServeStatInfo } from './serve.model'
+import { Disk, ServeStatInfo } from './serve.model';
 
 @Injectable()
 export class ServeService {
@@ -17,19 +17,19 @@ export class ServeService {
         si.currentLoad(),
         si.mem(),
       ])
-    ).map((p: any) => p.value)
+    ).map((p: any) => p.value);
 
     // 计算总空间
-    const diskListInfo = await si.fsSize()
-    const diskinfo = new Disk()
-    diskinfo.size = 0
-    diskinfo.available = 0
-    diskinfo.used = 0
+    const diskListInfo = await si.fsSize();
+    const diskinfo = new Disk();
+    diskinfo.size = 0;
+    diskinfo.available = 0;
+    diskinfo.used = 0;
     diskListInfo.forEach((d) => {
-      diskinfo.size += d.size
-      diskinfo.available += d.available
-      diskinfo.used += d.used
-    })
+      diskinfo.size += d.size;
+      diskinfo.available += d.available;
+      diskinfo.used += d.used;
+    });
 
     return {
       runtime: {
@@ -50,7 +50,7 @@ export class ServeService {
           return {
             rawLoad: e.rawLoad,
             rawLoadIdle: e.rawLoadIdle,
-          }
+          };
         }),
       },
       disk: diskinfo,
@@ -58,6 +58,6 @@ export class ServeService {
         total: meminfo.total,
         available: meminfo.available,
       },
-    }
+    };
   }
 }

@@ -1,4 +1,4 @@
-import { applyDecorators } from '@nestjs/common'
+import { applyDecorators } from '@nestjs/common';
 import {
   IsBoolean,
   IsDate,
@@ -12,8 +12,8 @@ import {
   MaxLength,
   Min,
   MinLength,
-} from 'class-validator'
-import { isNumber } from 'lodash'
+} from 'class-validator';
+import { isNumber } from 'lodash';
 
 import {
   ToArray,
@@ -23,7 +23,7 @@ import {
   ToNumber,
   ToTrim,
   ToUpperCase,
-} from './transform.decorator'
+} from './transform.decorator';
 
 interface IOptionalOptions {
   required?: boolean
@@ -48,31 +48,31 @@ interface IStringFieldOptions extends IOptionalOptions {
 export function NumberField(
   options: INumberFieldOptions = {},
 ): PropertyDecorator {
-  const { each, min, max, int, positive, required = true } = options
+  const { each, min, max, int, positive, required = true } = options;
 
-  const decorators = [ToNumber()]
+  const decorators = [ToNumber()];
 
   if (each)
-    decorators.push(ToArray())
+    decorators.push(ToArray());
 
   if (int)
-    decorators.push(IsInt({ each }))
+    decorators.push(IsInt({ each }));
   else
-    decorators.push(IsNumber({}, { each }))
+    decorators.push(IsNumber({}, { each }));
 
   if (isNumber(min))
-    decorators.push(Min(min, { each }))
+    decorators.push(Min(min, { each }));
 
   if (isNumber(max))
-    decorators.push(Max(max, { each }))
+    decorators.push(Max(max, { each }));
 
   if (positive)
-    decorators.push(IsPositive({ each }))
+    decorators.push(IsPositive({ each }));
 
   if (!required)
-    decorators.push(IsOptional())
+    decorators.push(IsOptional());
 
-  return applyDecorators(...decorators)
+  return applyDecorators(...decorators);
 }
 
 export function StringField(
@@ -85,53 +85,53 @@ export function StringField(
     lowerCase,
     upperCase,
     required = true,
-  } = options
+  } = options;
 
-  const decorators = [IsString({ each }), ToTrim()]
+  const decorators = [IsString({ each }), ToTrim()];
 
   if (each)
-    decorators.push(ToArray())
+    decorators.push(ToArray());
 
   if (isNumber(minLength))
-    decorators.push(MinLength(minLength, { each }))
+    decorators.push(MinLength(minLength, { each }));
 
   if (isNumber(maxLength))
-    decorators.push(MaxLength(maxLength, { each }))
+    decorators.push(MaxLength(maxLength, { each }));
 
   if (lowerCase)
-    decorators.push(ToLowerCase())
+    decorators.push(ToLowerCase());
 
   if (upperCase)
-    decorators.push(ToUpperCase())
+    decorators.push(ToUpperCase());
 
   if (!required)
-    decorators.push(IsOptional())
+    decorators.push(IsOptional());
   else
-    decorators.push(IsNotEmpty({ each }))
+    decorators.push(IsNotEmpty({ each }));
 
-  return applyDecorators(...decorators)
+  return applyDecorators(...decorators);
 }
 
 export function BooleanField(
   options: IOptionalOptions = {},
 ): PropertyDecorator {
-  const decorators = [ToBoolean(), IsBoolean()]
+  const decorators = [ToBoolean(), IsBoolean()];
 
-  const { required = true } = options
+  const { required = true } = options;
 
   if (!required)
-    decorators.push(IsOptional())
+    decorators.push(IsOptional());
 
-  return applyDecorators(...decorators)
+  return applyDecorators(...decorators);
 }
 
 export function DateField(options: IOptionalOptions = {}): PropertyDecorator {
-  const decorators = [ToDate(), IsDate()]
+  const decorators = [ToDate(), IsDate()];
 
-  const { required = true } = options
+  const { required = true } = options;
 
   if (!required)
-    decorators.push(IsOptional())
+    decorators.push(IsOptional());
 
-  return applyDecorators(...decorators)
+  return applyDecorators(...decorators);
 }

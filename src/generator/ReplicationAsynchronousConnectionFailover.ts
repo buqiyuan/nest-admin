@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, Index } from 'typeorm'
+import { BaseEntity, Column, Entity, Index } from 'typeorm';
 
 @Index('Channel_name', ['channelName', 'managedName'], {})
 @Entity('replication_asynchronous_connection_failover', { schema: 'mysql' })
@@ -9,7 +9,7 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
     comment: 'The replication channel name that connects source and replica.',
     length: 64,
   })
-  channelName: string
+  channelName: string;
 
   @Column('char', {
     primary: true,
@@ -18,7 +18,7 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
       'The source hostname that the replica will attempt to switch over the replication connection to in case of a failure.',
     length: 255,
   })
-  host: string
+  host: string;
 
   @Column('int', {
     primary: true,
@@ -27,7 +27,7 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
       'The source port that the replica will attempt to switch over the replication connection to in case of a failure.',
     unsigned: true,
   })
-  port: number
+  port: number;
 
   @Column('char', {
     primary: true,
@@ -36,7 +36,7 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
       'The source network namespace that the replica will attempt to switch over the replication connection to in case of a failure. If its value is empty, connections use the default (global) namespace.',
     length: 64,
   })
-  networkNamespace: string
+  networkNamespace: string;
 
   @Column('tinyint', {
     name: 'Weight',
@@ -44,7 +44,7 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
       'The order in which the replica shall try to switch the connection over to when there are failures. Weight can be set to a number between 1 and 100, where 100 is the highest weight and 1 the lowest.',
     unsigned: true,
   })
-  weight: number
+  weight: number;
 
   @Column('char', {
     primary: true,
@@ -52,5 +52,5 @@ export class replication_asynchronous_connection_failover extends BaseEntity {
     comment: 'The name of the group which this server belongs to.',
     length: 64,
   })
-  managedName: string
+  managedName: string;
 }

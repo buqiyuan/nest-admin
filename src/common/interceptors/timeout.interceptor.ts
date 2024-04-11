@@ -4,9 +4,9 @@ import {
   Injectable,
   NestInterceptor,
   RequestTimeoutException,
-} from '@nestjs/common'
-import { Observable, TimeoutError, throwError } from 'rxjs'
-import { catchError, timeout } from 'rxjs/operators'
+} from '@nestjs/common';
+import { Observable, TimeoutError, throwError } from 'rxjs';
+import { catchError, timeout } from 'rxjs/operators';
 
 @Injectable()
 export class TimeoutInterceptor implements NestInterceptor {
@@ -17,10 +17,10 @@ export class TimeoutInterceptor implements NestInterceptor {
       timeout(this.time),
       catchError((err) => {
         if (err instanceof TimeoutError)
-          return throwError(new RequestTimeoutException('请求超时'))
+          return throwError(new RequestTimeoutException('请求超时'));
 
-        return throwError(err)
+        return throwError(err);
       }),
-    )
+    );
   }
 }

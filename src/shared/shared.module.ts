@@ -1,16 +1,16 @@
-import { HttpModule } from '@nestjs/axios'
-import { Global, Module } from '@nestjs/common'
-import { EventEmitterModule } from '@nestjs/event-emitter'
-import { ScheduleModule } from '@nestjs/schedule'
-import { ThrottlerModule } from '@nestjs/throttler'
+import { HttpModule } from '@nestjs/axios';
+import { Global, Module } from '@nestjs/common';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 
-import { isDev } from '~/global/env'
+import { isDev } from '~/global/env';
 
-import { HelperModule } from './helper/helper.module'
-import { LoggerModule } from './logger/logger.module'
-import { MailerModule } from './mailer/mailer.module'
+import { HelperModule } from './helper/helper.module';
+import { LoggerModule } from './logger/logger.module';
+import { MailerModule } from './mailer/mailer.module';
 
-import { RedisModule } from './redis/redis.module'
+import { RedisModule } from './redis/redis.module';
 
 @Global()
 @Module({

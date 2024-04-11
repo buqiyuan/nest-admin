@@ -1,9 +1,9 @@
-import { Module } from '@nestjs/common'
+import { Module } from '@nestjs/common';
 
-import { OnlineModule } from '../system/online/online.module'
+import { OnlineModule } from '../system/online/online.module';
 
-import { SseController } from './sse.controller'
-import { SseService } from './sse.service'
+import { SseController } from './sse.controller';
+import { SseService } from './sse.service';
 
 @Module({
   imports: [OnlineModule],

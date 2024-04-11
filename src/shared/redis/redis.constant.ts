@@ -1,1 +1,1 @@
-export const REDIS_PUBSUB = Symbol('REDIS_PUBSUB')
+export const REDIS_PUBSUB = Symbol('REDIS_PUBSUB');

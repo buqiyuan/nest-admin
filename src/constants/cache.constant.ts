@@ -7,4 +7,4 @@ export enum RedisKeys {
   ONLINE_USER_PREFIX = 'online:user:',
   TOKEN_BLACKLIST_PREFIX = 'token:blacklist:',
 }
-export const API_CACHE_PREFIX = 'api-cache:'
+export const API_CACHE_PREFIX = 'api-cache:';

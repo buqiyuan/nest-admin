@@ -1,25 +1,25 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
-import { Injectable } from '@nestjs/common'
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Injectable } from '@nestjs/common';
 
-import Redis from 'ioredis'
+import Redis from 'ioredis';
 
-import { throttle } from 'lodash'
-import { UAParser } from 'ua-parser-js'
+import { throttle } from 'lodash';
+import { UAParser } from 'ua-parser-js';
 
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
+import { BusinessException } from '~/common/exceptions/biz.exception';
+import { ErrorEnum } from '~/constants/error-code.constant';
 
-import { genOnlineUserKey } from '~/helper/genRedisKey'
-import { AuthService } from '~/modules/auth/auth.service'
-import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity'
+import { genOnlineUserKey } from '~/helper/genRedisKey';
+import { AuthService } from '~/modules/auth/auth.service';
+import { AccessTokenEntity } from '~/modules/auth/entities/access-token.entity';
 
-import { TokenService } from '~/modules/auth/services/token.service'
-import { SseService } from '~/modules/sse/sse.service'
-import { getIpAddress } from '~/utils'
+import { TokenService } from '~/modules/auth/services/token.service';
+import { SseService } from '~/modules/sse/sse.service';
+import { getIpAddress } from '~/utils';
 
-import { UserService } from '../../user/user.service'
+import { UserService } from '../../user/user.service';
 
-import { OnlineUserInfo } from './online.model'
+import { OnlineUserInfo } from './online.model';
 
 @Injectable()
 export class OnlineService {
@@ -33,9 +33,9 @@ export class OnlineService {
 
   /** 在线用户数量变动时，通知前端实时更新在线用户数量或列表, 3 秒内最多推送一次，避免频繁触发 */
   updateOnlineUserCount = throttle(async () => {
-    const keys = await this.redis.keys(genOnlineUserKey('*'))
-    this.sseService.sendToAllUser({ type: 'updateOnlineUserCount', data: keys.length })
-  }, 3000)
+    const keys = await this.redis.keys(genOnlineUserKey('*'));
+    this.sseService.sendToAllUser({ type: 'updateOnlineUserCount', data: keys.length });
+  }, 3000);
 
   async addOnlineUser(value: string, ip: string, ua: string) {
     const token = await AccessTokenEntity.findOne({
@@ -46,16 +46,16 @@ export class OnlineService {
         },
       },
       cache: true,
-    })
+    });
 
     if (!token)
-      return
+      return;
 
-    const tokenPaload = await this.tokenService.verifyAccessToken(value)
-    const exp = ~~(tokenPaload.exp - Date.now() / 1000)
-    const parser = new UAParser()
-    const uaResult = parser.setUA(ua).getResult()
-    const address = await getIpAddress(ip)
+    const tokenPaload = await this.tokenService.verifyAccessToken(value);
+    const exp = ~~(tokenPaload.exp - Date.now() / 1000);
+    const parser = new UAParser();
+    const uaResult = parser.setUA(ua).getResult();
+    const address = await getIpAddress(ip);
 
     const result: OnlineUserInfo = {
       ip,
@@ -67,9 +67,9 @@ export class OnlineService {
       browser: `${`${uaResult.browser.name ?? ''} `}${uaResult.browser.version}`,
       username: token.user.username,
       time: token.created_at.toString(),
-    }
-    await this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', exp)
-    this.updateOnlineUserCount()
+    };
+    await this.redis.set(genOnlineUserKey(token.id), JSON.stringify(result), 'EX', exp);
+    this.updateOnlineUserCount();
   }
 
   async removeOnlineUser(value: string) {
@@ -77,15 +77,15 @@ export class OnlineService {
       where: { value },
       relations: ['user'],
       cache: true,
-    })
-    await this.redis.del(genOnlineUserKey(token?.id))
-    this.updateOnlineUserCount()
+    });
+    await this.redis.del(genOnlineUserKey(token?.id));
+    this.updateOnlineUserCount();
   }
 
   /** 移除所有在线用户 */
   async clearOnlineUser() {
-    const keys = await this.redis.keys(genOnlineUserKey('*'))
-    await this.redis.del(keys)
+    const keys = await this.redis.keys(genOnlineUserKey('*'));
+    await this.redis.del(keys);
   }
 
   /**
@@ -96,17 +96,17 @@ export class OnlineService {
       where: { value },
       relations: ['user'],
       cache: true,
-    })
-    const keys = await this.redis.keys(genOnlineUserKey('*'))
-    const users = await this.redis.mget(keys)
-    const rootUserId = await this.userService.findRootUserId()
+    });
+    const keys = await this.redis.keys(genOnlineUserKey('*'));
+    const users = await this.redis.mget(keys);
+    const rootUserId = await this.userService.findRootUserId();
 
     return users.map((e) => {
-      const item = JSON.parse(e) as OnlineUserInfo
-      item.isCurrent = token.id === item.tokenId
-      item.disable = item.isCurrent || item.uid === rootUserId
-      return item
-    }).sort((a, b) => a.time > b.time ? -1 : 1)
+      const item = JSON.parse(e) as OnlineUserInfo;
+      item.isCurrent = token.id === item.tokenId;
+      item.disable = item.isCurrent || item.uid === rootUserId;
+      return item;
+    }).sort((a, b) => a.time > b.time ? -1 : 1);
   }
 
   /**
@@ -117,15 +117,15 @@ export class OnlineService {
       where: { id: tokenId },
       relations: ['user'],
       cache: true,
-    })
+    });
     if (!token)
-      return
-    const rootUserId = await this.userService.findRootUserId()
-    const targetUid = token.user.id
+      return;
+    const rootUserId = await this.userService.findRootUserId();
+    const targetUid = token.user.id;
     if (targetUid === rootUserId || targetUid === user.uid)
-      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER)
+      throw new BusinessException(ErrorEnum.NOT_ALLOWED_TO_LOGOUT_USER);
 
-    const targetUser = await this.tokenService.verifyAccessToken(token.value)
-    await this.authService.clearLoginStatus(targetUser, token.value)
+    const targetUser = await this.tokenService.verifyAccessToken(token.value);
+    await this.authService.clearLoginStatus(targetUser, token.value);
   }
 }

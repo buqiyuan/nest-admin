@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity('replication_group_configuration_version', { schema: 'mysql' })
 export class replication_group_configuration_version extends BaseEntity {
@@ -8,12 +8,12 @@ export class replication_group_configuration_version extends BaseEntity {
     comment: 'The configuration name.',
     length: 255,
   })
-  name: string
+  name: string;
 
   @Column('bigint', {
     name: 'version',
     comment: 'The version of the configuration name.',
     unsigned: true,
   })
-  version: string
+  version: string;
 }

@@ -1,11 +1,11 @@
-import { Module, forwardRef } from '@nestjs/common'
+import { Module, forwardRef } from '@nestjs/common';
 
-import { StorageModule } from '../storage/storage.module'
+import { StorageModule } from '../storage/storage.module';
 
-import { UploadController } from './upload.controller'
-import { UploadService } from './upload.service'
+import { UploadController } from './upload.controller';
+import { UploadService } from './upload.service';
 
-const services = [UploadService]
+const services = [UploadService];
 
 @Module({
   imports: [forwardRef(() => StorageModule)],

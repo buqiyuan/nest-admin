@@ -1,21 +1,21 @@
-import { } from '@nestjs/common'
-import { OnEvent } from '@nestjs/event-emitter'
-import { JwtService } from '@nestjs/jwt'
+import { } from '@nestjs/common';
+import { OnEvent } from '@nestjs/event-emitter';
+import { JwtService } from '@nestjs/jwt';
 import type {
   OnGatewayConnection,
   OnGatewayDisconnect,
-} from '@nestjs/websockets'
-import { WebSocketServer } from '@nestjs/websockets'
-import { Namespace } from 'socket.io'
-import type { Socket } from 'socket.io'
+} from '@nestjs/websockets';
+import { WebSocketServer } from '@nestjs/websockets';
+import { Namespace } from 'socket.io';
+import type { Socket } from 'socket.io';
 
-import { EventBusEvents } from '~/constants/event-bus.constant'
+import { EventBusEvents } from '~/constants/event-bus.constant';
 
-import { TokenService } from '~/modules/auth/services/token.service'
-import { CacheService } from '~/shared/redis/cache.service'
+import { TokenService } from '~/modules/auth/services/token.service';
+import { CacheService } from '~/shared/redis/cache.service';
 
-import { BroadcastBaseGateway } from '../base.gateway'
-import { BusinessEvents } from '../business-event.constant'
+import { BroadcastBaseGateway } from '../base.gateway';
+import { BusinessEvents } from '../business-event.constant';
 
 export interface AuthGatewayOptions {
   namespace: string
@@ -26,7 +26,7 @@ export interface AuthGatewayOptions {
 export interface IAuthGateway extends OnGatewayConnection, OnGatewayDisconnect, BroadcastBaseGateway {}
 
 export function createAuthGateway(options: AuthGatewayOptions): new (...args: any[]) => IAuthGateway {
-  const { namespace } = options
+  const { namespace } = options;
 
   class AuthGateway extends BroadcastBaseGateway implements IAuthGateway {
     constructor(
@@ -34,87 +34,87 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
       protected readonly tokenService: TokenService,
       private readonly cacheService: CacheService,
     ) {
-      super()
+      super();
     }
 
     @WebSocketServer()
-    protected namespace: Namespace
+    protected namespace: Namespace;
 
     async authFailed(client: Socket) {
       client.send(
         this.gatewayMessageFormat(BusinessEvents.AUTH_FAILED, '认证失败'),
-      )
-      client.disconnect()
+      );
+      client.disconnect();
     }
 
     async authToken(token: string): Promise<boolean> {
       if (typeof token !== 'string')
-        return false
+        return false;
 
       const validJwt = async () => {
         try {
-          const ok = await this.jwtService.verifyAsync(token)
+          const ok = await this.jwtService.verifyAsync(token);
 
           if (!ok)
-            return false
+            return false;
         }
         catch {
-          return false
+          return false;
         }
         // is not crash, is verify
-        return true
-      }
+        return true;
+      };
 
-      return await validJwt()
+      return await validJwt();
     }
 
     async handleConnection(client: Socket) {
       const token
         = client.handshake.query.token
         || client.handshake.headers.authorization
-        || client.handshake.headers.Authorization
+        || client.handshake.headers.Authorization;
       if (!token)
-        return this.authFailed(client)
+        return this.authFailed(client);
 
       if (!(await this.authToken(token as string)))
-        return this.authFailed(client)
+        return this.authFailed(client);
 
-      super.handleConnect(client)
+      super.handleConnect(client);
 
-      const sid = client.id
-      this.tokenSocketIdMap.set(token.toString(), sid)
+      const sid = client.id;
+      this.tokenSocketIdMap.set(token.toString(), sid);
     }
 
     handleDisconnect(client: Socket) {
-      super.handleDisconnect(client)
+      super.handleDisconnect(client);
     }
 
-    tokenSocketIdMap = new Map<string, string>()
+    tokenSocketIdMap = new Map<string, string>();
 
     @OnEvent(EventBusEvents.TokenExpired)
     handleTokenExpired(token: string) {
       // consola.debug(`token expired: ${token}`)
 
-      const server = this.namespace.server
-      const sid = this.tokenSocketIdMap.get(token)
+      const server = this.namespace.server;
+      const sid = this.tokenSocketIdMap.get(token);
       if (!sid)
-        return false
+        return false;
 
-      const socket = server.of(`/${namespace}`).sockets.get(sid)
+      const socket = server.of(`/${namespace}`).sockets.get(sid);
       if (socket) {
-        socket.disconnect()
-        super.handleDisconnect(socket)
-        return true
+        socket.disconnect();
+        super.handleDisconnect(socket);
+        return true;
       }
-      return false
+      return false;
     }
 
     override broadcast(event: BusinessEvents, data: any) {
       this.cacheService.emitter
         .of(`/${namespace}`)
-        .emit('message', this.gatewayMessageFormat(event, data))
+        .emit('message', this.gatewayMessageFormat(event, data));
     }
   }
 
-  return AuthGateway
+  return AuthGateway;
 }

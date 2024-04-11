@@ -1,15 +1,15 @@
-import { HttpStatus, Type, applyDecorators } from '@nestjs/common'
-import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger'
+import { HttpStatus, Type, applyDecorators } from '@nestjs/common';
+import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger';
 
-import { ResOp } from '~/common/model/response.model'
+import { ResOp } from '~/common/model/response.model';
 
-const baseTypeNames = ['String', 'Number', 'Boolean']
+const baseTypeNames = ['String', 'Number', 'Boolean'];
 
 function genBaseProp(type: Type<any>) {
   if (baseTypeNames.includes(type.name))
-    return { type: type.name.toLocaleLowerCase() }
+    return { type: type.name.toLocaleLowerCase() };
   else
-    return { $ref: getSchemaPath(type) }
+    return { $ref: getSchemaPath(type) };
 }
 
 /**
@@ -24,7 +24,7 @@ export function ApiResult<TModel extends Type<any>>({
   isPage?: boolean
   status?: HttpStatus
 }) {
-  let prop = null
+  let prop = null;
 
   if (Array.isArray(type)) {
     if (isPage) {
@@ -46,23 +46,23 @@ export function ApiResult<TModel extends Type<any>>({
             },
           },
         },
-      }
+      };
     }
     else {
       prop = {
         type: 'array',
         items: genBaseProp(type[0]),
-      }
+      };
     }
   }
   else if (type) {
-    prop = genBaseProp(type)
+    prop = genBaseProp(type);
   }
   else {
-    prop = { type: 'null', default: null }
+    prop = { type: 'null', default: null };
   }
 
-  const model = Array.isArray(type) ? type[0] : type
+  const model = Array.isArray(type) ? type[0] : type;
 
   return applyDecorators(
     ApiExtraModels(model),
@@ -79,5 +79,5 @@ export function ApiResult<TModel extends Type<any>>({
         ],
       },
     }),
-  )
+  );
 }

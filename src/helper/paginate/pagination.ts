@@ -1,6 +1,6 @@
-import { ObjectLiteral } from 'typeorm'
+import { ObjectLiteral } from 'typeorm';
 
-import { IPaginationMeta } from './interface'
+import { IPaginationMeta } from './interface';
 
 export class Pagination<
   PaginationObject,

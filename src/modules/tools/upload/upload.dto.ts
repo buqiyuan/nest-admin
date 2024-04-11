@@ -1,9 +1,9 @@
-import { MultipartFile } from '@fastify/multipart'
-import { ApiProperty } from '@nestjs/swagger'
+import { MultipartFile } from '@fastify/multipart';
+import { ApiProperty } from '@nestjs/swagger';
 
-import { IsDefined } from 'class-validator'
+import { IsDefined } from 'class-validator';
 
-import { IsFile } from './file.constraint'
+import { IsFile } from './file.constraint';
 
 export class FileUploadDto {
   @ApiProperty({ type: 'string', format: 'binary', description: '文件' })
@@ -23,5 +23,5 @@ export class FileUploadDto {
       message: '文件类型不正确',
     },
   )
-  file: MultipartFile
+  file: MultipartFile;
 }

@@ -1,20 +1,20 @@
-import { JwtService } from '@nestjs/jwt'
+import { JwtService } from '@nestjs/jwt';
 import {
   GatewayMetadata,
   OnGatewayConnection,
   OnGatewayDisconnect,
   WebSocketGateway,
   WebSocketServer,
-} from '@nestjs/websockets'
+} from '@nestjs/websockets';
 
-import { Server } from 'socket.io'
+import { Server } from 'socket.io';
 
-import { AuthService } from '~/modules/auth/auth.service'
-import { CacheService } from '~/shared/redis/cache.service'
+import { AuthService } from '~/modules/auth/auth.service';
+import { CacheService } from '~/shared/redis/cache.service';
 
-import { createAuthGateway } from '../shared/auth.gateway'
+import { createAuthGateway } from '../shared/auth.gateway';
 
-const AuthGateway = createAuthGateway({ namespace: 'admin' })
+const AuthGateway = createAuthGateway({ namespace: 'admin' });
 
 @WebSocketGateway<GatewayMetadata>({ namespace: 'admin' })
 export class AdminEventsGateway
@@ -25,13 +25,13 @@ export class AdminEventsGateway
     protected readonly authService: AuthService,
     private readonly cacheService: CacheService,
   ) {
-    super(jwtService, authService, cacheService)
+    super(jwtService, authService, cacheService);
   }
 
   @WebSocketServer()
-  protected _server: Server
+  protected _server: Server;
 
   get server() {
-    return this._server
+    return this._server;
   }
 }

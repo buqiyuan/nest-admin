@@ -1,8 +1,8 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
-import { RoleEntity } from './role.entity'
+import { RoleEntity } from './role.entity';
 
 export class RoleInfo extends RoleEntity {
   @ApiProperty({ type: [Number] })
-  menuIds: number[]
+  menuIds: number[];
 }

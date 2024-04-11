@@ -1,16 +1,16 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { MenuModule } from '../system/menu/menu.module'
-import { ParamConfigModule } from '../system/param-config/param-config.module'
+import { MenuModule } from '../system/menu/menu.module';
+import { ParamConfigModule } from '../system/param-config/param-config.module';
 
-import { RoleModule } from '../system/role/role.module'
+import { RoleModule } from '../system/role/role.module';
 
-import { UserController } from './user.controller'
-import { UserEntity } from './user.entity'
-import { UserService } from './user.service'
+import { UserController } from './user.controller';
+import { UserEntity } from './user.entity';
+import { UserService } from './user.service';
 
-const providers = [UserService]
+const providers = [UserService];
 
 @Module({
   imports: [

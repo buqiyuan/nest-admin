@@ -1,36 +1,36 @@
-import { ApiHideProperty, ApiProperty } from '@nestjs/swagger'
-import { Column, Entity, JoinTable, ManyToMany, Relation } from 'typeorm'
+import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
+import { Column, Entity, JoinTable, ManyToMany, Relation } from 'typeorm';
 
-import { CommonEntity } from '~/common/entity/common.entity'
+import { CommonEntity } from '~/common/entity/common.entity';
 
-import { UserEntity } from '../../user/user.entity'
-import { MenuEntity } from '../menu/menu.entity'
+import { UserEntity } from '../../user/user.entity';
+import { MenuEntity } from '../menu/menu.entity';
 
 @Entity({ name: 'sys_role' })
 export class RoleEntity extends CommonEntity {
   @Column({ length: 50, unique: true })
   @ApiProperty({ description: '角色名' })
-  name: string
+  name: string;
 
   @Column({ unique: true })
   @ApiProperty({ description: '角色标识' })
-  value: string
+  value: string;
 
   @Column({ nullable: true })
   @ApiProperty({ description: '角色描述' })
-  remark: string
+  remark: string;
 
   @Column({ type: 'tinyint', nullable: true, default: 1 })
   @ApiProperty({ description: '状态：1启用，0禁用' })
-  status: number
+  status: number;
 
   @Column({ nullable: true })
   @ApiProperty({ description: '是否默认用户' })
-  default: boolean
+  default: boolean;
 
   @ApiHideProperty()
   @ManyToMany(() => UserEntity, user => user.roles)
-  users: Relation<UserEntity[]>
+  users: Relation<UserEntity[]>;
 
   @ApiHideProperty()
   @ManyToMany(() => MenuEntity, menu => menu.roles, {})
@@ -39,5 +39,5 @@ export class RoleEntity extends CommonEntity {
     joinColumn: { name: 'role_id', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'menu_id', referencedColumnName: 'id' },
   })
-  menus: Relation<MenuEntity[]>
+  menus: Relation<MenuEntity[]>;
 }

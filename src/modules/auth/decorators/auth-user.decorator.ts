@@ -1,5 +1,5 @@
-import { ExecutionContext, createParamDecorator } from '@nestjs/common'
-import { FastifyRequest } from 'fastify'
+import { ExecutionContext, createParamDecorator } from '@nestjs/common';
+import { FastifyRequest } from 'fastify';
 
 type Payload = keyof IAuthUser
 
@@ -8,10 +8,10 @@ type Payload = keyof IAuthUser
  */
 export const AuthUser = createParamDecorator(
   (data: Payload, ctx: ExecutionContext) => {
-    const request = ctx.switchToHttp().getRequest<FastifyRequest>()
+    const request = ctx.switchToHttp().getRequest<FastifyRequest>();
     // auth guard will mount this
-    const user = request.user as IAuthUser
+    const user = request.user as IAuthUser;
 
-    return data ? user?.[data] : user
+    return data ? user?.[data] : user;
   },
-)
+);

@@ -1,15 +1,15 @@
-import { Module, forwardRef } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module, forwardRef } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SseService } from '~/modules/sse/sse.service'
+import { SseService } from '~/modules/sse/sse.service';
 
-import { RoleModule } from '../role/role.module'
+import { RoleModule } from '../role/role.module';
 
-import { MenuController } from './menu.controller'
-import { MenuEntity } from './menu.entity'
-import { MenuService } from './menu.service'
+import { MenuController } from './menu.controller';
+import { MenuEntity } from './menu.entity';
+import { MenuService } from './menu.service';
 
-const providers = [MenuService, SseService]
+const providers = [MenuService, SseService];
 
 @Module({
   imports: [

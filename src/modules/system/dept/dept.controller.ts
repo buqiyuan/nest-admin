@@ -1,17 +1,17 @@
-import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, Post, Put, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
-import { DeptEntity } from '~/modules/system/dept/dept.entity'
+import { ApiResult } from '~/common/decorators/api-result.decorator';
+import { IdParam } from '~/common/decorators/id-param.decorator';
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
+import { BusinessException } from '~/common/exceptions/biz.exception';
+import { ErrorEnum } from '~/constants/error-code.constant';
+import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator';
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator';
+import { DeptEntity } from '~/modules/system/dept/dept.entity';
 
-import { DeptDto, DeptQueryDto } from './dept.dto'
-import { DeptService } from './dept.service'
+import { DeptDto, DeptQueryDto } from './dept.dto';
+import { DeptService } from './dept.service';
 
 export const permissions = definePermission('system:dept', {
   LIST: 'list',
@@ -19,7 +19,7 @@ export const permissions = definePermission('system:dept', {
   READ: 'read',
   UPDATE: 'update',
   DELETE: 'delete',
-} as const)
+} as const);
 
 @ApiSecurityAuth()
 @ApiTags('System - 部门模块')
@@ -32,21 +32,21 @@ export class DeptController {
   @ApiResult({ type: [DeptEntity] })
   @Perm(permissions.LIST)
   async list(@Query() dto: DeptQueryDto, @AuthUser('uid')uid: number): Promise<DeptEntity[]> {
-    return this.deptService.getDeptTree(uid, dto)
+    return this.deptService.getDeptTree(uid, dto);
   }
 
   @Post()
   @ApiOperation({ summary: '创建部门' })
   @Perm(permissions.CREATE)
   async create(@Body() dto: DeptDto): Promise<void> {
-    await this.deptService.create(dto)
+    await this.deptService.create(dto);
   }
 
   @Get(':id')
   @ApiOperation({ summary: '查询部门信息' })
   @Perm(permissions.READ)
   async info(@IdParam() id: number) {
-    return this.deptService.info(id)
+    return this.deptService.info(id);
   }
 
   @Put(':id')
@@ -56,7 +56,7 @@ export class DeptController {
     @IdParam() id: number, @Body()
 updateDeptDto: DeptDto,
   ): Promise<void> {
-    await this.deptService.update(id, updateDeptDto)
+    await this.deptService.update(id, updateDeptDto);
   }
 
   @Delete(':id')
@@ -64,16 +64,16 @@ updateDeptDto: DeptDto,
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
     // 查询是否有关联用户或者部门，如果含有则无法删除
-    const count = await this.deptService.countUserByDeptId(id)
+    const count = await this.deptService.countUserByDeptId(id);
     if (count > 0)
-      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_ASSOCIATED_USERS)
+      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_ASSOCIATED_USERS);
 
-    const count2 = await this.deptService.countChildDept(id)
-    console.log('count2', count2)
+    const count2 = await this.deptService.countChildDept(id);
+    console.log('count2', count2);
     if (count2 > 0)
-      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_CHILD_DEPARTMENTS)
+      throw new BusinessException(ErrorEnum.DEPARTMENT_HAS_CHILD_DEPARTMENTS);
 
-    await this.deptService.delete(id)
+    await this.deptService.delete(id);
   }
 
   // @Post('move')

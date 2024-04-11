@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, Index } from 'typeorm'
+import { BaseEntity, Column, Entity, Index } from 'typeorm';
 
 @Index('name', ['name'], { unique: true })
 @Entity('help_category', { schema: 'mysql' })
@@ -8,18 +8,18 @@ export class help_category extends BaseEntity {
     name: 'help_category_id',
     unsigned: true,
   })
-  helpCategoryId: number
+  helpCategoryId: number;
 
   @Column('char', { name: 'name', unique: true, length: 64 })
-  name: string
+  name: string;
 
   @Column('smallint', {
     name: 'parent_category_id',
     nullable: true,
     unsigned: true,
   })
-  parentCategoryId: number | null
+  parentCategoryId: number | null;
 
   @Column('text', { name: 'url' })
-  url: string
+  url: string;
 }

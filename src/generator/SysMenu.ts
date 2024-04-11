@@ -5,68 +5,68 @@ import {
   JoinTable,
   ManyToMany,
   PrimaryGeneratedColumn,
-} from 'typeorm'
+} from 'typeorm';
 
-import { sys_role } from './SysRole'
+import { sys_role } from './SysRole';
 
 @Entity('sys_menu', { schema: 'mysql' })
 export class sys_menu extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
-  id: number
+  id: number;
 
   @Column('int', { name: 'parent_id', nullable: true })
-  parentId: number | null
+  parentId: number | null;
 
   @Column('varchar', { name: 'path', nullable: true, length: 255 })
-  path: string | null
+  path: string | null;
 
   @Column('varchar', { name: 'name', length: 255 })
-  name: string
+  name: string;
 
   @Column('varchar', { name: 'permission', nullable: true, length: 255 })
-  permission: string | null
+  permission: string | null;
 
   @Column('tinyint', { name: 'type', default: () => '\'0\'' })
-  type: number
+  type: number;
 
   @Column('varchar', { name: 'icon', nullable: true, length: 255 })
-  icon: string | null
+  icon: string | null;
 
   @Column('int', { name: 'order_no', nullable: true, default: () => '\'0\'' })
-  orderNo: number | null
+  orderNo: number | null;
 
   @Column('varchar', { name: 'component', nullable: true, length: 255 })
-  component: string | null
+  component: string | null;
 
   @Column('tinyint', { name: 'keep_alive', default: () => '\'1\'' })
-  keepAlive: number
+  keepAlive: number;
 
   @Column('tinyint', { name: 'show', default: () => '\'1\'' })
-  show: number
+  show: number;
 
   @Column('tinyint', { name: 'status', default: () => '\'1\'' })
-  status: number
+  status: number;
 
   @Column('datetime', {
     name: 'created_at',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  createdAt: Date
+  createdAt: Date;
 
   @Column('datetime', {
     name: 'updated_at',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  updatedAt: Date
+  updatedAt: Date;
 
   @Column('tinyint', { name: 'is_ext', default: () => '\'0\'' })
-  isExt: number
+  isExt: number;
 
   @Column('tinyint', { name: 'ext_open_mode', default: () => '\'1\'' })
-  extOpenMode: number
+  extOpenMode: number;
 
   @Column('varchar', { name: 'active_menu', nullable: true, length: 255 })
-  activeMenu: string | null
+  activeMenu: string | null;
 
   @ManyToMany(() => sys_role, sysRole => sysRole.sysMenus)
   @JoinTable({
@@ -75,5 +75,5 @@ export class sys_menu extends BaseEntity {
     inverseJoinColumns: [{ name: 'role_id', referencedColumnName: 'id' }],
     schema: 'mysql',
   })
-  sysRoles: sys_role[]
+  sysRoles: sys_role[];
 }

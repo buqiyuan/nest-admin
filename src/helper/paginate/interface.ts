@@ -1,4 +1,4 @@
-import { ObjectLiteral } from 'typeorm'
+import { ObjectLiteral } from 'typeorm';
 
 export enum PaginationTypeEnum {
   LIMIT_AND_OFFSET = 'limit',

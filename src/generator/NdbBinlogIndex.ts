@@ -1,40 +1,40 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity('ndb_binlog_index', { schema: 'mysql' })
 export class ndb_binlog_index extends BaseEntity {
   @Column('bigint', { name: 'Position', unsigned: true })
-  position: string
+  position: string;
 
   @Column('varchar', { name: 'File', length: 255 })
-  file: string
+  file: string;
 
   @Column('bigint', { primary: true, name: 'epoch', unsigned: true })
-  epoch: string
+  epoch: string;
 
   @Column('int', { name: 'inserts', unsigned: true })
-  inserts: number
+  inserts: number;
 
   @Column('int', { name: 'updates', unsigned: true })
-  updates: number
+  updates: number;
 
   @Column('int', { name: 'deletes', unsigned: true })
-  deletes: number
+  deletes: number;
 
   @Column('int', { name: 'schemaops', unsigned: true })
-  schemaops: number
+  schemaops: number;
 
   @Column('int', { primary: true, name: 'orig_server_id', unsigned: true })
-  origServerId: number
+  origServerId: number;
 
   @Column('bigint', { primary: true, name: 'orig_epoch', unsigned: true })
-  origEpoch: string
+  origEpoch: string;
 
   @Column('int', { name: 'gci', unsigned: true })
-  gci: number
+  gci: number;
 
   @Column('bigint', { name: 'next_position', unsigned: true })
-  nextPosition: string
+  nextPosition: string;
 
   @Column('varchar', { name: 'next_file', length: 255 })
-  nextFile: string
+  nextFile: string;
 }

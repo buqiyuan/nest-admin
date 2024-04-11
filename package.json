@@ -106,7 +106,6 @@
     "winston-daily-rotate-file": "^5.0.0"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.9.0",
     "@compodoc/compodoc": "^1.1.23",
     "@nestjs/cli": "^10.3.2",
     "@nestjs/schematics": "^10.1.1",
@@ -118,6 +117,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "@types/ua-parser-js": "^0.7.39",
+    "@typescript-eslint/eslint-plugin": "^7.6.0",
     "cross-env": "^7.0.3",
     "eslint": "^8.57.0",
     "jest": "^29.7.0",

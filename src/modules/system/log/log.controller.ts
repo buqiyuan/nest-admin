@@ -1,28 +1,28 @@
-import { Controller, Get, Query } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Controller, Get, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { ApiResult } from '~/common/decorators/api-result.decorator';
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
+import { Pagination } from '~/helper/paginate/pagination';
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator';
 
 import {
   CaptchaLogQueryDto,
   LoginLogQueryDto,
   TaskLogQueryDto,
-} from './dto/log.dto'
-import { CaptchaLogEntity } from './entities/captcha-log.entity'
-import { TaskLogEntity } from './entities/task-log.entity'
-import { LoginLogInfo } from './models/log.model'
-import { CaptchaLogService } from './services/captcha-log.service'
-import { LoginLogService } from './services/login-log.service'
-import { TaskLogService } from './services/task-log.service'
+} from './dto/log.dto';
+import { CaptchaLogEntity } from './entities/captcha-log.entity';
+import { TaskLogEntity } from './entities/task-log.entity';
+import { LoginLogInfo } from './models/log.model';
+import { CaptchaLogService } from './services/captcha-log.service';
+import { LoginLogService } from './services/login-log.service';
+import { TaskLogService } from './services/task-log.service';
 
 export const permissions = definePermission('system:log', {
   TaskList: 'task:list',
   LogList: 'login:list',
   CaptchaList: 'captcha:list',
-} as const)
+} as const);
 
 @ApiSecurityAuth()
 @ApiTags('System - 日志模块')
@@ -41,7 +41,7 @@ export class LogController {
   async loginLogPage(
     @Query() dto: LoginLogQueryDto,
   ): Promise<Pagination<LoginLogInfo>> {
-    return this.loginLogService.list(dto)
+    return this.loginLogService.list(dto);
   }
 
   @Get('task/list')
@@ -49,7 +49,7 @@ export class LogController {
   @ApiResult({ type: [TaskLogEntity], isPage: true })
   @Perm(permissions.LogList)
   async taskList(@Query() dto: TaskLogQueryDto) {
-    return this.taskService.list(dto)
+    return this.taskService.list(dto);
   }
 
   @Get('captcha/list')
@@ -59,6 +59,6 @@ export class LogController {
   async captchaList(
     @Query() dto: CaptchaLogQueryDto,
   ): Promise<Pagination<CaptchaLogEntity>> {
-    return this.captchaLogService.paginate(dto)
+    return this.captchaLogService.paginate(dto);
   }
 }

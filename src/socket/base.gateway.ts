@@ -1,6 +1,6 @@
-import type { Socket } from 'socket.io'
+import type { Socket } from 'socket.io';
 
-import { BusinessEvents } from './business-event.constant'
+import { BusinessEvents } from './business-event.constant';
 
 export abstract class BaseGateway {
   public gatewayMessageFormat(
@@ -12,19 +12,19 @@ export abstract class BaseGateway {
       type,
       data: message,
       code,
-    }
+    };
   }
 
   handleDisconnect(client: Socket) {
     client.send(
       this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, 'WebSocket 断开'),
-    )
+    );
   }
 
   handleConnect(client: Socket) {
     client.send(
       this.gatewayMessageFormat(BusinessEvents.GATEWAY_CONNECT, 'WebSocket 已连接'),
-    )
+    );
   }
 }
 

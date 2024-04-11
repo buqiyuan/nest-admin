@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity('slow_log', { schema: 'mysql' })
 export class slow_log extends BaseEntity {
@@ -6,38 +6,38 @@ export class slow_log extends BaseEntity {
     name: 'start_time',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  startTime: Date
+  startTime: Date;
 
   @Column('mediumtext', { name: 'user_host' })
-  userHost: string
+  userHost: string;
 
   @Column('time', { name: 'query_time' })
-  queryTime: string
+  queryTime: string;
 
   @Column('time', { name: 'lock_time' })
-  lockTime: string
+  lockTime: string;
 
   @Column('int', { name: 'rows_sent' })
-  rowsSent: number
+  rowsSent: number;
 
   @Column('int', { name: 'rows_examined' })
-  rowsExamined: number
+  rowsExamined: number;
 
   @Column('varchar', { name: 'db', length: 512 })
-  db: string
+  db: string;
 
   @Column('int', { name: 'last_insert_id' })
-  lastInsertId: number
+  lastInsertId: number;
 
   @Column('int', { name: 'insert_id' })
-  insertId: number
+  insertId: number;
 
   @Column('int', { name: 'server_id', unsigned: true })
-  serverId: number
+  serverId: number;
 
   @Column('mediumblob', { name: 'sql_text' })
-  sqlText: Buffer
+  sqlText: Buffer;
 
   @Column('bigint', { name: 'thread_id', unsigned: true })
-  threadId: string
+  threadId: string;
 }

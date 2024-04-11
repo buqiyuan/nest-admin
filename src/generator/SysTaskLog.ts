@@ -5,40 +5,40 @@ import {
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
-} from 'typeorm'
+} from 'typeorm';
 
-import { sys_task } from './SysTask'
+import { sys_task } from './SysTask';
 
 @Entity('sys_task_log', { schema: 'mysql' })
 export class sys_task_log extends BaseEntity {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
-  id: number
+  id: number;
 
   @Column('tinyint', { name: 'status', default: () => '\'0\'' })
-  status: number
+  status: number;
 
   @Column('text', { name: 'detail', nullable: true })
-  detail: string | null
+  detail: string | null;
 
   @Column('int', { name: 'consume_time', nullable: true, default: () => '\'0\'' })
-  consumeTime: number | null
+  consumeTime: number | null;
 
   @Column('datetime', {
     name: 'created_at',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  createdAt: Date
+  createdAt: Date;
 
   @Column('datetime', {
     name: 'updated_at',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  updatedAt: Date
+  updatedAt: Date;
 
   @ManyToOne(() => sys_task, sysTask => sysTask.sysTaskLogs, {
     onDelete: 'NO ACTION',
     onUpdate: 'NO ACTION',
   })
   @JoinColumn([{ name: 'task_id', referencedColumnName: 'id' }])
-  task: sys_task
+  task: sys_task;
 }

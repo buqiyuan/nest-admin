@@ -1,12 +1,12 @@
-import { FastifyMultipartBaseOptions, MultipartFile } from '@fastify/multipart'
+import { FastifyMultipartBaseOptions, MultipartFile } from '@fastify/multipart';
 import {
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
   registerDecorator,
-} from 'class-validator'
-import { has, isArray } from 'lodash'
+} from 'class-validator';
+import { has, isArray } from 'lodash';
 
 type FileLimit = Pick<
   FastifyMultipartBaseOptions['limits'],
@@ -16,30 +16,30 @@ type FileLimit = Pick<
 }
 function checkFileAndLimit(file: MultipartFile, limits: FileLimit = {}) {
   if (!('mimetype' in file))
-    return false
+    return false;
   if (limits.mimetypes && !limits.mimetypes.includes(file.mimetype))
-    return false
+    return false;
   if (
     has(file, '_buf')
     && Buffer.byteLength((file as any)._buf) > limits.fileSize
   )
-    return false
-  return true
+    return false;
+  return true;
 }
 
 @ValidatorConstraint({ name: 'isFile' })
 export class FileConstraint implements ValidatorConstraintInterface {
   validate(value: MultipartFile, args: ValidationArguments) {
-    const [limits = {}] = args.constraints
-    const values = (args.object as any)[args.property]
-    const filesLimit = (limits as FileLimit).files ?? 0
+    const [limits = {}] = args.constraints;
+    const values = (args.object as any)[args.property];
+    const filesLimit = (limits as FileLimit).files ?? 0;
     if (filesLimit > 0 && isArray(values) && values.length > filesLimit)
-      return false
-    return checkFileAndLimit(value, limits)
+      return false;
+    return checkFileAndLimit(value, limits);
   }
 
   defaultMessage(_args: ValidationArguments) {
-    return `The file which to upload's conditions are not met`
+    return 'The file which to upload\'s conditions are not met';
   }
 }
 
@@ -59,6 +59,6 @@ export function IsFile(
       options: validationOptions,
       constraints: [limits],
       validator: FileConstraint,
-    })
-  }
+    });
+  };
 }

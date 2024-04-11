@@ -1,11 +1,11 @@
-import { OnQueueCompleted, Process, Processor } from '@nestjs/bull'
-import { Job } from 'bull'
+import { OnQueueCompleted, Process, Processor } from '@nestjs/bull';
+import { Job } from 'bull';
 
-import { TaskLogService } from '../log/services/task-log.service'
+import { TaskLogService } from '../log/services/task-log.service';
 
-import { SYS_TASK_QUEUE_NAME } from './constant'
+import { SYS_TASK_QUEUE_NAME } from './constant';
 
-import { TaskService } from './task.service'
+import { TaskService } from './task.service';
 
 export interface ExecuteData {
   id: number
@@ -22,23 +22,23 @@ export class TaskConsumer {
 
   @Process()
   async handle(job: Job<ExecuteData>): Promise<void> {
-    const startTime = Date.now()
-    const { data } = job
+    const startTime = Date.now();
+    const { data } = job;
     try {
-      await this.taskService.callService(data.service, data.args)
-      const timing = Date.now() - startTime
+      await this.taskService.callService(data.service, data.args);
+      const timing = Date.now() - startTime;
       // 任务执行成功
-      await this.taskLogService.create(data.id, 1, timing)
+      await this.taskLogService.create(data.id, 1, timing);
     }
     catch (e) {
-      const timing = Date.now() - startTime
+      const timing = Date.now() - startTime;
       // 执行失败
-      await this.taskLogService.create(data.id, 0, timing, `${e}`)
+      await this.taskLogService.create(data.id, 0, timing, `${e}`);
     }
   }
 
   @OnQueueCompleted()
   onCompleted(job: Job<ExecuteData>) {
-    this.taskService.updateTaskCompleteStatus(job.data.id)
+    this.taskService.updateTaskCompleteStatus(job.data.id);
   }
 }

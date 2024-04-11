@@ -1,14 +1,14 @@
-import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { UserModule } from '../../user/user.module'
-import { RoleModule } from '../role/role.module'
+import { UserModule } from '../../user/user.module';
+import { RoleModule } from '../role/role.module';
 
-import { DeptController } from './dept.controller'
-import { DeptEntity } from './dept.entity'
-import { DeptService } from './dept.service'
+import { DeptController } from './dept.controller';
+import { DeptEntity } from './dept.entity';
+import { DeptService } from './dept.service';
 
-const services = [DeptService]
+const services = [DeptService];
 
 @Module({
   imports: [TypeOrmModule.forFeature([DeptEntity]), UserModule, RoleModule],

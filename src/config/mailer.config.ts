@@ -1,8 +1,8 @@
-import { ConfigType, registerAs } from '@nestjs/config'
+import { ConfigType, registerAs } from '@nestjs/config';
 
-import { env, envNumber } from '~/global/env'
+import { env, envNumber } from '~/global/env';
 
-export const mailerRegToken = 'mailer'
+export const mailerRegToken = 'mailer';
 
 export const MailerConfig = registerAs(mailerRegToken, () => ({
   host: env('SMTP_HOST'),
@@ -13,6 +13,6 @@ export const MailerConfig = registerAs(mailerRegToken, () => ({
     user: env('SMTP_USER'),
     pass: env('SMTP_PASS'),
   },
-}))
+}));
 
 export type IMailerConfig = ConfigType<typeof MailerConfig>

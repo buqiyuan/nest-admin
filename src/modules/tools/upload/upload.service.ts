@@ -1,11 +1,11 @@
-import { MultipartFile } from '@fastify/multipart'
-import { Injectable, NotFoundException } from '@nestjs/common'
-import { InjectRepository } from '@nestjs/typeorm'
-import dayjs from 'dayjs'
-import { isNil } from 'lodash'
-import { Repository } from 'typeorm'
+import { MultipartFile } from '@fastify/multipart';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import dayjs from 'dayjs';
+import { isNil } from 'lodash';
+import { Repository } from 'typeorm';
 
-import { Storage } from '~/modules/tools/storage/storage.entity'
+import { Storage } from '~/modules/tools/storage/storage.entity';
 
 import {
   fileRename,
@@ -14,7 +14,7 @@ import {
   getFileType,
   getSize,
   saveLocalFile,
-} from '~/utils/file.util'
+} from '~/utils/file.util';
 
 @Injectable()
 export class UploadService {
@@ -28,17 +28,17 @@ export class UploadService {
    */
   async saveFile(file: MultipartFile, userId: number): Promise<string> {
     if (isNil(file))
-      throw new NotFoundException('Have not any file to upload!')
+      throw new NotFoundException('Have not any file to upload!');
 
-    const fileName = file.filename
-    const size = getSize(file.file.bytesRead)
-    const extName = getExtname(fileName)
-    const type = getFileType(extName)
-    const name = fileRename(fileName)
-    const currentDate = dayjs().format('YYYY-MM-DD')
-    const path = getFilePath(name, currentDate, type)
+    const fileName = file.filename;
+    const size = getSize(file.file.bytesRead);
+    const extName = getExtname(fileName);
+    const type = getFileType(extName);
+    const name = fileRename(fileName);
+    const currentDate = dayjs().format('YYYY-MM-DD');
+    const path = getFilePath(name, currentDate, type);
 
-    saveLocalFile(await file.toBuffer(), name, currentDate, type)
+    saveLocalFile(await file.toBuffer(), name, currentDate, type);
 
     await this.storageRepository.save({
       name,
@@ -48,8 +48,8 @@ export class UploadService {
       type,
       size,
       userId,
-    })
+    });
 
-    return path
+    return path;
   }
 }

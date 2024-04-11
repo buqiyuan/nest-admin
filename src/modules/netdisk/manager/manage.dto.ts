@@ -1,5 +1,5 @@
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-import { Type } from 'class-transformer'
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   IsNotEmpty,
@@ -12,31 +12,31 @@ import {
   ValidationArguments,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-} from 'class-validator'
-import { isEmpty } from 'lodash'
+} from 'class-validator';
+import { isEmpty } from 'lodash';
 
-import { NETDISK_HANDLE_MAX_ITEM } from '~/constants/oss.constant'
+import { NETDISK_HANDLE_MAX_ITEM } from '~/constants/oss.constant';
 
 @ValidatorConstraint({ name: 'IsLegalNameExpression', async: false })
 export class IsLegalNameExpression implements ValidatorConstraintInterface {
   validate(value: string, args: ValidationArguments) {
     try {
       if (isEmpty(value))
-        throw new Error('dir name is empty')
+        throw new Error('dir name is empty');
 
       if (value.includes('/'))
-        throw new Error('dir name not allow /')
+        throw new Error('dir name not allow /');
 
-      return true
+      return true;
     }
     catch (e) {
-      return false
+      return false;
     }
   }
 
   defaultMessage(_args: ValidationArguments) {
     // here you can provide default error message if validation failed
-    return 'file or dir name invalid'
+    return 'file or dir name invalid';
   }
 }
 
@@ -44,30 +44,30 @@ export class FileOpItem {
   @ApiProperty({ description: '文件类型', enum: ['file', 'dir'] })
   @IsString()
   @Matches(/(^file$)|(^dir$)/)
-  type: string
+  type: string;
 
   @ApiProperty({ description: '文件名称' })
   @IsString()
   @IsNotEmpty()
   @Validate(IsLegalNameExpression)
-  name: string
+  name: string;
 }
 
 export class GetFileListDto {
   @ApiProperty({ description: '分页标识' })
   @IsOptional()
   @IsString()
-  marker: string
+  marker: string;
 
   @ApiProperty({ description: '当前路径' })
   @IsString()
-  path: string
+  path: string;
 
   @ApiPropertyOptional({ description: '搜索关键字' })
   @Validate(IsLegalNameExpression)
   @ValidateIf(o => !isEmpty(o.key))
   @IsString()
-  key: string
+  key: string;
 }
 
 export class MKDirDto {
@@ -75,34 +75,34 @@ export class MKDirDto {
   @IsNotEmpty()
   @IsString()
   @Validate(IsLegalNameExpression)
-  dirName: string
+  dirName: string;
 
   @ApiProperty({ description: '所属路径' })
   @IsString()
-  path: string
+  path: string;
 }
 
 export class RenameDto {
   @ApiProperty({ description: '文件类型' })
   @IsString()
   @Matches(/(^file$)|(^dir$)/)
-  type: string
+  type: string;
 
   @ApiProperty({ description: '更改的名称' })
   @IsString()
   @IsNotEmpty()
   @Validate(IsLegalNameExpression)
-  toName: string
+  toName: string;
 
   @ApiProperty({ description: '原来的名称' })
   @IsString()
   @IsNotEmpty()
   @Validate(IsLegalNameExpression)
-  name: string
+  name: string;
 
   @ApiProperty({ description: '路径' })
   @IsString()
-  path: string
+  path: string;
 }
 
 export class FileInfoDto {
@@ -110,11 +110,11 @@ export class FileInfoDto {
   @IsString()
   @IsNotEmpty()
   @Validate(IsLegalNameExpression)
-  name: string
+  name: string;
 
   @ApiProperty({ description: '文件所在路径' })
   @IsString()
-  path: string
+  path: string;
 }
 
 export class DeleteDto {
@@ -122,11 +122,11 @@ export class DeleteDto {
   @Type(() => FileOpItem)
   @ArrayMaxSize(NETDISK_HANDLE_MAX_ITEM)
   @ValidateNested({ each: true })
-  files: FileOpItem[]
+  files: FileOpItem[];
 
   @ApiProperty({ description: '所在目录' })
   @IsString()
-  path: string
+  path: string;
 }
 
 export class MarkFileDto {
@@ -134,15 +134,15 @@ export class MarkFileDto {
   @IsString()
   @IsNotEmpty()
   @Validate(IsLegalNameExpression)
-  name: string
+  name: string;
 
   @ApiProperty({ description: '文件所在路径' })
   @IsString()
-  path: string
+  path: string;
 
   @ApiProperty({ description: '备注信息' })
   @IsString()
-  mark: string
+  mark: string;
 }
 
 export class FileOpDto {
@@ -150,13 +150,13 @@ export class FileOpDto {
   @Type(() => FileOpItem)
   @ArrayMaxSize(NETDISK_HANDLE_MAX_ITEM)
   @ValidateNested({ each: true })
-  files: FileOpItem[]
+  files: FileOpItem[];
 
   @ApiProperty({ description: '操作前的目录' })
   @IsString()
-  originPath: string
+  originPath: string;
 
   @ApiProperty({ description: '操作后的目录' })
   @IsString()
-  toPath: string
+  toPath: string;
 }

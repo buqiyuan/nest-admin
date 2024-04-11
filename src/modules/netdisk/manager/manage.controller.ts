@@ -1,19 +1,19 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common'
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import {
   ApiOkResponse,
   ApiOperation,
   ApiTags,
-} from '@nestjs/swagger'
+} from '@nestjs/swagger';
 
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
+import { BusinessException } from '~/common/exceptions/biz.exception';
+import { ErrorEnum } from '~/constants/error-code.constant';
+import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator';
 
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator';
 
-import { checkIsDemoMode } from '~/utils'
+import { checkIsDemoMode } from '~/utils';
 
-import { SFileInfoDetail, SFileList, UploadToken } from './manage.class'
+import { SFileInfoDetail, SFileList, UploadToken } from './manage.class';
 import {
   DeleteDto,
   FileInfoDto,
@@ -22,8 +22,8 @@ import {
   MKDirDto,
   MarkFileDto,
   RenameDto,
-} from './manage.dto'
-import { NetDiskManageService } from './manage.service'
+} from './manage.dto';
+import { NetDiskManageService } from './manage.service';
 
 export const permissions = definePermission('netdisk:manage', {
   LIST: 'list',
@@ -38,7 +38,7 @@ export const permissions = definePermission('netdisk:manage', {
   RENAME: 'rename',
   CUT: 'cut',
   COPY: 'copy',
-} as const)
+} as const);
 
 @ApiTags('NetDiskManage - 网盘管理模块')
 @Controller('manage')
@@ -50,7 +50,7 @@ export class NetDiskManageController {
   @ApiOkResponse({ type: SFileList })
   @Perm(permissions.LIST)
   async list(@Query() dto: GetFileListDto): Promise<SFileList> {
-    return await this.manageService.getFileList(dto.path, dto.marker, dto.key)
+    return await this.manageService.getFileList(dto.path, dto.marker, dto.key);
   }
 
   @Post('mkdir')
@@ -59,11 +59,11 @@ export class NetDiskManageController {
   async mkdir(@Body() dto: MKDirDto): Promise<void> {
     const result = await this.manageService.checkFileExist(
       `${dto.path}${dto.dirName}/`,
-    )
+    );
     if (result)
-      throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST)
+      throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST);
 
-    await this.manageService.createDir(`${dto.path}${dto.dirName}`)
+    await this.manageService.createDir(`${dto.path}${dto.dirName}`);
   }
 
   @Get('token')
@@ -71,11 +71,11 @@ export class NetDiskManageController {
   @ApiOkResponse({ type: UploadToken })
   @Perm(permissions.TOKEN)
   async token(@AuthUser() user: IAuthUser): Promise<UploadToken> {
-    checkIsDemoMode()
+    checkIsDemoMode();
 
     return {
       token: this.manageService.createUploadToken(`${user.uid}`),
-    }
+    };
   }
 
   @Get('info')
@@ -83,7 +83,7 @@ export class NetDiskManageController {
   @ApiOkResponse({ type: SFileInfoDetail })
   @Perm(permissions.INFO)
   async info(@Query() dto: FileInfoDto): Promise<SFileInfoDetail> {
-    return await this.manageService.getFileInfo(dto.name, dto.path)
+    return await this.manageService.getFileInfo(dto.name, dto.path);
   }
 
   @Post('mark')
@@ -92,7 +92,7 @@ export class NetDiskManageController {
   async mark(@Body() dto: MarkFileDto): Promise<void> {
     await this.manageService.changeFileHeaders(dto.name, dto.path, {
       mark: dto.mark,
-    })
+    });
   }
 
   @Get('download')
@@ -100,7 +100,7 @@ export class NetDiskManageController {
   @ApiOkResponse({ type: String })
   @Perm(permissions.DOWNLOAD)
   async download(@Query() dto: FileInfoDto): Promise<string> {
-    return this.manageService.getDownloadLink(`${dto.path}${dto.name}`)
+    return this.manageService.getDownloadLink(`${dto.path}${dto.name}`);
   }
 
   @Post('rename')
@@ -109,21 +109,21 @@ export class NetDiskManageController {
   async rename(@Body() dto: RenameDto): Promise<void> {
     const result = await this.manageService.checkFileExist(
       `${dto.path}${dto.toName}${dto.type === 'dir' ? '/' : ''}`,
-    )
+    );
     if (result)
-      throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST)
+      throw new BusinessException(ErrorEnum.OSS_FILE_OR_DIR_EXIST);
 
     if (dto.type === 'file')
-      await this.manageService.renameFile(dto.path, dto.name, dto.toName)
+      await this.manageService.renameFile(dto.path, dto.name, dto.toName);
     else
-      await this.manageService.renameDir(dto.path, dto.name, dto.toName)
+      await this.manageService.renameDir(dto.path, dto.name, dto.toName);
   }
 
   @Post('delete')
   @ApiOperation({ summary: '删除文件或文件夹' })
   @Perm(permissions.DELETE)
   async delete(@Body() dto: DeleteDto): Promise<void> {
-    await this.manageService.deleteMultiFileOrDir(dto.files, dto.path)
+    await this.manageService.deleteMultiFileOrDir(dto.files, dto.path);
   }
 
   @Post('cut')
@@ -131,13 +131,13 @@ export class NetDiskManageController {
   @Perm(permissions.CUT)
   async cut(@Body() dto: FileOpDto): Promise<void> {
     if (dto.originPath === dto.toPath)
-      throw new BusinessException(ErrorEnum.OSS_NO_OPERATION_REQUIRED)
+      throw new BusinessException(ErrorEnum.OSS_NO_OPERATION_REQUIRED);
 
     await this.manageService.moveMultiFileOrDir(
       dto.files,
       dto.originPath,
       dto.toPath,
-    )
+    );
   }
 
   @Post('copy')
@@ -148,6 +148,6 @@ export class NetDiskManageController {
       dto.files,
       dto.originPath,
       dto.toPath,
-    )
+    );
   }
 }

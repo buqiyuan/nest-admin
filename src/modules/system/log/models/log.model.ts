@@ -1,47 +1,47 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginLogInfo {
   @ApiProperty({ description: '日志编号' })
-  id: number
+  id: number;
 
   @ApiProperty({ description: '登录ip', example: '1.1.1.1' })
-  ip: string
+  ip: string;
 
   @ApiProperty({ description: '登录地址' })
-  address: string
+  address: string;
 
   @ApiProperty({ description: '系统', example: 'Windows 10' })
-  os: string
+  os: string;
 
   @ApiProperty({ description: '浏览器', example: 'Chrome' })
-  browser: string
+  browser: string;
 
   @ApiProperty({ description: '登录用户名', example: 'admin' })
-  username: string
+  username: string;
 
   @ApiProperty({ description: '登录时间', example: '2023-12-22 16:46:20.333843' })
-  time: string
+  time: string;
 }
 
 export class TaskLogInfo {
   @ApiProperty({ description: '日志编号' })
-  id: number
+  id: number;
 
   @ApiProperty({ description: '任务编号' })
-  taskId: number
+  taskId: number;
 
   @ApiProperty({ description: '任务名称' })
-  name: string
+  name: string;
 
   @ApiProperty({ description: '创建时间' })
-  createdAt: string
+  createdAt: string;
 
   @ApiProperty({ description: '耗时' })
-  consumeTime: number
+  consumeTime: number;
 
   @ApiProperty({ description: '执行信息' })
-  detail: string
+  detail: string;
 
   @ApiProperty({ description: '任务执行状态' })
-  status: number
+  status: number;
 }

@@ -1,16 +1,16 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common'
-import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-import { ApiResult } from '~/common/decorators/api-result.decorator'
-import { IdParam } from '~/common/decorators/id-param.decorator'
-import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
-import { Pagination } from '~/helper/paginate/pagination'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
-import { DictItemEntity } from '~/modules/system/dict-item/dict-item.entity'
+import { ApiResult } from '~/common/decorators/api-result.decorator';
+import { IdParam } from '~/common/decorators/id-param.decorator';
+import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator';
+import { Pagination } from '~/helper/paginate/pagination';
+import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator';
+import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator';
+import { DictItemEntity } from '~/modules/system/dict-item/dict-item.entity';
 
-import { DictItemDto, DictItemQueryDto } from './dict-item.dto'
-import { DictItemService } from './dict-item.service'
+import { DictItemDto, DictItemQueryDto } from './dict-item.dto';
+import { DictItemService } from './dict-item.service';
 
 export const permissions = definePermission('system:dict-item', {
   LIST: 'list',
@@ -18,7 +18,7 @@ export const permissions = definePermission('system:dict-item', {
   READ: 'read',
   UPDATE: 'update',
   DELETE: 'delete',
-} as const)
+} as const);
 
 @ApiTags('System - 字典项模块')
 @ApiSecurityAuth()
@@ -31,16 +31,16 @@ export class DictItemController {
   @ApiResult({ type: [DictItemEntity], isPage: true })
   @Perm(permissions.LIST)
   async list(@Query() dto: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
-    return this.dictItemService.page(dto)
+    return this.dictItemService.page(dto);
   }
 
   @Post()
   @ApiOperation({ summary: '新增字典项' })
   @Perm(permissions.CREATE)
   async create(@Body() dto: DictItemDto, @AuthUser() user: IAuthUser): Promise<void> {
-    await this.dictItemService.isExistKey(dto)
-    dto.createBy = dto.updateBy = user.uid
-    await this.dictItemService.create(dto)
+    await this.dictItemService.isExistKey(dto);
+    dto.createBy = dto.updateBy = user.uid;
+    await this.dictItemService.create(dto);
   }
 
   @Get(':id')
@@ -48,21 +48,21 @@ export class DictItemController {
   @ApiResult({ type: DictItemEntity })
   @Perm(permissions.READ)
   async info(@IdParam() id: number): Promise<DictItemEntity> {
-    return this.dictItemService.findOne(id)
+    return this.dictItemService.findOne(id);
   }
 
   @Post(':id')
   @ApiOperation({ summary: '更新字典项' })
   @Perm(permissions.UPDATE)
   async update(@IdParam() id: number, @Body() dto: DictItemDto, @AuthUser() user: IAuthUser): Promise<void> {
-    dto.updateBy = user.uid
-    await this.dictItemService.update(id, dto)
+    dto.updateBy = user.uid;
+    await this.dictItemService.update(id, dto);
   }
 
   @Delete(':id')
   @ApiOperation({ summary: '删除指定的字典项' })
   @Perm(permissions.DELETE)
   async delete(@IdParam() id: number): Promise<void> {
-    await this.dictItemService.delete(id)
+    await this.dictItemService.delete(id);
   }
 }

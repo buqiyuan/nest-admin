@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable } from '@nestjs/common';
 import {
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
   registerDecorator,
-} from 'class-validator'
-import { isNil, merge } from 'lodash'
-import { DataSource, ObjectType } from 'typeorm'
+} from 'class-validator';
+import { isNil, merge } from 'lodash';
+import { DataSource, ObjectType } from 'typeorm';
 
 interface Condition {
   entity: ObjectType<any>
@@ -27,40 +27,40 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
     // 获取要验证的模型和字段
     const config: Omit<Condition, 'entity'> = {
       field: args.property,
-    }
+    };
     const condition = ('entity' in args.constraints[0]
       ? merge(config, args.constraints[0])
       : {
           ...config,
           entity: args.constraints[0],
-        }) as unknown as Required<Condition>
+        }) as unknown as Required<Condition>;
     if (!condition.entity)
-      return false
+      return false;
     try {
       // 查询是否存在数据,如果已经存在则验证失败
-      const repo = this.dataSource.getRepository(condition.entity)
+      const repo = this.dataSource.getRepository(condition.entity);
       return isNil(
         await repo.findOne({
           where: { [condition.field]: value },
         }),
-      )
+      );
     }
     catch (err) {
       // 如果数据库操作异常则验证失败
-      return false
+      return false;
     }
   }
 
   defaultMessage(args: ValidationArguments) {
-    const { entity, property } = args.constraints[0]
-    const queryProperty = property ?? args.property
+    const { entity, property } = args.constraints[0];
+    const queryProperty = property ?? args.property;
     if (!(args.object as any).getManager)
-      return 'getManager function not been found!'
+      return 'getManager function not been found!';
 
     if (!entity)
-      return 'Model not been specified!'
+      return 'Model not been specified!';
 
-    return `${queryProperty} of ${entity.name} must been unique!`
+    return `${queryProperty} of ${entity.name} must been unique!`;
   }
 }
 
@@ -90,8 +90,8 @@ function IsUnique(
       options: validationOptions,
       constraints: [params],
       validator: UniqueConstraint,
-    })
-  }
+    });
+  };
 }
 
-export { IsUnique }
+export { IsUnique };

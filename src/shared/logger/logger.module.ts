@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common'
+import { Module } from '@nestjs/common';
 
-import { LoggerService } from './logger.service'
+import { LoggerService } from './logger.service';
 
 @Module({})
 export class LoggerModule {
@@ -10,6 +10,6 @@ export class LoggerModule {
       module: LoggerModule,
       providers: [LoggerService],
       exports: [LoggerService],
-    }
+    };
   }
 }

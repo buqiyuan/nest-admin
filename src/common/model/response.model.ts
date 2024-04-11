@@ -1,42 +1,42 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
 import {
   RESPONSE_SUCCESS_CODE,
   RESPONSE_SUCCESS_MSG,
-} from '~/constants/response.constant'
+} from '~/constants/response.constant';
 
 export class ResOp<T = any> {
   @ApiProperty({ type: 'object' })
-  data?: T
+  data?: T;
 
   @ApiProperty({ type: 'number', default: RESPONSE_SUCCESS_CODE })
-  code: number
+  code: number;
 
   @ApiProperty({ type: 'string', default: RESPONSE_SUCCESS_MSG })
-  message: string
+  message: string;
 
   constructor(code: number, data: T, message = RESPONSE_SUCCESS_MSG) {
-    this.code = code
-    this.data = data
-    this.message = message
+    this.code = code;
+    this.data = data;
+    this.message = message;
   }
 
   static success<T>(data?: T, message?: string) {
-    return new ResOp(RESPONSE_SUCCESS_CODE, data, message)
+    return new ResOp(RESPONSE_SUCCESS_CODE, data, message);
   }
 
   static error(code: number, message) {
-    return new ResOp(code, {}, message)
+    return new ResOp(code, {}, message);
   }
 }
 
 export class TreeResult<T> {
   @ApiProperty()
-  id: number
+  id: number;
 
   @ApiProperty()
-  parentId: number
+  parentId: number;
 
   @ApiProperty()
-  children?: TreeResult<T>[]
+  children?: TreeResult<T>[];
 }

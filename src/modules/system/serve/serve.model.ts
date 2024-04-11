@@ -1,71 +1,71 @@
-import { ApiProperty } from '@nestjs/swagger'
+import { ApiProperty } from '@nestjs/swagger';
 
 export class Runtime {
   @ApiProperty({ description: '系统' })
-  os?: string
+  os?: string;
 
   @ApiProperty({ description: '服务器架构' })
-  arch?: string
+  arch?: string;
 
   @ApiProperty({ description: 'Node版本' })
-  nodeVersion?: string
+  nodeVersion?: string;
 
   @ApiProperty({ description: 'Npm版本' })
-  npmVersion?: string
+  npmVersion?: string;
 }
 
 export class CoreLoad {
   @ApiProperty({ description: '当前CPU资源消耗' })
-  rawLoad?: number
+  rawLoad?: number;
 
   @ApiProperty({ description: '当前空闲CPU资源' })
-  rawLoadIdle?: number
+  rawLoadIdle?: number;
 }
 
 // Intel(R) Xeon(R) Platinum 8163 CPU @ 2.50GHz
 export class Cpu {
   @ApiProperty({ description: '制造商' })
-  manufacturer?: string
+  manufacturer?: string;
 
   @ApiProperty({ description: '品牌' })
-  brand?: string
+  brand?: string;
 
   @ApiProperty({ description: '物理核心数' })
-  physicalCores?: number
+  physicalCores?: number;
 
   @ApiProperty({ description: '型号' })
-  model?: string
+  model?: string;
 
   @ApiProperty({ description: '速度 in GHz' })
-  speed?: number
+  speed?: number;
 
   @ApiProperty({ description: 'CPU资源消耗 原始滴答' })
-  rawCurrentLoad?: number
+  rawCurrentLoad?: number;
 
   @ApiProperty({ description: '空闲CPU资源 原始滴答' })
-  rawCurrentLoadIdle?: number
+  rawCurrentLoadIdle?: number;
 
   @ApiProperty({ description: 'cpu资源消耗', type: [CoreLoad] })
-  coresLoad?: CoreLoad[]
+  coresLoad?: CoreLoad[];
 }
 
 export class Disk {
   @ApiProperty({ description: '磁盘空间大小 (bytes)' })
-  size?: number
+  size?: number;
 
   @ApiProperty({ description: '已使用磁盘空间 (bytes)' })
-  used?: number
+  used?: number;
 
   @ApiProperty({ description: '可用磁盘空间 (bytes)' })
-  available?: number
+  available?: number;
 }
 
 export class Memory {
   @ApiProperty({ description: 'total memory in bytes' })
-  total?: number
+  total?: number;
 
   @ApiProperty({ description: '可用内存' })
-  available?: number
+  available?: number;
 }
 
 /**
@@ -73,14 +73,14 @@ export class Memory {
  */
 export class ServeStatInfo {
   @ApiProperty({ description: '运行环境', type: Runtime })
-  runtime?: Runtime
+  runtime?: Runtime;
 
   @ApiProperty({ description: 'CPU信息', type: Cpu })
-  cpu?: Cpu
+  cpu?: Cpu;
 
   @ApiProperty({ description: '磁盘信息', type: Disk })
-  disk?: Disk
+  disk?: Disk;
 
   @ApiProperty({ description: '内存信息', type: Memory })
-  memory?: Memory
+  memory?: Memory;
 }

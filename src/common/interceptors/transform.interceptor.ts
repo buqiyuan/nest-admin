@@ -4,14 +4,14 @@ import {
   HttpStatus,
   Injectable,
   NestInterceptor,
-} from '@nestjs/common'
-import { Reflector } from '@nestjs/core'
-import { Observable } from 'rxjs'
-import { map } from 'rxjs/operators'
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ResOp } from '~/common/model/response.model'
+import { ResOp } from '~/common/model/response.model';
 
-import { BYPASS_KEY } from '../decorators/bypass.decorator'
+import { BYPASS_KEY } from '../decorators/bypass.decorator';
 
 /**
  * 统一处理返回接口结果，如果不需要则添加 @Bypass 装饰器
@@ -27,10 +27,10 @@ export class TransformInterceptor implements NestInterceptor {
     const bypass = this.reflector.get<boolean>(
       BYPASS_KEY,
       context.getHandler(),
-    )
+    );
 
     if (bypass)
-      return next.handle()
+      return next.handle();
 
     return next.handle().pipe(
       map((data) => {
@@ -39,8 +39,8 @@ export class TransformInterceptor implements NestInterceptor {
         //   return data;
         // }
 
-        return new ResOp(HttpStatus.OK, data ?? null)
+        return new ResOp(HttpStatus.OK, data ?? null);
       }),
-    )
+    );
   }
 }

@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity } from 'typeorm'
+import { BaseEntity, Column, Entity } from 'typeorm';
 
 @Entity('general_log', { schema: 'mysql' })
 export class general_log extends BaseEntity {
@@ -6,20 +6,20 @@ export class general_log extends BaseEntity {
     name: 'event_time',
     default: () => '\'CURRENT_TIMESTAMP(6)\'',
   })
-  eventTime: Date
+  eventTime: Date;
 
   @Column('mediumtext', { name: 'user_host' })
-  userHost: string
+  userHost: string;
 
   @Column('bigint', { name: 'thread_id', unsigned: true })
-  threadId: string
+  threadId: string;
 
   @Column('int', { name: 'server_id', unsigned: true })
-  serverId: number
+  serverId: number;
 
   @Column('varchar', { name: 'command_type', length: 64 })
-  commandType: string
+  commandType: string;
 
   @Column('mediumblob', { name: 'argument' })
-  argument: Buffer
+  argument: Buffer;
 }

@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger'
-import { Expose, Transform } from 'class-transformer'
-import { IsInt, IsOptional, Max, Min } from 'class-validator'
+import { ApiProperty } from '@nestjs/swagger';
+import { Expose, Transform } from 'class-transformer';
+import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
 export class CursorDto<T = any> {
   @ApiProperty({ minimum: 0, default: 0 })
@@ -11,7 +11,7 @@ export class CursorDto<T = any> {
   @Transform(({ value: val }) => (val ? Number.parseInt(val) : 0), {
     toClassOnly: true,
   })
-  cursor?: number
+  cursor?: number;
 
   @ApiProperty({ minimum: 1, maximum: 100, default: 10 })
   @Min(1)
@@ -22,5 +22,5 @@ export class CursorDto<T = any> {
   @Transform(({ value: val }) => (val ? Number.parseInt(val) : 10), {
     toClassOnly: true,
   })
-  limit?: number
+  limit?: number;
 }

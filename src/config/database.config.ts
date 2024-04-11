@@ -1,16 +1,16 @@
-import { ConfigType, registerAs } from '@nestjs/config'
+import { ConfigType, registerAs } from '@nestjs/config';
 
-import { DataSource, DataSourceOptions } from 'typeorm'
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-import { env, envBoolean, envNumber } from '~/global/env'
+import { env, envBoolean, envNumber } from '~/global/env';
 
 // eslint-disable-next-line import/order
-import dotenv from 'dotenv'
+import dotenv from 'dotenv';
 
-dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
+dotenv.config({ path: `.env.${process.env.NODE_ENV}` });
 
 // 当前通过 npm scripts 执行的命令
-const currentScript = process.env.npm_lifecycle_event
+const currentScript = process.env.npm_lifecycle_event;
 
 const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
@@ -25,16 +25,16 @@ const dataSourceOptions: DataSourceOptions = {
   entities: ['dist/modules/**/*.entity{.ts,.js}'],
   migrations: ['dist/migrations/*{.ts,.js}'],
   subscribers: ['dist/modules/**/*.subscriber{.ts,.js}'],
-}
-export const dbRegToken = 'database'
+};
+export const dbRegToken = 'database';
 
 export const DatabaseConfig = registerAs(
   dbRegToken,
   (): DataSourceOptions => dataSourceOptions,
-)
+);
 
 export type IDatabaseConfig = ConfigType<typeof DatabaseConfig>
 
-const dataSource = new DataSource(dataSourceOptions)
+const dataSource = new DataSource(dataSourceOptions);
 
-export default dataSource
+export default dataSource;
