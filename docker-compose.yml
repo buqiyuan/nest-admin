@@ -18,7 +18,7 @@ services:
     env_file:
       - .env
       - .env.production
-    environment: 
+    environment:
       - MYSQL_HOST=${DB_HOST}
       - MYSQL_PORT=${DB_PORT}
       - MYSQL_DATABASE=${DB_DATABASE}
@@ -27,7 +27,7 @@ services:
       - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
     ports:
       - '${DB_PORT}:3306'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci #设置utf8字符集
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_general_ci # 设置utf8字符集
     volumes:
       - ./__data/mysql/:/var/lib/mysql/ # ./__data/mysql/ 路径可以替换成自己的路径
       - ./deploy/sql/:/docker-entrypoint-initdb.d/ # 初始化的脚本，若 ./__data/mysql/ 文件夹存在数据，则不会执行初始化脚本
@@ -50,7 +50,10 @@ services:
 
   nest-admin-server:
     # build: 从当前路径构建镜像
-    build: .
+    build:
+      context: .
+      args:
+        - PROJECT_DIR=${PROJECT_DIR}
     image: buqiyuan/nest-admin-server:stable
     container_name: nest-admin-server
     restart: always
@@ -60,7 +63,9 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${APP_PORT}:${APP_PORT}' 
+      - '${APP_PORT}:${APP_PORT}'
+    volumes:
+      - ./logs/:${PROJECT_DIR}/logs/ # ./logs 日志文件挂载到容器外部
     # 当前服务启动之前先要把depends_on指定的服务启动起来才行
     depends_on:
       - mysql
