@@ -6,7 +6,7 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": "./",
-    "module": "commonjs",
+    "module": "nodenext",
     "paths": {
       "~/*": ["src/*"]
     },

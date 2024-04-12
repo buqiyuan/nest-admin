@@ -1,11 +1,11 @@
 {
   "name": "nest-admin",
-  "version": "2.0.0",
+  "version": "1.0.0",
   "private": true,
   "packageManager": "pnpm@8.10.2",
   "license": "MIT",
   "engines": {
-    "node": ">=16.20.2",
+    "node": ">=18",
     "pnpm": ">=8.1.0"
   },
   "scripts": {
@@ -134,6 +134,7 @@
   },
   "pnpm": {
     "overrides": {
+      "@langchain/core": "0.1.5",
       "@liaoliaots/nestjs-redis": "npm:@songkeys/nestjs-redis"
     }
   },
