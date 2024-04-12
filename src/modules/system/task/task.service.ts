@@ -248,6 +248,9 @@ export class TaskService implements OnModuleInit {
         await j.remove()
       })
 
+    // 在队列中删除当前任务
+    await this.taskQueue.removeRepeatable(JSON.parse(task.jobOpts))
+
     await this.taskRepository.update(task.id, { status: TaskStatus.Disabled })
     // if (task.jobOpts) {
     //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));

@@ -4,8 +4,9 @@
 # 使用 as 来为某一阶段命名
 FROM node:20-slim AS base
 
-ENV PROJECT_DIR=/nest-admin \
-    DB_HOST=mysql \
+ARG PROJECT_DIR
+
+ENV DB_HOST=mysql \
     APP_PORT=7001 \
     PNPM_HOME="/pnpm" \
     PATH="$PNPM_HOME:$PATH"
