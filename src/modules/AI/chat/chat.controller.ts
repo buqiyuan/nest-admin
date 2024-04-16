@@ -8,14 +8,21 @@ import {Public} from '~/modules/auth/decorators/public.decorator';
 
 @ApiTags('AI - 对话模块')
 @UseGuards(LocalGuard)
-@Public()
 @Controller('chat')
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Post()
+  @Public()
   @ApiOperation({ summary: '发起对话' })
   talk(@Body() chatDto: ChatDto) {
-    return this.chatService.talk(chatDto);
+    return this.chatService.chat(chatDto);
+  }
+
+  @Post('test')
+  @Public()
+  @ApiOperation({ summary: '发起对话' })
+  test(@Body() chatDto: ChatDto) {
+    return this.chatService.talktest(chatDto);
   }
 }

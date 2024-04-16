@@ -1,4 +1,4 @@
-import {ClassSerializerInterceptor, Module} from '@nestjs/common';
+import {ClassSerializerInterceptor, MiddlewareConsumer, Module, NestModule} from '@nestjs/common';
 
 import {ConfigModule} from '@nestjs/config';
 import {APP_FILTER, APP_GUARD, APP_INTERCEPTOR} from '@nestjs/core';
@@ -27,6 +27,7 @@ import {DatabaseModule} from './shared/database/database.module';
 
 import {SocketModule} from './socket/socket.module';
 import {ChatModule} from '~/modules/AI/chat/chat.module';
+import {LoggerMiddleware} from '~/common/middleware/LoggerMiddleware';
 
 @Module({
     imports: [
@@ -79,5 +80,12 @@ import {ChatModule} from '~/modules/AI/chat/chat.module';
 
     ],
 })
+
 export class AppModule {
 }
+
+// export class AppModule implements NestModule{
+//     configure(consumer: MiddlewareConsumer){
+//         consumer.apply(LoggerMiddleware).forRoutes('*');
+//     }
+// }

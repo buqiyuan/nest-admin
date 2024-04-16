@@ -46,4 +46,6 @@ export enum ErrorEnum {
   OSS_FILE_OR_DIR_EXIST = '1401:当前创建的文件或目录已存在',
   OSS_NO_OPERATION_REQUIRED = '1402:无需操作',
   OSS_EXCEE_MAXIMUM_QUANTITY = '1403:已超出支持的最大处理数量',
+
+  AI_NO_CONTEXT = '找不到相关记录'
 }
