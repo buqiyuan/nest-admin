@@ -1,19 +1,12 @@
-import {Injectable} from '@nestjs/common';
-import {isEmpty} from 'lodash';
-import {BusinessException} from '~/common/exceptions/biz.exception';
-import {ErrorEnum} from '~/constants/error-code.constant';
-import {md5, randomValue} from '~/utils';
-import {SYS_USER_INITPASSWORD} from '~/constants/system.constant';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {EntityManager, In, Repository} from 'typeorm';
-import {DeptEntity} from '~/modules/system/dept/dept.entity';
-import {InjectRedis} from '@songkeys/nestjs-redis';
-import Redis from 'ioredis';
 import {InjectEntityManager, InjectRepository} from '@nestjs/typeorm';
-import {RoleEntity} from '~/modules/system/role/role.entity';
-import {ParamConfigService} from '~/modules/system/param-config/param-config.service';
-import {QQService} from '~/shared/helper/qq.service';
 import {DemoEntity} from '~/modules/demo/demo.entity';
-import {DemoDto} from '~/modules/demo/demo.dto';
+import {DemoDto, DemoQueryDto, DemoUpdateDto} from '~/modules/demo/demo.dto';
+import {TodoQueryDto, TodoUpdateDto} from '~/modules/todo/todo.dto';
+import {Pagination} from '~/helper/paginate/pagination';
+import {TodoEntity} from '~/modules/todo/todo.entity';
+import {paginate} from '~/helper/paginate';
 
 @Injectable()
 export class DemoService {
@@ -25,23 +18,30 @@ export class DemoService {
 
 
     async create(createDemoDto: DemoDto): Promise<void> {
-        const result = await this.demoRepository.save(createDemoDto);
-        return result;
+        await this.demoRepository.save(createDemoDto);
     }
 
-    findAll() {
-        return 'This action returns all demo';
+    async list({
+                   page,
+                   pageSize,
+               }: DemoQueryDto): Promise<Pagination<DemoEntity>> {
+        return paginate(this.demoRepository, { page, pageSize });
     }
 
-    findOne(id: number) {
-        return `This action returns a #${id} demo`;
+    async detail(id: number): Promise<DemoEntity> {
+        const item = await this.demoRepository.findOneBy({ id });
+        if (!item)
+            throw new NotFoundException('未找到该记录');
+
+        return item;
     }
 
-    update(id: number, updateDemoDto: DemoDto) {
-        return `This action updates a #${id} demo`;
+    async update(id: number, dto: DemoUpdateDto) {
+        await this.demoRepository.update(id, dto);
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} demo`;
+    async delete(id: number) {
+        const item = await this.detail(id);
+        await this.demoRepository.remove(item);
     }
 }

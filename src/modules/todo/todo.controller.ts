@@ -22,6 +22,7 @@ import { TodoEntity } from '~/modules/todo/todo.entity';
 
 import { TodoDto, TodoQueryDto, TodoUpdateDto } from './todo.dto';
 import { TodoService } from './todo.service';
+import {Public} from '~/modules/auth/decorators/public.decorator';
 
 export const permissions = definePermission('todo', {
   LIST: 'list',
@@ -55,6 +56,7 @@ export class TodoController {
 
   @Post()
   @ApiOperation({ summary: '创建Todo' })
+  @Public()
   @Perm(permissions.CREATE)
   async create(@Body() dto: TodoDto): Promise<void> {
     await this.todoService.create(dto);

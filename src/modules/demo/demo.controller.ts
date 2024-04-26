@@ -1,10 +1,17 @@
-import {Controller, Get, Post, Body, Patch, Param, Delete} from '@nestjs/common';
+import {Controller, Get, Post, Body, Patch, Param, Delete, UseGuards, Query, Put} from '@nestjs/common';
 import {DemoService} from './demo.service';
-import {CreateDemoDto} from './dto/create-demo.dto';
-import {DemoDto} from './dto/demo.dto';
 import {ApiOperation, ApiTags} from '@nestjs/swagger';
 import {ApiSecurityAuth} from '~/common/decorators/swagger.decorator';
 import {definePermission, Perm} from '~/modules/auth/decorators/permission.decorator';
+import {DemoDto, DemoQueryDto, DemoUpdateDto} from '~/modules/demo/demo.dto';
+import {ApiResult} from '~/common/decorators/api-result.decorator';
+import {Pagination} from '~/helper/paginate/pagination';
+import {DemoEntity} from '~/modules/demo/demo.entity';
+import {Public} from '~/modules/auth/decorators/public.decorator';
+import {TodoEntity} from '~/modules/todo/todo.entity';
+import {IdParam} from '~/common/decorators/id-param.decorator';
+import {TodoUpdateDto} from '~/modules/todo/todo.dto';
+import {Resource} from '~/modules/auth/decorators/resource.decorator';
 
 export const permissions = definePermission('demo', {
     LIST: 'list',
@@ -17,34 +24,48 @@ export const permissions = definePermission('demo', {
 @ApiTags('Demo - demo模块')
 @ApiSecurityAuth()
 @Controller('demo')
+@Public()
 export class DemoController {
     constructor(private readonly demoService: DemoService) {
+
     }
 
     @Post()
     @ApiOperation({summary: '新增'})
     @Perm(permissions.CREATE)
-    async create(@Body() createDemoDto: CreateDemoDto): Promise<void> {
+    async create(@Body() createDemoDto: DemoDto): Promise<void> {
         await this.demoService.create(createDemoDto);
     }
 
     @Get()
-    findAll() {
-        return this.demoService.findAll();
+    @ApiOperation({ summary: '获取列表' })
+    @ApiResult({ type: [DemoEntity] })
+    @Perm(permissions.LIST)
+    async list(@Query() dto: DemoQueryDto): Promise<Pagination<DemoEntity>> {
+        return this.demoService.list(dto);
     }
 
     @Get(':id')
-    findOne(@Param('id') id: string) {
-        return this.demoService.findOne(+id);
+    @ApiOperation({ summary: '获取详情' })
+    @ApiResult({ type: DemoEntity })
+    @Perm(permissions.READ)
+    async info(@IdParam() id: number): Promise<DemoEntity> {
+        return this.demoService.detail(id);
     }
 
-    @Patch(':id')
-    update(@Param('id') id: string, @Body() updateDemoDto: DemoDto) {
-        return this.demoService.update(+id, updateDemoDto);
+    @Put(':id')
+    @ApiOperation({ summary: '更新' })
+    @Perm(permissions.UPDATE)
+    @Resource(TodoEntity)
+    async update(@IdParam() id: number, @Body()dto: DemoUpdateDto): Promise<void> {
+        await this.demoService.update(id, dto);
     }
 
     @Delete(':id')
-    remove(@Param('id') id: string) {
-        return this.demoService.remove(+id);
+    @ApiOperation({ summary: '删除' })
+    @Perm(permissions.DELETE)
+    @Resource(DemoEntity)
+    async delete(@IdParam() id: number): Promise<void> {
+        await this.demoService.delete(id);
     }
 }
