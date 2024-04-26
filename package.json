@@ -41,7 +41,9 @@
     "docker:up": "docker compose --env-file .env --env-file .env.production up -d --no-build",
     "docker:down": "docker compose --env-file .env --env-file .env.production down",
     "docker:rmi": "docker compose --env-file .env --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
-    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f"
+    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f",
+    "nestjs:generate:module": "nest generate resource demo"
+
   },
   "dependencies": {
     "@fastify/cookie": "^9.3.1",
@@ -157,9 +159,6 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "simple-git-hooks": {
-//    "pre-commit": "pnpm lint-staged"
   },
   "lint-staged": {
     "*": "eslint --fix"
