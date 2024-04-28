@@ -28,7 +28,8 @@ import {DatabaseModule} from './shared/database/database.module';
 import {SocketModule} from './socket/socket.module';
 import {ChatModule} from '~/modules/AI/chat/chat.module';
 import {LoggerMiddleware} from '~/common/middleware/LoggerMiddleware';
-import { DemoModule } from './modules/demo/demo.module';
+import {BaseModule} from '~/modules/base/base.module';
+import {XwsbookModule} from '~/modules/xwsBook/module';
 
 @Module({
     imports: [
@@ -65,7 +66,9 @@ import { DemoModule } from './modules/demo/demo.module';
 
         ChatModule,
 
-        DemoModule,
+        BaseModule,
+
+        XwsbookModule,
 
     ],
     providers: [

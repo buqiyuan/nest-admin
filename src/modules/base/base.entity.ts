@@ -2,9 +2,9 @@ import {CommonEntity, CompleteEntity} from '~/common/entity/common.entity';
 import {Column, Entity} from 'typeorm';
 import {ApiProperty} from '@nestjs/swagger';
 
-@Entity('demo')
-export class DemoEntity extends CommonEntity {
-  @Column()
+@Entity('base')
+export class _Entity extends CommonEntity {
+  @Column({unique: true})
   @ApiProperty({ description: 'name' })
   name:string ;
 
