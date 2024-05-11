@@ -202,18 +202,20 @@ export class UserService {
         .leftJoinAndSelect('user.dept', 'dept')
         .where('user.id = :id', { id })
         .getOne()
-      if(roleIds)
-      await manager
-        .createQueryBuilder()
-        .relation(UserEntity, 'roles')
-        .of(id)
-        .addAndRemove(roleIds, user.roles)
-      if(deptId)
-      await manager
-        .createQueryBuilder()
-        .relation(UserEntity, 'dept')
-        .of(id)
-        .set(deptId)
+      if (roleIds) {
+        await manager
+          .createQueryBuilder()
+          .relation(UserEntity, 'roles')
+          .of(id)
+          .addAndRemove(roleIds, user.roles)
+      }
+      if (deptId) {
+        await manager
+          .createQueryBuilder()
+          .relation(UserEntity, 'dept')
+          .of(id)
+          .set(deptId)
+      }
 
       if (status === 0) {
         // 禁用状态

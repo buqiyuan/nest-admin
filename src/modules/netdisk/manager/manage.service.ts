@@ -18,7 +18,7 @@ import { FileOpItem } from './manage.dto'
 
 @Injectable()
 export class NetDiskManageService {
-  private config: conf.ConfigOptions
+  private config: conf.Config
   private mac: auth.digest.Mac
   private bucketManager: rs.BucketManager
 
