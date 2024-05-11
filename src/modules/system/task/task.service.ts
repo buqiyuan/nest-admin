@@ -103,7 +103,7 @@ export class TaskService implements OnModuleInit {
         ...(name ? { name: Like(`%${name}%`) } : null),
         ...(service ? { service: Like(`%${service}%`) } : null),
         ...(type ? { type } : null),
-        ...(status ? { status } : null),
+        ...(status != undefined ? { status } : null),
       })
       .orderBy('task.id', 'ASC')
 

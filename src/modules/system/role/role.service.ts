@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
 import { isEmpty } from 'lodash'
-import { EntityManager, In, Repository } from 'typeorm'
+import { EntityManager, In, Like, Repository } from 'typeorm'
 
 import { PagerDto } from '~/common/dto/pager.dto'
 import { ROOT_ROLE_ID } from '~/constants/system.constant'
@@ -10,7 +10,7 @@ import { Pagination } from '~/helper/paginate/pagination'
 import { MenuEntity } from '~/modules/system/menu/menu.entity'
 import { RoleEntity } from '~/modules/system/role/role.entity'
 
-import { RoleDto, RoleUpdateDto } from './role.dto'
+import { RoleDto, RoleQueryDto, RoleUpdateDto } from './role.dto'
 
 @Injectable()
 export class RoleService {
@@ -30,6 +30,32 @@ export class RoleService {
     pageSize,
   }: PagerDto): Promise<Pagination<RoleEntity>> {
     return paginate(this.roleRepository, { page, pageSize })
+  }
+
+  /**
+   * 查询角色列表
+   */
+  async list({
+    page,
+    pageSize,
+    name,
+    value,
+    remark,
+    status,
+  }: RoleQueryDto): Promise<Pagination<RoleEntity>> {
+    const queryBuilder = await this.roleRepository
+      .createQueryBuilder('role')
+      .where({
+        ...(name ? { name: Like(`%${name}%`) } : null),
+        ...(value ? { value: Like(`%${value}%`) } : null),
+        ...(remark ? { remark: Like(`%${remark}%`) } : null),
+        ...(status != undefined ? { status } : null),
+      })
+
+    return paginate<RoleEntity>(queryBuilder, {
+      page,
+      pageSize,
+    })
   }
 
   /**
@@ -73,22 +99,17 @@ export class RoleService {
 
   /**
    * 更新角色信息
+   * 如果传入的menuIds为空，则清空sys_role_menus表中存有的关联数据，参考新增
    */
   async update(id, { menuIds, ...data }: RoleUpdateDto): Promise<void> {
     await this.roleRepository.update(id, data)
-
-    if (!isEmpty(menuIds)) {
-      // using transaction
-      await this.entityManager.transaction(async (manager) => {
-        const menus = await this.menuRepository.find({
-          where: { id: In(menuIds) },
-        })
-
-        const role = await this.roleRepository.findOne({ where: { id } })
-        role.menus = menus
-        await manager.save(role)
-      })
-    }
+    await this.entityManager.transaction(async (manager) => {
+      const role = await this.roleRepository.findOne({ where: { id } })
+      role.menus = menuIds
+        ? await this.menuRepository.findBy({ id: In(menuIds) })
+        : []
+      await manager.save(role)
+    })
   }
 
   /**

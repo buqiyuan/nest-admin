@@ -284,7 +284,7 @@ export class UserService {
         ...(username ? { username: Like(`%${username}%`) } : null),
         ...(nickname ? { nickname: Like(`%${nickname}%`) } : null),
         ...(email ? { email: Like(`%${email}%`) } : null),
-        ...(status ? { status } : null),
+        ...(status != undefined ? { status } : null),
       })
 
     if (deptId)

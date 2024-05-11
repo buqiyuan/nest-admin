@@ -45,7 +45,7 @@ export class MenuService {
         ...(path && { path: Like(`%${path}%`) }),
         ...(permission && { permission: Like(`%${permission}%`) }),
         ...(component && { component: Like(`%${component}%`) }),
-        ...(status && { status }),
+        ...(status != undefined ? { status } : null),
       },
       order: { orderNo: 'ASC' },
     })
