@@ -2,7 +2,7 @@ import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import Redis from 'ioredis'
-import { concat, isEmpty, uniq } from 'lodash'
+import { concat, isEmpty, isNil, uniq } from 'lodash'
 
 import { In, IsNull, Like, Not, Repository } from 'typeorm'
 
@@ -45,7 +45,7 @@ export class MenuService {
         ...(path && { path: Like(`%${path}%`) }),
         ...(permission && { permission: Like(`%${permission}%`) }),
         ...(component && { component: Like(`%${component}%`) }),
-        ...(status != undefined ? { status } : null),
+        ...(!isNil(status) ? { status } : null),
       },
       order: { orderNo: 'ASC' },
     })
@@ -227,7 +227,7 @@ export class MenuService {
   /**
    * 刷新所有在线用户的权限
    */
-  async refreshOnlineUserPerms(): Promise<void> {
+  async refreshOnlineUserPerms(isNoticeUser = true): Promise<void> {
     const onlineUserIds: string[] = await this.redis.keys(genAuthTokenKey('*'))
     if (onlineUserIds && onlineUserIds.length > 0) {
       const promiseArr = onlineUserIds
@@ -240,7 +240,8 @@ export class MenuService {
         })
       const uids = await Promise.all(promiseArr)
       console.log('refreshOnlineUserPerms')
-      this.sseService.noticeClientToUpdateMenusByUserIds(uids)
+      if (isNoticeUser)
+        this.sseService.noticeClientToUpdateMenusByUserIds(uids)
     }
   }
 

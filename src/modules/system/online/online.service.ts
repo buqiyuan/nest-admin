@@ -103,7 +103,7 @@ export class OnlineService {
 
     return users.map((e) => {
       const item = JSON.parse(e) as OnlineUserInfo
-      item.isCurrent = token.id === item.tokenId
+      item.isCurrent = token?.id === item.tokenId
       item.disable = item.isCurrent || item.uid === rootUserId
       return item
     }).sort((a, b) => a.time > b.time ? -1 : 1)

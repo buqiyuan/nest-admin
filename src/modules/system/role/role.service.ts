@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectEntityManager, InjectRepository } from '@nestjs/typeorm'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { EntityManager, In, Like, Repository } from 'typeorm'
 
 import { PagerDto } from '~/common/dto/pager.dto'
@@ -49,7 +49,7 @@ export class RoleService {
         ...(name ? { name: Like(`%${name}%`) } : null),
         ...(value ? { value: Like(`%${value}%`) } : null),
         ...(remark ? { remark: Like(`%${remark}%`) } : null),
-        ...(status != undefined ? { status } : null),
+        ...(!isNil(status) ? { status } : null),
       })
 
     return paginate<RoleEntity>(queryBuilder, {
@@ -105,7 +105,7 @@ export class RoleService {
     await this.roleRepository.update(id, data)
     await this.entityManager.transaction(async (manager) => {
       const role = await this.roleRepository.findOne({ where: { id } })
-      role.menus = menuIds
+      role.menus = menuIds?.length
         ? await this.menuRepository.findBy({ id: In(menuIds) })
         : []
       await manager.save(role)
