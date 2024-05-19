@@ -6,7 +6,7 @@
   "license": "MIT",
   "engines": {
     "node": ">=16.20.2",
-    "pnpm": ">=9"
+    "pnpm": ">=8"
   },
   "scripts": {
     "postinstall": "npm run gen-env-types",
