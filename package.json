@@ -23,7 +23,6 @@
     "prod:pm2": "cross-env NODE_ENV=production pm2 restart ecosystem.config.js",
     "prod:stop": "pm2 stop ecosystem.config.js",
     "prod:debug": "cross-env NODE_ENV=production nest start --debug --watch",
-    "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "doc": "compodoc -p tsconfig.json -s",
@@ -35,15 +34,7 @@
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
     "cleanlog": "rimraf logs",
-    "docker:build:dev": "docker compose --env-file .env --env-file .env.development up --build",
-    "docker:build": "docker compose --env-file .env --env-file .env.production up --build",
-    "docker:prod:up": "docker compose -f docker-compose.prod.yml --env-file .env --env-file .env.production up -d --pull=always",
-    "docker:up": "docker compose --env-file .env --env-file .env.production up -d --no-build",
-    "docker:down": "docker compose --env-file .env --env-file .env.production down",
-    "docker:rmi": "docker compose --env-file .env --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
-    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f",
     "nestjs:generate:module": "nest generate resource demo"
-
   },
   "dependencies": {
     "@fastify/cookie": "^9.3.1",
@@ -96,6 +87,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pluralize": "^8.0.0",
     "qiniu": "^7.11.1",
     "reflect-metadata": "^0.2.1",
     "rimraf": "^5.0.5",
@@ -121,9 +113,7 @@
     "@types/passport-jwt": "^4.0.1",
     "@types/supertest": "^6.0.2",
     "@types/ua-parser-js": "^0.7.39",
-    "@typescript-eslint/eslint-plugin": "^7.6.0",
     "cross-env": "^7.0.3",
-    "eslint": "^8.57.0",
     "jest": "^29.7.0",
     "simple-git-hooks": "^2.11.0",
     "source-map-support": "^0.5.21",
@@ -159,8 +149,5 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  },
-  "lint-staged": {
-    "*": "eslint --fix"
   }
 }

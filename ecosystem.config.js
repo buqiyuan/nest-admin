@@ -1,6 +1,6 @@
-const { cpus } = require('node:os')
+const {cpus} = require('node:os');
 
-const cpuLen = cpus().length
+const cpuLen = cpus().length;
 
 module.exports = {
   apps: [
@@ -19,4 +19,4 @@ module.exports = {
       },
     },
   ],
-}
+};

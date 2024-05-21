@@ -14,7 +14,6 @@ dist
 #.env.production
 .env.local
 
-.eslintcache
 
 # Log files
 npm-debug.log*
