@@ -12,8 +12,8 @@
   <li>
     <details>
       <summary>
-        <a href="https://buqiyuan.gitee.io/vue3-antdv-admin/" target="_blank">
-        https://buqiyuan.gitee.io/vue3-antdv-admin/
+        <a href="https://vue3-antdv-admin.pages.dev/" target="_blank">
+        https://vue3-antdv-admin.pages.dev/
         </a>（墙内）
       </summary>
       只读，可以完整地预览项目的初始效果
