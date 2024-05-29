@@ -37,7 +37,6 @@ export class ParamConfigController {
   @ApiOperation({ summary: '新增参数配置' })
   @Perm(permissions.CREATE)
   async create(@Body() dto: ParamConfigDto): Promise<void> {
-    await this.paramConfigService.isExistKey(dto.key)
     await this.paramConfigService.create(dto)
   }
 

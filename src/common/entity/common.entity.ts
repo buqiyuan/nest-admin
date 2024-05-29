@@ -33,12 +33,12 @@ export abstract class CommonEntity extends BaseEntity {
 export abstract class CompleteEntity extends CommonEntity {
   @ApiHideProperty()
   @Exclude()
-  @Column({ name: 'create_by', update: false, comment: '创建者' })
+  @Column({ name: 'create_by', update: false, comment: '创建者', nullable: true })
   createBy: number
 
   @ApiHideProperty()
   @Exclude()
-  @Column({ name: 'update_by', comment: '更新者' })
+  @Column({ name: 'update_by', comment: '更新者', nullable: true })
   updateBy: number
 
   /**

@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Like, Repository } from 'typeorm'
 
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { DictTypeEntity } from '~/modules/system/dict-type/dict-type.entity'
@@ -74,11 +72,5 @@ export class DictTypeService {
    */
   async findOne(id: number): Promise<DictTypeEntity> {
     return this.dictTypeRepository.findOneBy({ id })
-  }
-
-  async isExistKey(name: string): Promise<void | never> {
-    const result = await this.dictTypeRepository.findOneBy({ name })
-    if (result)
-      throw new BusinessException(ErrorEnum.DICT_NAME_EXISTS)
   }
 }

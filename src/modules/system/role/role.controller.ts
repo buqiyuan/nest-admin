@@ -15,6 +15,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { SseService } from '~/modules/sse/sse.service'
 import { RoleEntity } from '~/modules/system/role/role.entity'
@@ -70,7 +71,7 @@ export class RoleController {
   @Put(':id')
   @ApiOperation({ summary: '更新角色' })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: number, @Body()dto: RoleUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body(UpdaterPipe)dto: RoleUpdateDto): Promise<void> {
     await this.roleService.update(id, dto)
     await this.menuService.refreshOnlineUserPerms(false)
     this.sseService.noticeClientToUpdateMenusByRoleIds([id])

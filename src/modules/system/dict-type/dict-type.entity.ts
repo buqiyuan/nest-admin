@@ -10,7 +10,7 @@ export class DictTypeEntity extends CompleteEntity {
   name: string
 
   @Column({ type: 'varchar', length: 50, unique: true })
-  @ApiProperty({ description: '字典类型' })
+  @ApiProperty({ description: '字典编码' })
   code: string
 
   @Column({ type: 'tinyint', default: 1 })

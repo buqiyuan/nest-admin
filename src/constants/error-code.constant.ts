@@ -21,9 +21,8 @@ export enum ErrorEnum {
   USER_NOT_FOUND = '1017:用户不存在',
   UNABLE_TO_FIND_DEPARTMENT_FOR_USER = '1018:无法查找当前用户所属部门',
   DEPARTMENT_NOT_FOUND = '1019:部门不存在',
-  DICT_NAME_EXISTS = '1020: 已存在相同名称的字典',
-  PARAMETER_CONFIG_KEY_EXISTS = '1021:参数配置键值对已存在',
-  DEFAULT_ROLE_NOT_FOUND = '1022:所分配的默认角色不存在',
+  PARAMETER_CONFIG_KEY_EXISTS = '1022:参数配置键值对已存在',
+  DEFAULT_ROLE_NOT_FOUND = '1023:所分配的默认角色不存在',
 
   INVALID_LOGIN = '1101:登录无效，请重新登录',
   NO_PERMISSION = '1102:无权限访问',

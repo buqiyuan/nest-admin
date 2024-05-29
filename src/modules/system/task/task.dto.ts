@@ -19,6 +19,9 @@ import * as parser from 'cron-parser'
 import { isEmpty } from 'lodash'
 
 import { PagerDto } from '~/common/dto/pager.dto'
+import { IsUnique } from '~/shared/database/constraints/unique.constraint'
+
+import { TaskEntity } from './task.entity'
 
 // cron 表达式验证，bull lib下引用了cron-parser
 @ValidatorConstraint({ name: 'isCronExpression', async: false })
@@ -43,6 +46,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
 
 export class TaskDto {
   @ApiProperty({ description: '任务名称' })
+  @IsUnique({ entity: TaskEntity, message: '任务名称已存在' })
   @IsString()
   @MinLength(2)
   @MaxLength(50)

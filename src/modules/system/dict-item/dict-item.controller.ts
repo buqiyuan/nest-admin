@@ -4,6 +4,7 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Pagination } from '~/helper/paginate/pagination'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
@@ -38,8 +39,6 @@ export class DictItemController {
   @ApiOperation({ summary: '新增字典项' })
   @Perm(permissions.CREATE)
   async create(@Body() dto: DictItemDto, @AuthUser() user: IAuthUser): Promise<void> {
-    await this.dictItemService.isExistKey(dto)
-    dto.createBy = dto.updateBy = user.uid
     await this.dictItemService.create(dto)
   }
 
@@ -54,8 +53,7 @@ export class DictItemController {
   @Post(':id')
   @ApiOperation({ summary: '更新字典项' })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: number, @Body() dto: DictItemDto, @AuthUser() user: IAuthUser): Promise<void> {
-    dto.updateBy = user.uid
+  async update(@IdParam() id: number, @Body(UpdaterPipe) dto: DictItemDto): Promise<void> {
     await this.dictItemService.update(id, dto)
   }
 

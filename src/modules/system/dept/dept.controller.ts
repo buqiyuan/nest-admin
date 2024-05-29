@@ -5,6 +5,8 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { BusinessException } from '~/common/exceptions/biz.exception'
+import { CreatorPipe } from '~/common/pipes/creator.pipe'
+import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
@@ -38,7 +40,7 @@ export class DeptController {
   @Post()
   @ApiOperation({ summary: '创建部门' })
   @Perm(permissions.CREATE)
-  async create(@Body() dto: DeptDto): Promise<void> {
+  async create(@Body(CreatorPipe) dto: DeptDto): Promise<void> {
     await this.deptService.create(dto)
   }
 
@@ -52,10 +54,7 @@ export class DeptController {
   @Put(':id')
   @ApiOperation({ summary: '更新部门' })
   @Perm(permissions.UPDATE)
-  async update(
-    @IdParam() id: number, @Body()
-updateDeptDto: DeptDto,
-  ): Promise<void> {
+  async update(@IdParam() id: number, @Body(UpdaterPipe) updateDeptDto: DeptDto): Promise<void> {
     await this.deptService.update(id, updateDeptDto)
   }
 

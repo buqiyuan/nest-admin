@@ -2,6 +2,9 @@ import { ApiProperty } from '@nestjs/swagger'
 import { IsOptional, IsString, MinLength } from 'class-validator'
 
 import { PagerDto } from '~/common/dto/pager.dto'
+import { IsUnique } from '~/shared/database/constraints/unique.constraint'
+
+import { ParamConfigEntity } from './param-config.entity'
 
 export class ParamConfigDto {
   @ApiProperty({ description: '参数名称' })
@@ -9,6 +12,7 @@ export class ParamConfigDto {
   name: string
 
   @ApiProperty({ description: '参数键名' })
+  @IsUnique({ entity: ParamConfigEntity, message: '该键名已存在' })
   @IsString()
   @MinLength(3)
   key: string

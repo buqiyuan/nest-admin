@@ -4,8 +4,9 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { CreatorPipe } from '~/common/pipes/creator.pipe'
+import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Pagination } from '~/helper/paginate/pagination'
-import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
 import { DictTypeEntity } from '~/modules/system/dict-type/dict-type.entity'
 
@@ -45,9 +46,7 @@ export class DictTypeController {
   @Post()
   @ApiOperation({ summary: '新增字典类型' })
   @Perm(permissions.CREATE)
-  async create(@Body() dto: DictTypeDto, @AuthUser() user: IAuthUser): Promise<void> {
-    await this.dictTypeService.isExistKey(dto.name)
-    dto.createBy = dto.updateBy = user.uid
+  async create(@Body(CreatorPipe) dto: DictTypeDto): Promise<void> {
     await this.dictTypeService.create(dto)
   }
 
@@ -62,8 +61,7 @@ export class DictTypeController {
   @Post(':id')
   @ApiOperation({ summary: '更新字典类型' })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: number, @Body() dto: DictTypeDto, @AuthUser() user: IAuthUser): Promise<void> {
-    dto.updateBy = user.uid
+  async update(@IdParam() id: number, @Body(UpdaterPipe) dto: DictTypeDto): Promise<void> {
     await this.dictTypeService.update(id, dto)
   }
 

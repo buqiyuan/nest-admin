@@ -14,6 +14,8 @@ import { flattenDeep } from 'lodash'
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
+import { CreatorPipe } from '~/common/pipes/creator.pipe'
+import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Perm, definePermission, getDefinePermissions } from '~/modules/auth/decorators/permission.decorator'
 
 import { MenuDto, MenuQueryDto, MenuUpdateDto } from './menu.dto'
@@ -52,7 +54,7 @@ export class MenuController {
   @Post()
   @ApiOperation({ summary: '新增菜单或权限' })
   @Perm(permissions.CREATE)
-  async create(@Body() dto: MenuDto): Promise<void> {
+  async create(@Body(CreatorPipe) dto: MenuDto): Promise<void> {
     // check
     await this.menuService.check(dto)
     if (!dto.parentId)
@@ -68,7 +70,7 @@ export class MenuController {
   @Put(':id')
   @ApiOperation({ summary: '更新菜单或权限' })
   @Perm(permissions.UPDATE)
-  async update(@IdParam() id: number, @Body() dto: MenuUpdateDto): Promise<void> {
+  async update(@IdParam() id: number, @Body(UpdaterPipe) dto: MenuUpdateDto): Promise<void> {
     // check
     await this.menuService.check(dto)
     if (dto.parentId === -1 || !dto.parentId)

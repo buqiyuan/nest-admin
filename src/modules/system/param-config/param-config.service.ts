@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm'
 
 import { Repository } from 'typeorm'
 
-import { BusinessException } from '~/common/exceptions/biz.exception'
-import { ErrorEnum } from '~/constants/error-code.constant'
 import { paginate } from '~/helper/paginate'
 import { Pagination } from '~/helper/paginate/pagination'
 import { ParamConfigEntity } from '~/modules/system/param-config/param-config.entity'
@@ -70,12 +68,6 @@ export class ParamConfigService {
    */
   async findOne(id: number): Promise<ParamConfigEntity> {
     return this.paramConfigRepository.findOneBy({ id })
-  }
-
-  async isExistKey(key: string): Promise<void | never> {
-    const result = await this.paramConfigRepository.findOneBy({ key })
-    if (result)
-      throw new BusinessException(ErrorEnum.PARAMETER_CONFIG_KEY_EXISTS)
   }
 
   async findValueByKey(key: string): Promise<string | null> {

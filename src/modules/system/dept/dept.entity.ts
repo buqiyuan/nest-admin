@@ -9,13 +9,13 @@ import {
   TreeParent,
 } from 'typeorm'
 
-import { CommonEntity } from '~/common/entity/common.entity'
+import { CompleteEntity } from '~/common/entity/common.entity'
 
 import { UserEntity } from '../../user/user.entity'
 
 @Entity({ name: 'sys_dept' })
 @Tree('materialized-path')
-export class DeptEntity extends CommonEntity {
+export class DeptEntity extends CompleteEntity {
   @Column()
   @ApiProperty({ description: '部门名称' })
   name: string

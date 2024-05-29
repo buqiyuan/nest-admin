@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common'
 import { FastifyReply, FastifyRequest } from 'fastify'
+import { QueryFailedError } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
@@ -35,17 +36,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     const url = request.raw.url!
 
-    const status
-      = exception instanceof HttpException
-        ? exception.getStatus()
-        : (exception as myError)?.status
-        || (exception as myError)?.statusCode
-        || HttpStatus.INTERNAL_SERVER_ERROR
-
-    let message
-      = (exception as any)?.response?.message
-      || (exception as myError)?.message
-      || `${exception}`
+    const status = this.getStatus(exception)
+    let message = this.getErrorMessage(exception)
 
     // 系统内部错误时
     if (
@@ -64,8 +56,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       )
     }
 
-    const apiErrorCode: number
-      = exception instanceof BusinessException ? exception.getErrorCode() : status
+    const apiErrorCode = exception instanceof BusinessException ? exception.getErrorCode() : status
 
     // 返回基础响应结果
     const resBody: IBaseResponse = {
@@ -75,6 +66,33 @@ export class AllExceptionsFilter implements ExceptionFilter {
     }
 
     response.status(status).send(resBody)
+  }
+
+  getStatus(exception: unknown): number {
+    if (exception instanceof HttpException) {
+      return exception.getStatus()
+    }
+    else if (exception instanceof QueryFailedError) {
+      // console.log('driverError', exception.driverError.code)
+      return HttpStatus.INTERNAL_SERVER_ERROR
+    }
+    else {
+      return (exception as myError)?.status
+        ?? (exception as myError)?.statusCode ?? HttpStatus.INTERNAL_SERVER_ERROR
+    }
+  }
+
+  getErrorMessage(exception: unknown): string {
+    if (exception instanceof HttpException) {
+      return exception.message
+    }
+    else if (exception instanceof QueryFailedError) {
+      return exception.message
+    }
+
+    else {
+      return (exception as any)?.response?.message ?? (exception as myError)?.message ?? `${exception}`
+    }
   }
 
   registerCatchAllExceptionsHook() {

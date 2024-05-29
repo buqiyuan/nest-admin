@@ -10,7 +10,9 @@ import {
   ValidateIf,
 } from 'class-validator'
 
-export class MenuDto {
+import { OperatorDto } from '~/common/dto/operator.dto'
+
+export class MenuDto extends OperatorDto {
   @ApiProperty({ description: '菜单类型' })
   @IsIn([0, 1, 2])
   type: number
