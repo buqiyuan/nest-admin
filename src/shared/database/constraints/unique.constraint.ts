@@ -7,9 +7,8 @@ import {
   registerDecorator,
 } from 'class-validator'
 import { isNil, merge } from 'lodash'
+import { ClsService } from 'nestjs-cls'
 import { DataSource, Not, ObjectType } from 'typeorm'
-
-import { REQUEST_ENTITY_ID } from '~/constants/request.constant'
 
 interface Condition {
   entity: ObjectType<any>
@@ -25,7 +24,7 @@ interface Condition {
 @ValidatorConstraint({ name: 'entityItemUnique', async: true })
 @Injectable()
 export class UniqueConstraint implements ValidatorConstraintInterface {
-  constructor(private dataSource: DataSource) {}
+  constructor(private dataSource: DataSource, private readonly cls: ClsService) {}
 
   async validate(value: any, args: ValidationArguments) {
     // 获取要验证的模型和字段
@@ -56,10 +55,10 @@ export class UniqueConstraint implements ValidatorConstraintInterface {
       }
 
       let andWhere = {}
-      // console.log('args.object', args.object)
+      const operateId = this.cls.get('operateId')
       // 如果是编辑操作，则排除自身
-      if ((args.object as any)[REQUEST_ENTITY_ID]) {
-        andWhere = { id: Not((args.object as any)[REQUEST_ENTITY_ID]) }
+      if (Number.isInteger(operateId)) {
+        andWhere = { id: Not(operateId) }
       }
 
       return isNil(

@@ -24,6 +24,16 @@ import { checkIsDemoMode } from '~/utils'
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
 
+/** @type {import('fastify').RequestGenericInterface} */
+interface RequestType {
+  Params: {
+    uid?: string
+  }
+  Querystring: {
+    token?: string
+  }
+}
+
 // https://docs.nestjs.com/recipes/passport#implement-protected-route-and-jwt-strategy-guards
 @Injectable()
 export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
@@ -44,7 +54,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
-    const request = context.switchToHttp().getRequest<FastifyRequest>()
+    const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
     // const response = context.switchToHttp().getResponse<FastifyReply>()
 
     // TODO 此处代码的作用是判断如果在演示环境下，则拒绝用户的增删改操作，去掉此代码不影响正常的业务逻辑
@@ -54,7 +64,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     const isSse = request.headers.accept === 'text/event-stream'
 
     if (isSse && !request.headers.authorization?.startsWith('Bearer ')) {
-      const { token } = request.query as Record<string, string>
+      const { token } = request.query
       if (token)
         request.headers.authorization = `Bearer ${token}`
     }
@@ -94,7 +104,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
 
     // SSE 请求
     if (isSse) {
-      const { uid } = request.params as Record<string, any>
+      const { uid } = request.params
 
       if (Number(uid) !== request.user.uid)
         throw new UnauthorizedException('路径参数 uid 与当前 token 登录的用户 uid 不一致')

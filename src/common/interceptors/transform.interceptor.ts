@@ -6,13 +6,12 @@ import {
   NestInterceptor,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
+import type { FastifyRequest } from 'fastify'
 import qs from 'qs'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
 
 import { ResOp } from '~/common/model/response.model'
-
-import { REQUEST_ENTITY_ID } from '~/constants/request.constant'
 
 import { BYPASS_KEY } from '../decorators/bypass.decorator'
 
@@ -36,15 +35,10 @@ export class TransformInterceptor implements NestInterceptor {
       return next.handle()
 
     const http = context.switchToHttp()
-    const request = http.getRequest()
+    const request = http.getRequest<FastifyRequest>()
 
     // 处理 query 参数，将数组参数转换为数组,如：?a[]=1&a[]=2 => { a: [1, 2] }
     request.query = qs.parse(request.url.split('?').at(1))
-
-    // 给自定义参数验证器(UniqueConstraint)使用
-    if (request.params.id && request.body) {
-      request.body[REQUEST_ENTITY_ID] = Number.parseInt(request.params.id)
-    }
 
     return next.handle().pipe(
       map((data) => {

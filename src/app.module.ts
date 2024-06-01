@@ -4,6 +4,8 @@ import { ConfigModule } from '@nestjs/config'
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 
 import { ThrottlerGuard, ThrottlerModule, seconds } from '@nestjs/throttler'
+import type { FastifyRequest } from 'fastify'
+import { ClsModule } from 'nestjs-cls'
 
 import config from '~/config'
 import { SharedModule } from '~/shared/shared.module'
@@ -44,7 +46,21 @@ import { SocketModule } from './socket/socket.module'
           { ttl: seconds(10), limit: 7 },
         ],
       }),
-
+    }),
+    // 启用 CLS 上下文
+    ClsModule.forRoot({
+      global: true,
+      // https://github.com/Papooch/nestjs-cls/issues/92
+      interceptor: {
+        mount: true,
+        setup: (cls, context) => {
+          const req = context.switchToHttp().getRequest<FastifyRequest<{ Params: { id?: string } }>>()
+          if (req.params?.id && req.body) {
+            // 供自定义参数验证器(UniqueConstraint)使用
+            cls.set('operateId', Number.parseInt(req.params.id))
+          }
+        },
+      },
     }),
     SharedModule,
     DatabaseModule,

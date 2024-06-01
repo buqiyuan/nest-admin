@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Logger,
   UnprocessableEntityException,
+  ValidationPipe,
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
@@ -17,7 +18,6 @@ import { AppModule } from './app.module'
 import { fastifyApp } from './common/adapters/fastify.adapter'
 import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
-import { GlobalValidationPipe } from './common/pipes/global-validation-pipe'
 import type { ConfigKeyPaths } from './config'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
@@ -53,7 +53,7 @@ async function bootstrap() {
     app.useGlobalInterceptors(new LoggingInterceptor())
 
   app.useGlobalPipes(
-    new GlobalValidationPipe({
+    new ValidationPipe({
       transform: true,
       whitelist: true,
       transformOptions: { enableImplicitConversion: true },
