@@ -17,6 +17,7 @@ export class AccountUpdateDto {
   nickname: string
 
   @ApiProperty({ description: '用户邮箱' })
+  @IsOptional()
   @IsEmail()
   email: string
 
