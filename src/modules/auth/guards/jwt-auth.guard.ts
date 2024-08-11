@@ -23,6 +23,7 @@ import { checkIsDemoMode } from '~/utils'
 
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
+import { RouterWhiteList } from '~/config'
 
 /** @type {import('fastify').RequestGenericInterface} */
 interface RequestType {
@@ -56,7 +57,7 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
     ])
     const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
     // const response = context.switchToHttp().getResponse<FastifyReply>()
-
+    if (RouterWhiteList.includes(request.routeOptions.url)) return true
     // TODO 此处代码的作用是判断如果在演示环境下，则拒绝用户的增删改操作，去掉此代码不影响正常的业务逻辑
     if (request.method !== 'GET' && !request.url.includes('/auth/login'))
       checkIsDemoMode()
