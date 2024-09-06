@@ -1,4 +1,4 @@
-import { HttpStatus, RequestMethod, Type, applyDecorators } from '@nestjs/common'
+import { applyDecorators, HttpStatus, RequestMethod, Type } from '@nestjs/common'
 import { METHOD_METADATA } from '@nestjs/common/constants'
 import { ApiExtraModels, ApiResponse, getSchemaPath } from '@nestjs/swagger'
 

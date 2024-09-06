@@ -22,18 +22,18 @@ export class UserDto {
   @ApiProperty({ description: '头像' })
   @IsOptional()
   @IsString()
-   avatar?: string
+  avatar?: string
 
   @ApiProperty({ description: '登录账号', example: 'admin' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z\W_]+$/)
+  @Matches(/^[\s\S]+$/)
   @MinLength(4)
   @MaxLength(20)
   username: string
 
   @ApiProperty({ description: '登录密码', example: 'a123456' })
   @IsOptional()
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+  @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
     message: '密码必须包含数字、字母，长度为6-16',
   })
   password: string
@@ -68,7 +68,7 @@ export class UserDto {
   @ApiProperty({ description: 'QQ' })
   @IsOptional()
   @IsString()
-  @Matches(/^[1-9][0-9]{4,10}$/)
+  @Matches(/^[1-9]\d{4,10}$/)
   @MinLength(5)
   @MaxLength(11)
   qq?: string

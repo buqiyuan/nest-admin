@@ -5,7 +5,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 import { TaskEntity } from '~/modules/system/task/task.entity'
 
 import { TaskDto, TaskQueryDto, TaskUpdateDto } from './task.dto'

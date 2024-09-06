@@ -2,7 +2,7 @@ name: Daily Curl Request
 
 on:
   schedule:
-    - cron: "*/5 * * * *"
+    - cron: '*/5 * * * *'
 
 jobs:
   run-curl:

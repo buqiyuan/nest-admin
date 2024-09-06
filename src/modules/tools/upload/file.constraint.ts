@@ -1,10 +1,10 @@
 import { FastifyMultipartBaseOptions, MultipartFile } from '@fastify/multipart'
 import {
+  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator,
 } from 'class-validator'
 import { has, isArray } from 'lodash'
 
@@ -22,8 +22,9 @@ function checkFileAndLimit(file: MultipartFile, limits: FileLimit = {}) {
   if (
     has(file, '_buf')
     && Buffer.byteLength((file as any)._buf) > limits.fileSize
-  )
+  ) {
     return false
+  }
   return true
 }
 

@@ -36,7 +36,7 @@ export class RedisSubPub {
     await this.pubClient.publish(channel, _data)
   }
 
-  private ctc = new WeakMap<Function, (channel: string, message: string) => void>()
+  private ctc = new WeakMap<(data: any) => void, (channel: string, message: string) => void>()
 
   public async subscribe(event: string, callback: (data: any) => void) {
     const myChannel = this.channelPrefix + event

@@ -1,4 +1,4 @@
-import { Module, Provider, forwardRef } from '@nestjs/common'
+import { forwardRef, Module, Provider } from '@nestjs/common'
 
 import { AuthModule } from '../modules/auth/auth.module'
 import { SystemModule } from '../modules/system/system.module'

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import {
+  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator,
 } from 'class-validator'
 import { isNil, merge } from 'lodash'
 import { ClsService } from 'nestjs-cls'

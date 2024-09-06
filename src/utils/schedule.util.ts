@@ -62,7 +62,7 @@ export function createNotifyManager() {
   /**
    * All calls to the wrapped function will be batched.
    */
-  const batchCalls = <T extends Function>(callback: T): T => {
+  const batchCalls = <T extends (...args: any[]) => any>(callback: T): T => {
     return ((...args: any[]) => {
       schedule(() => {
         callback(...args)

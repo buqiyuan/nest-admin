@@ -4,13 +4,13 @@ import { IsString, Matches, MaxLength, MinLength } from 'class-validator'
 export class PasswordUpdateDto {
   @ApiProperty({ description: '旧密码' })
   @IsString()
-  @Matches(/^[a-z0-9A-Z\W_]+$/)
+  @Matches(/^[\s\S]+$/)
   @MinLength(6)
   @MaxLength(20)
   oldPassword: string
 
   @ApiProperty({ description: '新密码' })
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+  @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
     message: '密码必须包含数字、字母，长度为6-16',
   })
   newPassword: string
@@ -23,7 +23,7 @@ export class UserPasswordDto {
   // id: number
 
   @ApiProperty({ description: '更改后的密码' })
-  @Matches(/^\S*(?=\S{6,})(?=\S*\d)(?=\S*[A-Za-z])\S*$/, {
+  @Matches(/^\S*(?=\S{6})(?=\S*\d)(?=\S*[A-Z])\S*$/i, {
     message: '密码格式不正确',
   })
   password: string
@@ -32,7 +32,7 @@ export class UserPasswordDto {
 export class UserExistDto {
   @ApiProperty({ description: '登录账号' })
   @IsString()
-  @Matches(/^[a-zA-Z0-9_-]{4,16}$/)
+  @Matches(/^[\w-]{4,16}$/)
   @MinLength(6)
   @MaxLength(20)
   username: string

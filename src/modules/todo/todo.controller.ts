@@ -14,7 +14,7 @@ import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'
 
 import { Pagination } from '~/helper/paginate/pagination'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 import { Resource } from '~/modules/auth/decorators/resource.decorator'
 
 import { ResourceGuard } from '~/modules/auth/guards/resource.guard'

@@ -8,7 +8,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { KickDto } from './online.dto'
 import { OnlineUserInfo } from './online.model'

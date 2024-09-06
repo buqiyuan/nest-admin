@@ -1,7 +1,7 @@
 import { BeforeApplicationShutdown, Controller, Headers, Ip, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { Observable, interval } from 'rxjs'
+import { interval, Observable } from 'rxjs'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 

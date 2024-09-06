@@ -12,10 +12,27 @@ import {
 
 import { OperatorDto } from '~/common/dto/operator.dto'
 
+enum MenuType {
+  /** 菜单 */
+  MENU = 0,
+  /** 目录 */
+  MENU_GROUP = 1,
+  /** 权限 */
+  PERMISSION = 2,
+}
+
 export class MenuDto extends OperatorDto {
-  @ApiProperty({ description: '菜单类型' })
+  @ApiProperty({
+    description: `
+菜单类型:
+- 0: 菜单
+- 1: 目录
+- 2: 权限   
+    `,
+    enum: MenuType,
+  })
   @IsIn([0, 1, 2])
-  type: number
+  type: MenuType
 
   @ApiProperty({ description: '父级菜单' })
   @IsOptional()
@@ -33,11 +50,11 @@ export class MenuDto extends OperatorDto {
 
   @ApiProperty({ description: '前端路由地址' })
   // @Matches(/^[/]$/)
-  @ValidateIf(o => o.type !== 2)
+  @ValidateIf(o => o.type !== MenuType.PERMISSION)
   path: string
 
   @ApiProperty({ description: '是否外链', default: false })
-  @ValidateIf(o => o.type !== 2)
+  @ValidateIf(o => o.type !== MenuType.PERMISSION)
   @IsBoolean()
   isExt: boolean
 
@@ -47,12 +64,12 @@ export class MenuDto extends OperatorDto {
   extOpenMode: number
 
   @ApiProperty({ description: '菜单是否显示', default: 1 })
-  @ValidateIf((o: MenuDto) => o.type !== 2)
+  @ValidateIf((o: MenuDto) => o.type !== MenuType.PERMISSION)
   @IsIn([0, 1])
   show: number
 
   @ApiProperty({ description: '设置当前路由高亮的菜单项，一般用于详情页' })
-  @ValidateIf((o: MenuDto) => o.type !== 2 && o.show === 0)
+  @ValidateIf((o: MenuDto) => o.type !== MenuType.PERMISSION && o.show === 0)
   @IsString()
   @IsOptional()
   activeMenu?: string
@@ -68,18 +85,18 @@ export class MenuDto extends OperatorDto {
 
   @ApiProperty({ description: '菜单图标' })
   @IsOptional()
-  @ValidateIf((o: MenuDto) => o.type !== 2)
+  @ValidateIf((o: MenuDto) => o.type !== MenuType.PERMISSION)
   @IsString()
   icon?: string
 
   @ApiProperty({ description: '对应权限' })
-  @ValidateIf((o: MenuDto) => o.type === 2)
+  @ValidateIf((o: MenuDto) => o.type === MenuType.PERMISSION)
   @IsString()
   @IsOptional()
   permission: string
 
   @ApiProperty({ description: '菜单路由路径或外链' })
-  @ValidateIf((o: MenuDto) => o.type !== 2)
+  @ValidateIf((o: MenuDto) => o.type !== MenuType.PERMISSION)
   @IsString()
   @IsOptional()
   component?: string

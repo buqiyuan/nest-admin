@@ -1,17 +1,17 @@
-import type {
-  CallHandler,
-  ExecutionContext,
-  NestInterceptor,
-} from '@nestjs/common'
-
 import {
   ConflictException,
   Injectable,
   SetMetadata,
 } from '@nestjs/common'
+
 import { Reflector } from '@nestjs/core'
-import type { FastifyRequest } from 'fastify'
 import { catchError, tap } from 'rxjs'
+import type {
+  CallHandler,
+  ExecutionContext,
+  NestInterceptor,
+} from '@nestjs/common'
+import type { FastifyRequest } from 'fastify'
 
 import { CacheService } from '~/shared/redis/cache.service'
 import { hashString } from '~/utils'
@@ -113,7 +113,9 @@ export class IdempotenceInterceptor implements NestInterceptor {
     }
     return next.handle().pipe(
       tap(async () => {
-        idempotenceKey && (await redis.set(idempotenceKey, '1', 'KEEPTTL'))
+        if (idempotenceKey) {
+          await redis.set(idempotenceKey, '1', 'KEEPTTL')
+        }
       }),
       catchError(async (err) => {
         if (idempotenceKey)

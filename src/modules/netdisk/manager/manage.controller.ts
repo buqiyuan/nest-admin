@@ -9,7 +9,7 @@ import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
 
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { checkIsDemoMode } from '~/utils'
 
@@ -19,8 +19,8 @@ import {
   FileInfoDto,
   FileOpDto,
   GetFileListDto,
-  MKDirDto,
   MarkFileDto,
+  MKDirDto,
   RenameDto,
 } from './manage.dto'
 import { NetDiskManageService } from './manage.service'

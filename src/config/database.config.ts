@@ -1,11 +1,10 @@
 import { ConfigType, registerAs } from '@nestjs/config'
 
+import dotenv from 'dotenv'
+
 import { DataSource, DataSourceOptions } from 'typeorm'
 
 import { env, envBoolean, envNumber } from '~/global/env'
-
-// eslint-disable-next-line import/order
-import dotenv from 'dotenv'
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV}` })
 

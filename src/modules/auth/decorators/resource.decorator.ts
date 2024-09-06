@@ -1,4 +1,4 @@
-import { SetMetadata, applyDecorators } from '@nestjs/common'
+import { applyDecorators, SetMetadata } from '@nestjs/common'
 
 import { ObjectLiteral, ObjectType, Repository } from 'typeorm'
 

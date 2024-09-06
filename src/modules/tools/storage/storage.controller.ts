@@ -7,7 +7,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
 import { Pagination } from '~/helper/paginate/pagination'
 
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 
 import { StorageDeleteDto, StoragePageDto } from './storage.dto'
 import { StorageInfo } from './storage.modal'

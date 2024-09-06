@@ -16,7 +16,7 @@ jobs:
           host: ${{ secrets.REMOTE_HOST }}
           username: ${{ secrets.REMOTE_USERNAME }}
           password: ${{ secrets.REMOTE_PASSWORD }}
-          port: ${{ secrets.REMOTE_PORT }} 
+          port: ${{ secrets.REMOTE_PORT }}
           script: |
             cd ${{ secrets.REMOTE_WORKDIR }}
             git reset --hard origin/main
@@ -26,4 +26,3 @@ jobs:
             echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
             echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.production
             pnpm prod:pm2
-    

@@ -18,11 +18,10 @@ jobs:
       - name: Mirror the Github organization repos to Gitee.
         uses: Yikun/hub-mirror-action@master
         with:
-          src: 'github/buqiyuan'
-          dst: 'gitee/buqiyuan'
+          src: github/buqiyuan
+          dst: gitee/buqiyuan
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
-          static_list: 'nest-admin'
+          static_list: nest-admin
           force_update: true
           debug: true
-

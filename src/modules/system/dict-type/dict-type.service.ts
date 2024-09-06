@@ -25,11 +25,10 @@ export class DictTypeService {
     name,
     code,
   }: DictTypeQueryDto): Promise<Pagination<DictTypeEntity>> {
-    const queryBuilder = this.dictTypeRepository.createQueryBuilder('dict_type')
-      .where({
-        ...(name && { name: Like(`%${name}%`) }),
-        ...(code && { code: Like(`%${code}%`) }),
-      })
+    const queryBuilder = this.dictTypeRepository.createQueryBuilder('dict_type').where({
+      ...(name && { name: Like(`%${name}%`) }),
+      ...(code && { code: Like(`%${code}%`) }),
+    })
 
     return paginate(queryBuilder, { page, pageSize })
   }

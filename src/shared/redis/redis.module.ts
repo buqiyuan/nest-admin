@@ -9,8 +9,8 @@ import { RedisOptions } from 'ioredis'
 import { ConfigKeyPaths, IRedisConfig } from '~/config'
 
 import { CacheService } from './cache.service'
-import { RedisSubPub } from './redis-subpub'
 import { REDIS_PUBSUB } from './redis.constant'
+import { RedisSubPub } from './redis-subpub'
 import { RedisPubSubService } from './subpub.service'
 
 const providers: Provider[] = [

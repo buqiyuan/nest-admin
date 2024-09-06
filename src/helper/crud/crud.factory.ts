@@ -1,5 +1,3 @@
-import type { Type } from '@nestjs/common'
-
 import {
   Body,
   Controller,
@@ -10,9 +8,11 @@ import {
   Put,
   Query,
 } from '@nestjs/common'
+
 import { ApiBody, IntersectionType, PartialType } from '@nestjs/swagger'
 import { upperFirst } from 'lodash'
 import pluralize from 'pluralize'
+import type { Type } from '@nestjs/common'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { IdParam } from '~/common/decorators/id-param.decorator'

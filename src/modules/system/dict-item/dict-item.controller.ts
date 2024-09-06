@@ -7,7 +7,7 @@ import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { UpdaterPipe } from '~/common/pipes/updater.pipe'
 import { Pagination } from '~/helper/paginate/pagination'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
-import { Perm, definePermission } from '~/modules/auth/decorators/permission.decorator'
+import { definePermission, Perm } from '~/modules/auth/decorators/permission.decorator'
 import { DictItemEntity } from '~/modules/system/dict-item/dict-item.entity'
 
 import { DictItemDto, DictItemQueryDto } from './dict-item.dto'

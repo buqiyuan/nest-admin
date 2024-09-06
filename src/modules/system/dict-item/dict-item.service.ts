@@ -26,15 +26,13 @@ export class DictItemService {
     value,
     typeId,
   }: DictItemQueryDto): Promise<Pagination<DictItemEntity>> {
-    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item')
-      .orderBy({ orderNo: 'ASC' })
-      .where({
-        ...(label && { label: Like(`%${label}%`) }),
-        ...(value && { value: Like(`%${value}%`) }),
-        type: {
-          id: typeId,
-        },
-      })
+    const queryBuilder = this.dictItemRepository.createQueryBuilder('dict_item').orderBy({ orderNo: 'ASC' }).where({
+      ...(label && { label: Like(`%${label}%`) }),
+      ...(value && { value: Like(`%${value}%`) }),
+      type: {
+        id: typeId,
+      },
+    })
 
     return paginate(queryBuilder, { page, pageSize })
   }

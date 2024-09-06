@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common'
 import {
+  registerDecorator,
   ValidationArguments,
   ValidationOptions,
   ValidatorConstraint,
   ValidatorConstraintInterface,
-  registerDecorator,
 } from 'class-validator'
 import { DataSource, ObjectType, Repository } from 'typeorm'
 

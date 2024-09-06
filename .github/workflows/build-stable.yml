@@ -3,7 +3,7 @@ name: Build Stable Image
 on:
   push:
     branches:
-      - 'main'
+      - main
 
 jobs:
   docker:
@@ -28,7 +28,6 @@ jobs:
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
-
   # deploy:
   #   runs-on: ubuntu-latest
   #   needs: docker
@@ -39,7 +38,7 @@ jobs:
   #         host: ${{ secrets.REMOTE_HOST }}
   #         username: ${{ secrets.REMOTE_USERNAME }}
   #         password: ${{ secrets.REMOTE_PASSWORD }}
-  #         port: ${{ secrets.REMOTE_PORT }} 
+  #         port: ${{ secrets.REMOTE_PORT }}
   #         script: |
   #           cd ${{ secrets.REMOTE_WORKDIR }}
   #           pnpm docker:prod:up

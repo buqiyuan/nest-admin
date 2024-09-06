@@ -1,12 +1,12 @@
 import { } from '@nestjs/common'
 import { OnEvent } from '@nestjs/event-emitter'
 import { JwtService } from '@nestjs/jwt'
+import { WebSocketServer } from '@nestjs/websockets'
+import { Namespace } from 'socket.io'
 import type {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets'
-import { WebSocketServer } from '@nestjs/websockets'
-import { Namespace } from 'socket.io'
 import type { Socket } from 'socket.io'
 
 import { EventBusEvents } from '~/constants/event-bus.constant'
@@ -110,9 +110,7 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
     }
 
     override broadcast(event: BusinessEvents, data: any) {
-      this.cacheService.emitter
-        .of(`/${namespace}`)
-        .emit('message', this.gatewayMessageFormat(event, data))
+      this.cacheService.emitter.of(`/${namespace}`).emit('message', this.gatewayMessageFormat(event, data))
     }
   }
 

@@ -12,7 +12,7 @@ services:
     extra_hosts:
       - 'host.docker.internal:host-gateway'
     ports:
-      - '${APP_PORT}:${APP_PORT}'  
+      - '${APP_PORT}:${APP_PORT}'
     networks:
       - nest_admin_net
 

@@ -2,10 +2,9 @@
  * @module utils/ip
  * @description IP utility functions
  */
-import type { IncomingMessage } from 'node:http'
-
 import axios from 'axios'
 import type { FastifyRequest } from 'fastify'
+import type { IncomingMessage } from 'node:http'
 
 /* 判断IP是不是内网 */
 function isLAN(ip: string) {

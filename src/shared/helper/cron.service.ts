@@ -34,9 +34,9 @@ export class CronService {
         await AccessTokenEntity.remove(token)
 
         this.logger.debug(
-            `--> 删除过期的 token：${value}, 签发于 ${dayjs(created_at).format(
-              'YYYY-MM-DD H:mm:ss',
-            )}`,
+          `--> 删除过期的 token：${value}, 签发于 ${dayjs(created_at).format(
+            'YYYY-MM-DD H:mm:ss',
+          )}`,
         )
 
         deleteCount += 1
