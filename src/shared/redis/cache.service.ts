@@ -1,8 +1,8 @@
+import type { Redis } from 'ioredis'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Inject, Injectable } from '@nestjs/common'
 import { Emitter } from '@socket.io/redis-emitter'
 import { Cache } from 'cache-manager'
-import type { Redis } from 'ioredis'
 
 import { RedisIoAdapterKey } from '~/common/adapters/socket.adapter'
 

@@ -1,6 +1,6 @@
 import { SetMetadata } from '@nestjs/common'
 
-export const BYPASS_KEY = '__bypass_key__'
+export const BYPASS_KEY = Symbol('__bypass_key__')
 
 /**
  * 当不需要转换成基础返回格式时添加该装饰器

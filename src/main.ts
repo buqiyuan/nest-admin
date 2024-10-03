@@ -1,6 +1,7 @@
+import type { ConfigKeyPaths } from './config'
 import cluster from 'node:cluster'
-import path from 'node:path'
 
+import path from 'node:path'
 import {
   HttpStatus,
   Logger,
@@ -9,19 +10,18 @@ import {
 } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 import { NestFactory } from '@nestjs/core'
+
 import { NestFastifyApplication } from '@nestjs/platform-fastify'
 
 import { useContainer } from 'class-validator'
 
 import { AppModule } from './app.module'
-
 import { fastifyApp } from './common/adapters/fastify.adapter'
 import { RedisIoAdapter } from './common/adapters/socket.adapter'
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor'
 import { isDev, isMainProcess } from './global/env'
 import { setupSwagger } from './setup-swagger'
 import { LoggerService } from './shared/logger/logger.service'
-import type { ConfigKeyPaths } from './config'
 
 declare const module: any
 

@@ -1,12 +1,12 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Controller, Get, Query } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
-
 import Redis from 'ioredis'
+
 import { isEmpty } from 'lodash'
 import * as svgCaptcha from 'svg-captcha'
-
 import { ApiResult } from '~/common/decorators/api-result.decorator'
+
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 import { genCaptchaImgKey } from '~/helper/genRedisKey'
 import { generateUUID } from '~/utils'
 

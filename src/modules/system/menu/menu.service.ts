@@ -1,10 +1,10 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import Redis from 'ioredis'
 import { concat, isEmpty, isNil, uniq } from 'lodash'
-
 import { In, IsNull, Like, Not, Repository } from 'typeorm'
+
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { RedisKeys } from '~/constants/cache.constant'

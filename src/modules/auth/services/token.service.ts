@@ -1,9 +1,9 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Inject, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import dayjs from 'dayjs'
-
 import Redis from 'ioredis'
+
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { ISecurityConfig, SecurityConfig } from '~/config'
 import { genOnlineUserKey } from '~/helper/genRedisKey'

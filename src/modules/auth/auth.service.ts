@@ -1,8 +1,8 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { Inject, Injectable } from '@nestjs/common'
-
 import Redis from 'ioredis'
+
 import { isEmpty } from 'lodash'
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 

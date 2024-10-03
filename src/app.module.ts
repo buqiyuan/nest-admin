@@ -1,11 +1,11 @@
+import type { FastifyRequest } from 'fastify'
+
 import { ClassSerializerInterceptor, Module } from '@nestjs/common'
-
 import { ConfigModule } from '@nestjs/config'
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core'
 import { ThrottlerGuard } from '@nestjs/throttler'
 import { ClsModule } from 'nestjs-cls'
-import type { FastifyRequest } from 'fastify'
 
 import config from '~/config'
 import { SharedModule } from '~/shared/shared.module'

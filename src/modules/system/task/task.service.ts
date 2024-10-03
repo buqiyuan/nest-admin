@@ -1,4 +1,3 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import { InjectQueue } from '@nestjs/bull'
 import {
   BadRequestException,
@@ -14,6 +13,7 @@ import { Queue } from 'bull'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
 import { Like, Repository } from 'typeorm'
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'

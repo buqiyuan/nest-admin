@@ -1,4 +1,3 @@
-import { InjectRedis } from '@liaoliaots/nestjs-redis'
 import {
   ExecutionContext,
   Inject,
@@ -10,8 +9,9 @@ import { AuthGuard } from '@nestjs/passport'
 import { FastifyRequest } from 'fastify'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
-
 import { ExtractJwt } from 'passport-jwt'
+
+import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { AppConfig, IAppConfig, RouterWhiteList } from '~/config'

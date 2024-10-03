@@ -1,3 +1,4 @@
+import type { FastifyRequest } from 'fastify'
 import {
   CallHandler,
   ExecutionContext,
@@ -9,7 +10,6 @@ import { Reflector } from '@nestjs/core'
 import qs from 'qs'
 import { Observable } from 'rxjs'
 import { map } from 'rxjs/operators'
-import type { FastifyRequest } from 'fastify'
 
 import { ResOp } from '~/common/model/response.model'
 

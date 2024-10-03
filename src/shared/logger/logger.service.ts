@@ -1,9 +1,9 @@
-import { ConsoleLogger, ConsoleLoggerOptions, Injectable } from '@nestjs/common'
-
-import { ConfigService } from '@nestjs/config'
-import { config, createLogger, format, transports } from 'winston'
-
 import type { Logger as WinstonLogger } from 'winston'
+
+import { ConsoleLogger, ConsoleLoggerOptions, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
+
+import { config, createLogger, format, transports } from 'winston'
 
 import { ConfigKeyPaths } from '~/config'
 

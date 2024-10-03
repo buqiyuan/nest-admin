@@ -1,13 +1,13 @@
-import { } from '@nestjs/common'
-import { OnEvent } from '@nestjs/event-emitter'
-import { JwtService } from '@nestjs/jwt'
-import { WebSocketServer } from '@nestjs/websockets'
-import { Namespace } from 'socket.io'
 import type {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets'
 import type { Socket } from 'socket.io'
+import { } from '@nestjs/common'
+import { OnEvent } from '@nestjs/event-emitter'
+import { JwtService } from '@nestjs/jwt'
+import { WebSocketServer } from '@nestjs/websockets'
+import { Namespace } from 'socket.io'
 
 import { EventBusEvents } from '~/constants/event-bus.constant'
 
