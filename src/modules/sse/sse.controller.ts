@@ -1,16 +1,18 @@
 import { BeforeApplicationShutdown, Controller, Headers, Ip, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
+import { SkipThrottle } from '@nestjs/throttler'
 import { FastifyReply, FastifyRequest } from 'fastify'
+
 import { interval, Observable } from 'rxjs'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 
 import { OnlineService } from '../system/online/online.service'
-
 import { MessageEvent, SseService } from './sse.service'
 
 @ApiTags('System - sse模块')
 @ApiSecurityAuth()
+@SkipThrottle()
 @Controller('sse')
 export class SseController implements BeforeApplicationShutdown {
   private replyMap: Map<number, FastifyReply> = new Map()
