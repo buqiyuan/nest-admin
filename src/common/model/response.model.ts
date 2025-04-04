@@ -6,7 +6,7 @@ import {
 } from '~/constants/response.constant'
 
 export class ResOp<T = any> {
-  @ApiProperty({ type: 'object' })
+  @ApiProperty({ type: 'object',additionalProperties: true })
   data?: T
 
   @ApiProperty({ type: 'number', default: RESPONSE_SUCCESS_CODE })

@@ -27,7 +27,7 @@ export interface RouteRecordRaw {
   children?: RouteRecordRaw[]
 }
 
-function createRoute(menu: MenuEntity, _isRoot): RouteRecordRaw {
+function createRoute(menu: MenuEntity, _isRoot: boolean): RouteRecordRaw {
   const commonMeta: RouteRecordRaw['meta'] = {
     title: menu.name,
     icon: menu.icon,
