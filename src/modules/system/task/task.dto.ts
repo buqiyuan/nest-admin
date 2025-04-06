@@ -15,7 +15,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator'
-import * as parser from 'cron-parser'
+import { CronExpressionParser } from 'cron-parser';
 import { isEmpty } from 'lodash'
 
 import { PagerDto } from '~/common/dto/pager.dto'
@@ -31,7 +31,7 @@ export class IsCronExpression implements ValidatorConstraintInterface {
       if (isEmpty(value))
         throw new BadRequestException('cron expression is empty')
 
-      parser.parseExpression(value)
+      CronExpressionParser.parse(value)
       return true
     }
     catch (e) {

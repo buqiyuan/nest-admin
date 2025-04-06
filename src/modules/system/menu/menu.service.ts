@@ -218,7 +218,6 @@ export class MenuService {
     if (online) {
       // 判断是否在线
       await this.redis.set(genAuthPermKey(uid), JSON.stringify(perms))
-      console.log('refreshPerms')
 
       this.sseService.noticeClientToUpdateMenusByUserIds([uid])
     }
