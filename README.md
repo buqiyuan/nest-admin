@@ -35,7 +35,7 @@
     </details>
   </li>
   <li>
-   <a href="https://nest-api.buqiyuan.site/api-docs/" target="_blank">
+   <a href="https://nest-admin.buqiyuan.top/api-docs/" target="_blank">
       Swagger 文档
    </a>
   </li>
@@ -51,7 +51,7 @@
 
 ## 环境要求
 
-- `nodejs` `16.20.2`+
+- `nodejs` `20`+
 - `docker` `20.x`+ ，其中 `docker compose`版本需要 `2.17.0`+
 - `mysql` `8.x`+
 - 使用 [`pnpm`](https://pnpm.io/zh/) 包管理器安装项目依赖
