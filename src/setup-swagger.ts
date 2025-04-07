@@ -11,25 +11,25 @@ import { Pagination } from './helper/paginate/pagination'
 export function setupSwagger(
   app: INestApplication,
   configService: ConfigService<ConfigKeyPaths>,
-): void {
-  const { name, globalPrefix, baseUrl } = configService.get<IAppConfig>('app')!
-  const { enable, path } = configService.get<ISwaggerConfig>('swagger')!
+) {
+  const { name, globalPrefix } = configService.get<IAppConfig>('app')!
+  const { enable, path, serverUrl } = configService.get<ISwaggerConfig>('swagger')!
 
   if (!enable)
     return
 
-  const swaggerPath = `${baseUrl}/${path}`
+  const swaggerPath = `${serverUrl}/${path}`
 
   const documentBuilder = new DocumentBuilder()
     .setTitle(name)
     .setDescription(`
-🔷 **Base URL**: \`${baseUrl}/${globalPrefix}\` <br>
+🔷 **Base URL**: \`${serverUrl}/${globalPrefix}\` <br>
 🧾 **Swagger JSON**: [查看文档 JSON](${swaggerPath}/json)
 
 📌 [nest-admin](https://github.com/buqiyuan/nest-admin) 后台管理系统 API 文档. 在线 demo [vue3-antdv-admin.pages.dev](https://vue3-antdv-admin.pages.dev/)
     `)
     .setVersion('1.0')
-    .addServer(`${baseUrl}/${globalPrefix}`, 'Base URL') 
+    .addServer(`${serverUrl}/${globalPrefix}`, 'Base URL')
 
   // auth security
   documentBuilder.addSecurity(API_SECURITY_AUTH, {
@@ -51,7 +51,10 @@ export function setupSwagger(
     jsonDocumentUrl: `/${path}/json`,
   })
 
+  return () => {
   // started log
-  const logger = new Logger('SwaggerModule')
-  logger.log(`Document running on ${swaggerPath}`)
+    const logger = new Logger('SwaggerModule')
+    logger.log(`Swagger UI: ${swaggerPath}`)
+    logger.log(`Swagger JSON: ${swaggerPath}/json`)
+  }
 }

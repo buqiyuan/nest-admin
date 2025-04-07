@@ -43,13 +43,13 @@ async function bootstrap() {
   // class-validator 的 DTO 类中注入 nest 容器的依赖 (用于自定义验证器)
   useContainer(app.select(AppModule), { fallbackOnErrors: true })
 
-  //允许跨域
+  // 允许跨域
   app.enableCors({
     origin: '*',
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'], // 明确允许方法
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'], // 按需配置允许的请求头
-  });
+  })
 
   app.setGlobalPrefix(globalPrefix)
   app.useStaticAssets({ root: path.join(__dirname, '..', 'public') })
@@ -81,7 +81,7 @@ async function bootstrap() {
 
   app.useWebSocketAdapter(new RedisIoAdapter(app))
 
-  setupSwagger(app, configService)
+  const printSwaggerLog = setupSwagger(app, configService)
 
   await app.listen(port, '0.0.0.0', async () => {
     app.useLogger(app.get(LoggerService))
@@ -93,11 +93,10 @@ async function bootstrap() {
     if (!isMainProcess)
       return
 
+    printSwaggerLog?.()
+
     const logger = new Logger('NestApplication')
     logger.log(`[${prefix + pid}] Server running on ${url}`)
-
-    if (isDev)
-      logger.log(`[${prefix + pid}] OpenAPI: ${url}/api-docs`)
   })
 
   if (module.hot) {
