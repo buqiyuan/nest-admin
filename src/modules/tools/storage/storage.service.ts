@@ -60,7 +60,7 @@ export class StorageService {
         ...(size && { size: Between(size[0], size[1]) }),
         ...(time && { createdAt: Between(time[0], time[1]) }),
         ...(username && {
-          userId: await (await this.userRepository.findOneBy({ username })).id,
+          userId: await (await this.userRepository.findOneBy({ username }))?.id,
         }),
       })
       .orderBy('storage.created_at', 'DESC')
