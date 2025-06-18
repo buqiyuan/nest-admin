@@ -47,7 +47,7 @@ export class UserEntity extends CommonEntity {
   @Column({ nullable: true })
   remark: string
 
-  @Column({ type: 'tinyint', nullable: true, default: 1 })
+  @Column({ type: 'smallint', nullable: true, default: 1 })
   status: number
 
   @ManyToMany(() => RoleEntity, role => role.users)

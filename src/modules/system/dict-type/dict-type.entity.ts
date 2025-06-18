@@ -13,7 +13,7 @@ export class DictTypeEntity extends CompleteEntity {
   @ApiProperty({ description: '字典编码' })
   code: string
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'smallint', default: 1 })
   @ApiProperty({ description: ' 状态' })
   status: number
 

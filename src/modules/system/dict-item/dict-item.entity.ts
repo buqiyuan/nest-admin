@@ -22,7 +22,7 @@ export class DictItemEntity extends CompleteEntity {
   @Column({ nullable: true, comment: '字典项排序' })
   orderNo: number
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'smallint', default: 1 })
   @ApiProperty({ description: ' 状态' })
   status: number
 
