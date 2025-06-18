@@ -13,19 +13,19 @@ export class TaskEntity extends CommonEntity {
   @ApiProperty({ description: '任务标识' })
   service: string
 
-  @Column({ type: 'tinyint', default: 0 })
+  @Column({ type: 'smallint', default: 0 })
   @ApiProperty({ description: '任务类型 0cron 1间隔' })
   type: number
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'smallint', default: 1 })
   @ApiProperty({ description: '任务状态 0禁用 1启用' })
   status: number
 
-  @Column({ name: 'start_time', type: 'datetime', nullable: true })
+  @Column({ name: 'start_time', type: 'timestamp', nullable: true })
   @ApiProperty({ description: '开始时间' })
   startTime: Date
 
-  @Column({ name: 'end_time', type: 'datetime', nullable: true })
+  @Column({ name: 'end_time', type: 'timestamp', nullable: true })
   @ApiProperty({ description: '结束时间' })
   endTime: Date
 

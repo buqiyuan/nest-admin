@@ -20,7 +20,7 @@ export class RoleEntity extends CompleteEntity {
   @ApiProperty({ description: '角色描述' })
   remark: string
 
-  @Column({ type: 'tinyint', nullable: true, default: 1 })
+  @Column({ type: 'smallint', nullable: true, default: 1 })
   @ApiProperty({ description: '状态：1启用，0禁用' })
   status: number
 

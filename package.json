@@ -30,7 +30,6 @@
     "doc": "compodoc -p tsconfig.json -s",
     "gen-env-types": "npx tsx scripts/genEnvTypes.ts || true",
     "typeorm": "cross-env NODE_ENV=development typeorm-ts-node-esm -d ./dist/config/database.config.js",
-    "migration:create": "npm run typeorm migration:create ./src/migrations/initData",
     "migration:generate": "npm run typeorm migration:generate ./src/migrations/update-table_$(echo $npm_package_version | sed 's/\\./_/g')",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
@@ -41,7 +40,9 @@
     "docker:up": "docker compose --env-file .env --env-file .env.production up -d --no-build",
     "docker:down": "docker compose --env-file .env --env-file .env.production down",
     "docker:rmi": "docker compose --env-file .env --env-file .env.production stop nest-admin-server && docker container rm nest-admin-server && docker rmi nest-admin-server",
-    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f"
+    "docker:logs": "docker compose --env-file .env --env-file .env.production logs -f",
+    "docker:db:up": "docker compose -f docker-compose.db.yml --env-file .env --env-file .env.development up -d --no-build",
+    "docker:db:down": "docker compose -f docker-compose.db.yml --env-file .env --env-file .env.development down"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
@@ -91,6 +92,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
+    "pg": "^8.16.0",
     "qiniu": "^7.14.0",
     "qs": "^6.14.0",
     "reflect-metadata": "^0.2.2",
@@ -117,6 +119,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.14.0",
     "@types/passport-jwt": "^4.0.1",
+    "@types/pg": "^8.15.4",
     "@types/qs": "^6.9.18",
     "@types/supertest": "^6.0.3",
     "@types/ua-parser-js": "^0.7.39",
