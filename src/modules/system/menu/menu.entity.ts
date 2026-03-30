@@ -18,7 +18,7 @@ export class MenuEntity extends CompleteEntity {
   @Column({ nullable: true })
   permission: string
 
-  @Column({ type: 'tinyint', default: 0 })
+  @Column({ type: 'smallint', default: 0 })
   type: number
 
   @Column({ nullable: true, default: '' })
@@ -33,19 +33,19 @@ export class MenuEntity extends CompleteEntity {
   @Column({ name: 'is_ext', type: 'boolean', default: false })
   isExt: boolean
 
-  @Column({ name: 'ext_open_mode', type: 'tinyint', default: 1 })
+  @Column({ name: 'ext_open_mode', type: 'smallint', default: 1 })
   extOpenMode: number
 
-  @Column({ name: 'keep_alive', type: 'tinyint', default: 1 })
+  @Column({ name: 'keep_alive', type: 'smallint', default: 1 })
   keepAlive: number
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'smallint', default: 1 })
   show: number
 
   @Column({ name: 'active_menu', nullable: true })
   activeMenu: string
 
-  @Column({ type: 'tinyint', default: 1 })
+  @Column({ type: 'smallint', default: 1 })
   status: number
 
   @ManyToMany(() => RoleEntity, role => role.menus, {

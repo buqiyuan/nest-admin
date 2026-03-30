@@ -11,8 +11,8 @@ export class TodoEntity extends CommonEntity {
   value: string
 
   @ApiProperty({ description: 'todo' })
-  @Column({ default: false })
-  status: boolean
+  @Column({ type: 'smallint', default: 0 })
+  status: number
 
   @ManyToOne(() => UserEntity)
   @JoinColumn({ name: 'user_id' })
