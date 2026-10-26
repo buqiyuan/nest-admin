@@ -1,4 +1,4 @@
-import { RedisModule as NestRedisModule, RedisService } from '@liaoliaots/nestjs-redis'
+import { RedisModule as NestRedisModule, RedisService } from '@nestjs-labs/nestjs-ioredis'
 import { CacheModule } from '@nestjs/cache-manager'
 import { Global, Module, Provider } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
@@ -10,8 +10,8 @@ import { REDIS_CLIENT } from '~/common/decorators/inject-redis.decorator'
 
 import { ConfigKeyPaths, IRedisConfig } from '~/config'
 import { CacheService } from './cache.service'
-import { REDIS_PUBSUB } from './redis.constant'
 import { RedisSubPub } from './redis-subpub'
+import { REDIS_PUBSUB } from './redis.constant'
 import { RedisPubSubService } from './subpub.service'
 
 const providers: Provider[] = [
