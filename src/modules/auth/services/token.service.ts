@@ -135,6 +135,27 @@ export class TokenService {
   }
 
   /**
+   * access token 必须是本服务签发并写入 user_access_tokens 的值。
+   * 只凭签名（哪怕密钥曾经泄露）不能通过。
+   */
+  async hasIssuedAccessToken(value: string): Promise<boolean> {
+    if (!value)
+      return false
+
+    try {
+      await this.verifyAccessToken(value)
+      const res = await AccessTokenEntity.findOne({
+        where: { value },
+        select: { id: true },
+      })
+      return Boolean(res)
+    }
+    catch {
+      return false
+    }
+  }
+
+  /**
    * 移除AccessToken且自动移除关联的RefreshToken
    * @param value
    */

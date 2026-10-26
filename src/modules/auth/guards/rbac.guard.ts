@@ -34,6 +34,11 @@ export class RbacGuard implements CanActivate {
     if (!user)
       throw new BusinessException(ErrorEnum.INVALID_LOGIN)
 
+    // 角色以数据库当前绑定为准，不信任 JWT payload 里的 roles。
+    // 这样令牌即使被写入了 admin，被撤权的用户也不能继续走管理员短路。
+    const roles = await this.authService.getRoleValuesByUid(user.uid)
+    user.roles = roles
+
     // allowAnon 是需要登录后可访问(无需权限), Public 则是无需登录也可访问.
     const allowAnon = this.reflector.get<boolean>(
       ALLOW_ANON_KEY,
@@ -50,8 +55,8 @@ export class RbacGuard implements CanActivate {
     if (!payloadPermission)
       return true
 
-    // 管理员放开所有权限
-    if (user.roles.includes(Roles.ADMIN))
+    // 管理员放开所有权限（角色来自数据库，而不是令牌声明）
+    if (roles.includes(Roles.ADMIN))
       return true
 
     const allPermissions = await this.authService.getPermissionsCache(user.uid) ?? await this.authService.getPermissions(user.uid)

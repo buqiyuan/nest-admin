@@ -9,7 +9,7 @@ import {
 
 import { Server } from 'socket.io'
 
-import { AuthService } from '~/modules/auth/auth.service'
+import { TokenService } from '~/modules/auth/services/token.service'
 import { CacheService } from '~/shared/redis/cache.service'
 
 import { createAuthGateway } from '../shared/auth.gateway'
@@ -22,10 +22,10 @@ export class AdminEventsGateway
   implements OnGatewayConnection, OnGatewayDisconnect {
   constructor(
     protected readonly jwtService: JwtService,
-    protected readonly authService: AuthService,
+    protected readonly tokenService: TokenService,
     private readonly cacheService: CacheService,
   ) {
-    super(jwtService, authService, cacheService)
+    super(jwtService, tokenService, cacheService)
   }
 
   @WebSocketServer()

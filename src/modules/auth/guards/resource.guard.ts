@@ -43,7 +43,8 @@ export class ResourceGuard implements CanActivate {
       context.getHandler(),
     ) ?? { entity: null, condition: null }
 
-    if (entity && !user.roles.includes(Roles.ADMIN)) {
+    // roles 由 JwtStrategy / RbacGuard 写成数据库中的当前角色。缺失时按非管理员处理。
+    if (entity && !user.roles?.includes(Roles.ADMIN)) {
       const repo: Repository<any> = this.dataSource.getRepository(entity)
 
       /**

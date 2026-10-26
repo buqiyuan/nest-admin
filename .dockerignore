@@ -44,3 +44,9 @@ README.md
 
 # Dev data
 /__data/
+
+# 本地密钥不要打进镜像。运行时通过 env_file 或进程环境变量注入。
+.env.development
+.env.production
+.env.local
+.env*.local
