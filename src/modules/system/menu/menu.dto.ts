@@ -12,11 +12,15 @@ import {
 
 import { OperatorDto } from '~/common/dto/operator.dto'
 
+/**
+ * 与库表 sys_menu.type、种子数据以及前端选项一致，数值不可对调：
+ * 0 目录、1 菜单、2 权限。
+ */
 enum MenuType {
-  /** 菜单 */
-  MENU = 0,
   /** 目录 */
-  MENU_GROUP = 1,
+  MENU_GROUP = 0,
+  /** 菜单 */
+  MENU = 1,
   /** 权限 */
   PERMISSION = 2,
 }
@@ -25,9 +29,9 @@ export class MenuDto extends OperatorDto {
   @ApiProperty({
     description: `
 菜单类型:
-- 0: 菜单
-- 1: 目录
-- 2: 权限   
+- 0: 目录
+- 1: 菜单
+- 2: 权限
     `,
     enum: MenuType,
   })
@@ -75,7 +79,7 @@ export class MenuDto extends OperatorDto {
   activeMenu?: string
 
   @ApiProperty({ description: '是否开启页面缓存', default: 1 })
-  @ValidateIf((o: MenuDto) => o.type === 1)
+  @ValidateIf((o: MenuDto) => o.type === MenuType.MENU)
   @IsIn([0, 1])
   keepAlive: number
 
