@@ -129,11 +129,22 @@ export class RoleService {
   }
 
   async getRoleValues(ids: number[]): Promise<string[]> {
+    if (isEmpty(ids))
+      return []
+
     return (
       await this.roleRepository.findBy({
         id: In(ids),
       })
     ).map(r => r.value)
+  }
+
+  /**
+   * 按用户当前的角色绑定取值。鉴权使用该结果，而不是 JWT 自带的 roles。
+   */
+  async getRoleValuesByUser(uid: number): Promise<string[]> {
+    const roleIds = await this.getRoleIdsByUser(uid)
+    return this.getRoleValues(roleIds)
   }
 
   async isAdminRoleByUser(uid: number): Promise<boolean> {

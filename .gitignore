@@ -9,10 +9,11 @@ dist
 .turbo
 .local
 
-# local env files
-#.env.development
-#.env.production
+# local env files（含 JWT / SMTP 等密钥，勿提交）
+.env.development
+.env.production
 .env.local
+.env*.local
 
 .eslintcache
 

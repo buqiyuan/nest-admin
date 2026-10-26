@@ -153,6 +153,13 @@ export class AuthService {
     return this.redis.get(genAuthPVKey(uid))
   }
 
+  /**
+   * 当前用户在数据库中的角色值。RBAC 以此为准，忽略令牌里携带的 roles。
+   */
+  async getRoleValuesByUid(uid: number): Promise<string[]> {
+    return this.roleService.getRoleValuesByUser(uid)
+  }
+
   async getTokenByUid(uid: number): Promise<string> {
     return this.redis.get(genAuthTokenKey(uid))
   }

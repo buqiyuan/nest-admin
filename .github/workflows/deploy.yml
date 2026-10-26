@@ -24,5 +24,7 @@ jobs:
             pnpm install
             pnpm build
             echo "${{ secrets.DEPLOY_ENV_FILE }}" > .env
+            # DEPLOY_ENV_PROD_FILE 必须包含各自独立、至少 32 位的 JWT_SECRET 与 REFRESH_TOKEN_SECRET。
+            # 应用会拒绝使用空值、过短值或已知占位密钥启动。
             echo "${{ secrets.DEPLOY_ENV_PROD_FILE }}" > .env.production
             pnpm prod:pm2

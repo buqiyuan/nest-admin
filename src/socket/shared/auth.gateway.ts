@@ -51,28 +51,15 @@ export function createAuthGateway(options: AuthGatewayOptions): new (...args: an
       if (typeof token !== 'string')
         return false
 
-      const validJwt = async () => {
-        try {
-          const ok = await this.jwtService.verifyAsync(token)
-
-          if (!ok)
-            return false
-        }
-        catch {
-          return false
-        }
-        // is not crash, is verify
-        return true
-      }
-
-      return await validJwt()
+      // 签名正确还不够，必须是登录时写入数据库的 access token。
+      return this.tokenService.hasIssuedAccessToken(token)
     }
 
     async handleConnection(client: Socket) {
       const token
         = client.handshake.query.token
-        || client.handshake.headers.authorization
-        || client.handshake.headers.Authorization
+          || client.handshake.headers.authorization
+          || client.handshake.headers.Authorization
       if (!token)
         return this.authFailed(client)
 

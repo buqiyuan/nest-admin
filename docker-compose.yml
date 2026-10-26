@@ -1,3 +1,5 @@
+# 启动前复制 .env.production.example 为 .env.production，并设置至少 32 位的随机
+# JWT_SECRET 与 REFRESH_TOKEN_SECRET。密钥缺失、过短或仍是已知占位值时，应用会拒绝启动。
 version: '3'
 
 services:

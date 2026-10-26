@@ -104,6 +104,20 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
         throw new BusinessException(ErrorEnum.INVALID_LOGIN)
     }
 
+    // 只承认写入 user_access_tokens 的 access token。
+    // 用密钥伪造、但从未由登录接口签发的 JWT 不能成为 request.user。
+    if (!isEmpty(token) && !(await this.tokenService.hasIssuedAccessToken(token))) {
+      if (isPublic) {
+        request.user = undefined
+        return true
+      }
+
+      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+    }
+
+    if (!isPublic && !request.user?.uid)
+      throw new BusinessException(ErrorEnum.INVALID_LOGIN)
+
     // SSE 请求
     if (isSse) {
       const { uid } = request.params

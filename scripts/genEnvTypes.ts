@@ -7,14 +7,30 @@ const directoryPath = path.resolve(__dirname, '..')
 
 const targets = ['.env', `.env.${process.env.NODE_ENV || 'development'}`]
 
-const envObj = targets.reduce((prev, file) => {
-  const result = dotenv.parse(fs.readFileSync(path.join(directoryPath, file)))
-  return { ...prev, ...result }
-}, {})
+function resolveEnvFile(file: string): string | undefined {
+  const full = path.join(directoryPath, file)
+  if (fs.existsSync(full))
+    return full
 
-const envType = Object.entries<string>(envObj).reduce((prev, [key, value]) => {
+  const example = `${full}.example`
+  if (fs.existsSync(example))
+    return example
+
+  return undefined
+}
+
+const envObj = targets.reduce((prev, file) => {
+  const full = resolveEnvFile(file)
+  if (!full)
+    return prev
+
+  const result = dotenv.parse(fs.readFileSync(full))
+  return { ...prev, ...result }
+}, {} as Record<string, string>)
+
+const envType = Object.keys(envObj).reduce((prev, key) => {
   return `${prev}
-      ${key}: '${value}';`
+      ${key}: string;`
 }, '').trim()
 
 fs.writeFile(path.join(directoryPath, 'types/env.d.ts'), `
