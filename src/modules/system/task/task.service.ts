@@ -9,7 +9,7 @@ import {
 import { ModuleRef, Reflector } from '@nestjs/core'
 import { UnknownElementException } from '@nestjs/core/errors/exceptions/unknown-element.exception'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Queue } from 'bull'
+import { Job, JobOptions, Queue } from 'bull'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
 import { Like, Repository } from 'typeorm'
@@ -30,6 +30,15 @@ import {
   TaskStatus,
 } from './constant'
 import { TaskDto, TaskQueryDto, TaskUpdateDto } from './task.dto'
+import {
+  buildOnceJobId,
+  buildRepeatJobAdd,
+  buildStoredJobOpts,
+  repeatableIdsForTask,
+  shouldRetireRepeatableTask,
+  SYS_TASK_JOB_NAME,
+  TASK_JOB_KEEP,
+} from './task.util'
 
 @Injectable()
 export class TaskService implements OnModuleInit {
@@ -67,26 +76,42 @@ export class TaskService implements OnModuleInit {
       this.logger.log('Init task is lock', TaskService.name)
       return
     }
-    const jobs = await this.taskQueue.getJobs([
-      'active',
-      'delayed',
-      'failed',
-      'paused',
-      'waiting',
-      'completed',
-    ])
-    jobs.forEach((j) => {
-      j.remove()
-    })
+    try {
+      await this.clearQueueSchedules()
 
-    // 查找所有需要运行的任务
-    const tasks = await this.taskRepository.findBy({ status: 1 })
-    if (tasks && tasks.length > 0) {
-      for (const t of tasks)
-        await this.start(t)
+      // 查找所有需要运行的任务
+      const tasks = await this.taskRepository.findBy({ status: TaskStatus.Activited })
+      for (const task of tasks) {
+        try {
+          await this.start(task)
+        }
+        catch (error) {
+          this.logger.error(`Failed to restore task ${task.id}: ${error}`)
+        }
+      }
     }
-    // 启动后释放锁
-    await this.redis.del(initKey)
+    finally {
+      // 启动后释放锁
+      await this.redis.del(initKey)
+    }
+  }
+
+  /**
+   * 先删 repeatable 配置，再删已经生成的 job。
+   * 不 await 的话，后完成的 remove 会把刚刚重新入队的下一拍删掉，调度就此停住。
+   */
+  private async clearQueueSchedules(): Promise<void> {
+    const repeatables = await this.taskQueue.getRepeatableJobs()
+    for (const job of repeatables) {
+      try {
+        await this.taskQueue.removeRepeatableByKey(job.key)
+      }
+      catch (error) {
+        this.logger.warn(`removeRepeatableByKey ${job.key} failed: ${error}`)
+      }
+    }
+
+    await this.removeJobs(() => true)
   }
 
   async list({
@@ -140,15 +165,18 @@ export class TaskService implements OnModuleInit {
    * 手动执行一次
    */
   async once(task: TaskEntity): Promise<void | never> {
-    if (task) {
-      await this.taskQueue.add(
-        { id: task.id, service: task.service, args: task.data },
-        { jobId: task.id, removeOnComplete: true, removeOnFail: true },
-      )
-    }
-    else {
+    if (!task)
       throw new BadRequestException('Task is Empty')
-    }
+
+    await this.taskQueue.add(
+      SYS_TASK_JOB_NAME,
+      { id: task.id, service: task.service, args: task.data ?? null },
+      {
+        jobId: buildOnceJobId(task.id),
+        removeOnComplete: TASK_JOB_KEEP,
+        removeOnFail: TASK_JOB_KEEP,
+      },
+    )
   }
 
   async create(dto: TaskDto): Promise<void> {
@@ -178,46 +206,31 @@ export class TaskService implements OnModuleInit {
 
     // 先停掉之前存在的任务
     await this.stop(task)
-    let repeat: any
-    if (task.type === 1) {
-      // 间隔 Repeat every millis (cron setting cannot be used together with this setting.)
-      repeat = {
-        every: task.every,
-      }
-    }
-    else {
-      // cron
-      repeat = {
-        cron: task.cron,
-      }
-      // Start date when the repeat job should start repeating (only with cron).
-      if (task.startTime)
-        repeat.startDate = task.startTime
 
-      if (task.endTime)
-        repeat.endDate = task.endTime
+    let add: ReturnType<typeof buildRepeatJobAdd>
+    try {
+      add = buildRepeatJobAdd(task)
     }
-    if (task.limit > 0)
-      repeat.limit = task.limit
+    catch (error) {
+      throw new BadRequestException(error instanceof Error ? error.message : 'Task Start failed')
+    }
 
-    const job = await this.taskQueue.add(
-      { id: task.id, service: task.service, args: task.data },
-      { jobId: task.id, removeOnComplete: true, removeOnFail: true, repeat },
-    )
-    if (job && job.opts) {
+    // 第一个参数必须是 job name。把 JSON.stringify(payload) 放在这里时，
+    // Bull 会把它当成 job name，processor 匹配不到，Redis 侧也不会按任务数据入队。
+    const job = await this.taskQueue.add(add.name, add.data, add.opts as JobOptions)
+    if (job?.opts?.repeat) {
       await this.taskRepository.update(task.id, {
-        jobOpts: JSON.stringify(job.opts.repeat),
-        status: 1,
+        jobOpts: buildStoredJobOpts(add.opts.repeat),
+        status: TaskStatus.Activited,
       })
+      return
     }
-    else {
-      // update status to 0，标识暂停任务，因为启动失败
-      await job?.remove()
-      await this.taskRepository.update(task.id, {
-        status: TaskStatus.Disabled,
-      })
-      throw new BadRequestException('Task Start failed')
-    }
+
+    await job?.remove().catch(() => undefined)
+    await this.taskRepository.update(task.id, {
+      status: TaskStatus.Disabled,
+    })
+    throw new BadRequestException('Task Start failed')
   }
 
   /**
@@ -227,13 +240,83 @@ export class TaskService implements OnModuleInit {
     if (!task)
       throw new BadRequestException('Task is Empty')
 
-    const exist = await this.existJob(task.id.toString())
-    if (!exist) {
-      await this.taskRepository.update(task.id, {
-        status: TaskStatus.Disabled,
-      })
-      return
+    await this.removeTaskJobs(task)
+    await this.taskRepository.update(task.id, { status: TaskStatus.Disabled })
+  }
+
+  private async removeTaskJobs(task: TaskEntity): Promise<void> {
+    const ids = new Set(repeatableIdsForTask(task.id))
+    const repeatables = await this.taskQueue.getRepeatableJobs()
+    for (const job of repeatables) {
+      if (job.id == null || !ids.has(String(job.id)))
+        continue
+
+      try {
+        await this.taskQueue.removeRepeatableByKey(job.key)
+      }
+      catch (error) {
+        this.logger.warn(`removeRepeatableByKey ${job.key} failed: ${error}`)
+      }
     }
+
+    await this.removeStoredRepeatable(task)
+    await this.removeJobs(job => job.data?.id === task.id)
+  }
+
+  /**
+   * 用入队时保存的 repeat 再删一次。
+   * getRepeatableJobs 按 `:` 拆 key，旧数据或带特殊字符的 cron 可能解析不出 id。
+   */
+  private async removeStoredRepeatable(task: TaskEntity): Promise<void> {
+    if (!task.jobOpts)
+      return
+
+    const stored = this.safeParse(task.jobOpts)
+    if (!stored || typeof stored !== 'object')
+      return
+
+    const record = stored as Record<string, any>
+    const nested = record.repeat && typeof record.repeat === 'object'
+      ? record.repeat as Record<string, any>
+      : record
+    const name = typeof record.name === 'string' ? record.name : undefined
+    const cron = typeof nested.cron === 'string' ? nested.cron : undefined
+    const every = nested.every == null ? undefined : Number(nested.every)
+    if (!cron && (every == null || Number.isNaN(every)))
+      return
+
+    const rawJobId = nested.jobId ?? record.jobId
+    const jobId = typeof rawJobId === 'string' || typeof rawJobId === 'number' ? rawJobId : undefined
+    const endDate = typeof nested.endDate === 'string' || typeof nested.endDate === 'number'
+      ? nested.endDate
+      : undefined
+    const startDate = typeof nested.startDate === 'string' || typeof nested.startDate === 'number'
+      ? nested.startDate
+      : undefined
+    const tz = typeof nested.tz === 'string' ? nested.tz : undefined
+
+    try {
+      if (cron) {
+        const repeat = { cron, jobId, endDate, startDate, tz }
+        if (name)
+          await this.taskQueue.removeRepeatable(name, repeat)
+        else
+          await this.taskQueue.removeRepeatable(repeat)
+      }
+      else if (every != null) {
+        const repeat = { every, jobId, endDate, tz }
+        if (name)
+          await this.taskQueue.removeRepeatable(name, repeat)
+        else
+          await this.taskQueue.removeRepeatable(repeat)
+      }
+    }
+    catch (error) {
+      this.logger.warn(`removeRepeatable failed: ${error}`)
+    }
+  }
+
+  private async removeJobs(match: (job: Job) => boolean): Promise<void> {
     const jobs = await this.taskQueue.getJobs([
       'active',
       'delayed',
@@ -242,50 +325,38 @@ export class TaskService implements OnModuleInit {
       'waiting',
       'completed',
     ])
-    jobs
-      .filter(j => j.data.id === task.id)
-      .forEach(async (j) => {
-        await j.remove()
-      })
-
-    // 在队列中删除当前任务
-    await this.taskQueue.removeRepeatable(JSON.parse(task.jobOpts))
-
-    await this.taskRepository.update(task.id, { status: TaskStatus.Disabled })
-    // if (task.jobOpts) {
-    //   await this.app.queue.sys.removeRepeatable(JSON.parse(task.jobOpts));
-    //   // update status
-    //   await this.getRepo().admin.sys.Task.update(task.id, { status: TaskStatus.Disabled, });
-    // }
-  }
-
-  /**
-   * 查看队列中任务是否存在
-   */
-  async existJob(jobId: string): Promise<boolean> {
-    // https://github.com/OptimalBits/bull/blob/develop/REFERENCE.md#queueremoverepeatablebykey
-    const jobs = await this.taskQueue.getRepeatableJobs()
-    const ids = jobs.map((e) => {
-      return e.id
-    })
-    return ids.includes(jobId)
-  }
-
-  /**
-   * 更新是否已经完成，完成则移除该任务并修改状态
-   */
-  async updateTaskCompleteStatus(tid: number): Promise<void> {
-    const jobs = await this.taskQueue.getRepeatableJobs()
-    const task = await this.taskRepository.findOneBy({ id: tid })
-    // 如果下次执行时间小于当前时间，则表示已经执行完成。
     for (const job of jobs) {
-      const currentTime = new Date().getTime()
-      if (job.id === tid.toString() && job.next < currentTime) {
-        // 如果下次执行时间小于当前时间，则表示已经执行完成。
-        await this.stop(task)
-        break
+      if (!job || !match(job))
+        continue
+
+      try {
+        await job.remove()
+      }
+      catch (error) {
+        this.logger.warn(`remove job ${job.id} failed: ${error}`)
       }
     }
+  }
+
+  /**
+   * 次数用尽或超过结束时间后，停掉调度并改状态。
+   * 不能用 `next < now` 判断：间隔任务只要这一轮比 every 慢，下一拍的分数就已经落在过去。
+   */
+  async updateTaskCompleteStatus(job: Job<{ id?: number }>): Promise<void> {
+    const tid = job?.data?.id
+    if (!tid)
+      return
+
+    const task = await this.taskRepository.findOneBy({ id: tid })
+    if (!task || task.status !== TaskStatus.Activited)
+      return
+
+    const count = job.opts?.repeat?.count
+    if (!shouldRetireRepeatableTask(task, { count }))
+      return
+
+    this.logger.log(`task ${tid} finished its schedule (count=${count ?? 'n/a'}), stopping`)
+    await this.stop(task)
   }
 
   /**

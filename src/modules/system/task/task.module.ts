@@ -25,6 +25,13 @@ const providers = [TaskService, TaskConsumer]
       useFactory: (configService: ConfigService<ConfigKeyPaths>) => ({
         redis: configService.get<IRedisConfig>('redis'),
         prefix: SYS_TASK_QUEUE_PREFIX,
+        settings: {
+          // 默认 30s 锁会把稍慢的任务判成 stalled。重复任务的下一次在进入 active 时才入队，
+          // stalled 次数用尽后这条链会断。
+          lockDuration: 120_000,
+          stalledInterval: 120_000,
+          maxStalledCount: 3,
+        },
       }),
       inject: [ConfigService],
     }),
