@@ -89,6 +89,14 @@ openssl rand -base64 48   # REFRESH_TOKEN_SECRET
 
 启动成功后，通过 <http://localhost:7001/api-docs/> 访问。
 
+只构建后端镜像时，在仓库根目录执行。`PROJECT_DIR` 默认为 `/nest-admin`，不需要额外的 build-arg。要改安装路径时再加上 `--build-arg PROJECT_DIR=/your-path`。`docker compose` 构建时仍从 `.env` 读取 `PROJECT_DIR`。
+
+```bash
+docker build -t web-api .
+```
+
+镜像启动时会等待 `DB_HOST`（默认 `mysql`）的 `${DB_PORT:-3306}`，再执行迁移并交给 `pm2-runtime`。生产镜像不包含 devDependency `cross-env`，因此迁移直接调用 `typeorm` CLI，而不是 `pnpm migration:run`。`JWT_SECRET` 和 `REFRESH_TOKEN_SECRET` 需要在运行时注入，不要写进镜像。
+
 ```bash
 pnpm docker:up
 # or
