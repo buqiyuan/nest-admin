@@ -59,4 +59,6 @@ EXPOSE $APP_PORT
 # 容器启动时执行的命令，类似npm run start
 # CMD ["pnpm", "start:prod"]
 # CMD ["pm2-runtime", "ecosystem.config.js"]
-ENTRYPOINT ./wait-for-it.sh $DB_HOST:$DB_PORT -- pnpm migration:run && pm2-runtime ecosystem.config.js
+# 生产镜像不含 devDependency cross-env，不能走 `pnpm migration:run`。
+# npm_lifecycle_event=typeorm 让 database.config 打开 multipleStatements，初始化 SQL 才能一次执行。
+ENTRYPOINT ./wait-for-it.sh $DB_HOST:${DB_PORT:-3306} -- sh -c "npm_lifecycle_event=typeorm ./node_modules/.bin/typeorm -d ./dist/config/database.config.js migration:run" && pm2-runtime ecosystem.config.js
