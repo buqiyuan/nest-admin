@@ -4,15 +4,21 @@
 # 使用 as 来为某一阶段命名
 FROM node:20-slim AS base
 
-ARG PROJECT_DIR
+# 直接 `docker build -t web-api .` 时不要求额外 build-arg。
+# docker compose 仍可通过 --build-arg PROJECT_DIR 覆盖。
+ARG PROJECT_DIR=/nest-admin
 
+# PATH 必须单独一条 ENV。写在同一条里时 $PNPM_HOME 还没生效，结果会变成空前缀。
 ENV DB_HOST=mysql \
     APP_PORT=7001 \
+    PROJECT_DIR=${PROJECT_DIR} \
     PNPM_HOME="/pnpm" \
-    PATH="$PNPM_HOME:$PATH"
+    COREPACK_ENABLE_DOWNLOAD_PROMPT=0
+ENV PATH="${PNPM_HOME}:${PATH}"
 
-
+# package.json 的 packageManager 为 pnpm@9.1.0。预先激活，避免非交互构建时 corepack 等待确认。
 RUN corepack enable \
+    && corepack prepare pnpm@9.1.0 --activate \
     && yarn global add pm2
 
 # WORKDIR指令用于设置Dockerfile中的RUN、CMD和ENTRYPOINT指令执行命令的工作目录(默认为/目录)，该指令在Dockerfile文件中可以出现多次，
@@ -27,12 +33,14 @@ RUN chmod +x ./wait-for-it.sh
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
     && echo 'Asia/Shanghai' > /etc/timezone
 
-# see https://pnpm.io/docker
+# 不使用 RUN --mount 缓存。Ubuntu 自带的 docker.io 往往没有 buildx，
+# 默认 `docker build` 走 legacy builder，遇到 --mount 会直接失败。
+# 见 https://pnpm.io/docker
 FROM base AS prod-deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --prod --frozen-lockfile 
+RUN pnpm install --prod --frozen-lockfile
 
 FROM base AS build
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+RUN pnpm install --frozen-lockfile
 RUN pnpm run build
 
 

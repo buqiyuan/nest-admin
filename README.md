@@ -89,6 +89,12 @@ openssl rand -base64 48   # REFRESH_TOKEN_SECRET
 
 启动成功后，通过 <http://localhost:7001/api-docs/> 访问。
 
+只构建后端镜像时，在仓库根目录执行。`PROJECT_DIR` 默认为 `/nest-admin`，不需要额外的 build-arg。要改安装路径时再加上 `--build-arg PROJECT_DIR=/your-path`。`docker compose` 构建时仍从 `.env` 读取 `PROJECT_DIR`。
+
+```bash
+docker build -t web-api .
+```
+
 ```bash
 pnpm docker:up
 # or
