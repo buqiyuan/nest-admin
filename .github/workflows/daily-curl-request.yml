@@ -10,5 +10,5 @@ jobs:
 
     steps:
       - name: Run Curl Request
-        # because: https://docs.render.com/free#spinning-down-on-idle
-        run: curl https://nest-admin-093x.onrender.com
+        # 访问当前公开 API，避免演示实例长时间无请求后休眠。
+        run: curl https://nest-admin-api.pages.dev
