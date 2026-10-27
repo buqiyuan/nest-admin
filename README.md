@@ -8,38 +8,13 @@
 
 ## 演示地址
 
-<ul>
-  <li>
-    <details>
-      <summary>
-        <a href="https://vue3-antdv-admin.pages.dev/" target="_blank">
-        https://vue3-antdv-admin.pages.dev/
-        </a>（墙内）
-      </summary>
-      只读，可以完整地预览项目的初始效果
-    </details>
-  </li>
-  <li>
-    <details>
-      <summary>
-        <a href="https://vue3-antd-admin.vercel.app/" target="_blank">
-        https://vue3-antd-admin.vercel.app/
-        </a>（墙外）
-      </summary>
-      <ul>
-        <li>
-        可随意 CRUD，所以你看到的数据可能已经被其他人修改过，而非项目得初始效果，并且数据库的数据会在每天凌晨 4.30 分重置一次。
-        </li>
-        <li>由于是白嫖的国外服务器资源，所以不保熟， 并可能还需要翻墙浏览。</li>
-      </ul>
-    </details>
-  </li>
-  <li>
-   <a href="https://nest-admin.buqiyuan.top/api-docs/" target="_blank">
-      Swagger 文档
-   </a>
-  </li>
-</ul>
+当前公开演示：
+
+- 前端：<https://vue3-antdv-admin.pages.dev>
+- 接口：<https://nest-admin-api.pages.dev>
+- Swagger：<https://nest-admin-api.pages.dev/api-docs/>
+
+前端配合上面的接口使用。演示环境账号见下方表格。
 
 ## 项目启动前的准备工作
 

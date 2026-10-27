@@ -32,7 +32,7 @@ export class HealthController {
   @HealthCheck()
   @Perm(PermissionHealth.NETWORK)
   async checkNetwork() {
-    return this.http.pingCheck('buqiyuan', 'https://buqiyuan.gitee.io/')
+    return this.http.pingCheck('buqiyuan', 'https://vue3-antdv-admin.pages.dev')
   }
 
   @Get('database')
