@@ -8,7 +8,7 @@ import { InjectRedis } from '~/common/decorators/inject-redis.decorator'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
-import { ROOT_ROLE_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
+import { ROOT_ROLE_ID, ROOT_USER_ID, SYS_USER_INITPASSWORD } from '~/constants/system.constant'
 import { genAuthPermKey, genAuthPVKey, genAuthTokenKey, genOnlineUserKey } from '~/helper/genRedisKey'
 
 import { paginate } from '~/helper/paginate'
@@ -25,6 +25,7 @@ import { ParamConfigService } from '../system/param-config/param-config.service'
 import { RoleEntity } from '../system/role/role.entity'
 
 import { UserStatus } from './constant'
+import { assertDemoAdminAccountProtected, assertDemoAdminProfileChange, isDemoAdminProtectionEnabled } from './demo-admin.util'
 import { PasswordUpdateDto } from './dto/password.dto'
 import { UserDto, UserQueryDto, UserUpdateDto } from './dto/user.dto'
 import { UserEntity } from './user.entity'
@@ -117,6 +118,9 @@ export class UserService {
     if (isEmpty(user))
       throw new BusinessException(ErrorEnum.USER_NOT_FOUND)
 
+    // 演示环境先拒绝，避免用旧密码是否匹配来探测内置管理员口令
+    assertDemoAdminAccountProtected(user)
+
     const comparePassword = md5(`${dto.oldPassword}${user.psalt}`)
     // 原密码不一致，不允许更改
     if (user.password !== comparePassword)
@@ -132,6 +136,9 @@ export class UserService {
    */
   async forceUpdatePassword(uid: number, password: string): Promise<void> {
     const user = await this.userRepository.findOneBy({ id: uid })
+
+    // 用户管理重置密码、以及 AuthService.resetPassword 都走这里
+    assertDemoAdminAccountProtected(user)
 
     const newPassword = md5(`${password}${user.psalt}`)
     await this.userRepository.update({ id: uid }, { password: newPassword })
@@ -185,8 +192,16 @@ export class UserService {
    */
   async update(
     id: number,
-    { password, deptId, roleIds, status, ...data }: UserUpdateDto,
+    dto: UserUpdateDto,
   ): Promise<void> {
+    const { password, deptId, roleIds, status, ...data } = dto
+
+    // 开关关闭时不额外查库，避免改变非演示环境的更新路径
+    if (isDemoAdminProtectionEnabled()) {
+      const current = await this.userRepository.findOneBy({ id })
+      assertDemoAdminProfileChange(current, dto)
+    }
+
     await this.entityManager.transaction(async (manager) => {
       if (password)
         await this.forceUpdatePassword(id, password)
@@ -246,11 +261,27 @@ export class UserService {
    * 根据ID列表删除用户
    */
   async delete(userIds: number[]): Promise<void | never> {
+    if (isDemoAdminProtectionEnabled())
+      await this.rejectProtectedDemoAdmin(userIds)
+
     const rootUserId = await this.findRootUserId()
     if (userIds.includes(rootUserId))
       throw new BadRequestException('不能删除root用户!')
 
     await this.userRepository.delete(userIds)
+  }
+
+  /** 演示环境不允许删掉内置管理员，否则公开账号会直接失效 */
+  private async rejectProtectedDemoAdmin(userIds: number[]): Promise<void> {
+    if (userIds.some(id => Number(id) === ROOT_USER_ID))
+      assertDemoAdminAccountProtected({ id: ROOT_USER_ID })
+
+    if (userIds.length === 0)
+      return
+
+    const users = await this.userRepository.findBy({ id: In(userIds) })
+    for (const user of users)
+      assertDemoAdminAccountProtected(user)
   }
 
   /**

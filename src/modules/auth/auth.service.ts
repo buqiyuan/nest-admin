@@ -106,7 +106,7 @@ export class AuthService {
   }
 
   /**
-   * 重置密码
+   * 重置密码。演示环境下对内置管理员的限制在 UserService.forceUpdatePassword。
    */
   async resetPassword(username: string, password: string) {
     const user = await this.userService.findUserByUserName(username)
