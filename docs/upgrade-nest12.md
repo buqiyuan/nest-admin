@@ -27,7 +27,7 @@
 
 不使用 Node 21 / 23 / 25。
 
-HTTP 层换成官方 `NodeAdapter`，删除 `@nestjs/platform-fastify` 和 `@fastify/cookie`、`@fastify/multipart`、`@fastify/static`。没有安装 `@nestjs/platform-express`。`@nestjs/core` 把它列为可选 peer，应用和测试都显式传入 `new NodeAdapter()`，避免测试进程偷偷退回 Express。
+HTTP 层换成官方 `NodeAdapter`，删除 `@nestjs/platform-fastify` 和 `@fastify/cookie`、`@fastify/multipart`、`@fastify/static`。没有安装 `@nestjs/platform-express`。`@nestjs/core` 把它列为可选 peer。仓库里唯一的 `NestFactory.create` 在 `src/main.ts`，并且传入 `new NodeAdapter()`。现有单元测试不启动 HTTP，不会退回 Express，也没有覆盖适配器。适配器行为靠生产进程的冒烟和文末复核。
 
 ```ts
 const app = await NestFactory.create<NestNodeApplication>(AppModule, nodeAdapter, {
@@ -40,9 +40,9 @@ app.useBodyParser('urlencoded', { limit: '1mb', extended: true })
 
 `bodyParser: false` 是必须的。Nest 12 在 `init()` 里就会按默认 100kb 注册解析器，之后再 `useBodyParser` 只会再挂一个解析器，不会把限额抬高。旧 Fastify 适配器的 body 限额是 1mb，这里按这个值接上。
 
-`routeConflictPolicy` 里重复路由直接失败，被静态路径挡住的参数路由只告警。Node 适配器按特异性匹配，和原来的 Fastify 一样，所以 `GET /menus/permissions` 仍优先于 `GET /menus/:id`。
+`routeConflictPolicy` 里重复路由直接失败，被静态路径挡住的参数路由只告警。Node 适配器按特异性匹配，并且 `caseSensitive: true`，和原来的 Fastify 一样。`GET /menus/permissions` 仍优先于 `GET /menus/:id`。大小写不同的路径不会命中。
 
-缓存从 `cache-manager-ioredis-yet` 换成 cache-manager 7 + `@keyv/redis`。`CacheService` 不再读 `cache.store.client`，Socket.IO emitter、幂等和按前缀删 key 改走已经存在的 ioredis `REDIS_CLIENT`。Keyv store 注册了 `error` 监听，避免 Redis 断开时把进程打崩。
+缓存从 `cache-manager-ioredis-yet` 换成 cache-manager 7 + `@keyv/redis`。`CacheService` 不再读 `cache.store.client`，Socket.IO emitter、幂等和按前缀删 key 改走已经存在的 ioredis `REDIS_CLIENT`。Keyv store 注册了 `error` 监听，避免 Redis 断开时把进程打崩。`cleanCatch()` 仍按 `api-cache:*` 扫描 ioredis，当前没有调用方；HTTP 缓存的 key 在 Keyv 里，这个前缀清不到它们。
 
 邮件改用 `@nestjs-modules/mailer@4` 的公开入口 `@nestjs-modules/mailer/adapters/handlebars.adapter`。没有挂 preview 模块，不会多出 `/_mailer`。
 
@@ -117,6 +117,30 @@ Jest 30 要靠 `vm.SourceTextModule.prototype.hasAsyncGraph` 判断能不能同�
 冒烟覆盖：`.php` 418、favicon 204、Swagger、验证码（从本机 Redis 读出答案）、管理员登录、资料、权限、菜单、用户分页（含 `roles` / `dept`）、角色列表、`/api/system/menus/permissions`、部门树、创建用户、修改昵称、`DEMO_MODE` 下修改管理员密码返回 403、创建并更新角色、创建权限菜单、不存在的上传者返回空存储分页、multipart 上传、静态文件可下载、无权限角色访问用户列表被拒绝（`code=1102`）、该用户自己的资料仍可读取、SSE、Socket.IO polling。`IS_DEMO=false`，所以创建用户和角色这些写操作没有被演示总开关挡住。
 
 `nanoid@6` 在 Node 24 上可以用 `require('nanoid')` 加载，应用启动和上传都没有因此失败。
+
+仓库的 GitHub Actions 只在推送到 `main` 时构建并推送镜像，部署 job 是注释掉的。PR 的 `statusCheckRollup` 是空数组。这表示没有流水线在这个分支上跑，不能写成 CI 通过。
+
+## 复核
+
+2026-11-09 同一天又对过一次 registry：`@nestjs/core`、`@nestjs/platform-node` 的 `latest` 仍是 12.4.0，`typeorm` 的 `latest` 仍是 1.1.2。本机安装的就是这三个版本。`typescript` 的 `latest` 仍是 7.0.2，`ioredis` 的 `latest` 仍是 6.0.0，上一节的阻塞没有变化。platform-node 包里的 README 只是 Nest 的通用说明，适配器约定以 `adapters/node-adapter.js` 和 <https://docs.nestjs.com/http/performance> 为准。
+
+对照 12.4.0 的源码：`NestApplication.useBodyParser` 会自己插入 `rawBody` 布尔值，应用代码第二个参数仍是选项对象。`rawBody` 为 false 时适配器原样使用 `{ limit: '1mb' }`。现场请求确认了这一点：约 200KB 的 JSON 被解析（验证码错误，HTTP 200，不是 413）；约 1.2MB 返回 HTTP 413，文案 `request entity too large`。默认 100KB 限额没有留下来。
+
+对着仍在运行的 `NODE_ENV=production node dist/main` 又打了这些请求。管理员 JWT 来自本机库，没有改线上数据。
+
+| 检查 | 结果 |
+| --- | --- |
+| `GET /api/health/database` | HTTP 200，`database.status` 为 `up` |
+| `GET /api/system/roles/1` | HTTP 200，`menuIds` 长度 67。对象形式的 `select` / `relations` 能读出菜单。 |
+| `GET /api/system/serve/stat` 连续两次 | `X-Cache` 从 `MISS` 变为 `HIT`。Keyv 缓存和 `CacheInterceptor` 在 Node 适配器上生效。 |
+| `GET /api/system/users?dept[id]=1` | HTTP 200，没有 500 |
+| Socket.IO 命名空间 `/admin`，刚签发的 access token | 收到 `GATEWAY_CONNECT`，文案是「WebSocket 已连接」 |
+| 同一命名空间，伪造 token | `AUTH_FAILED`（认证失败）之后断开 |
+| `pnpm exec tsc --noEmit` 与 Jest `--runInBand` | 再次通过，9 个套件、95 个测试 |
+
+省略 `status` 的用户更新会把 `status: undefined` 传给 `repository.update`。本轮用 MySQL 核对过：被改过昵称的用户 `status` 仍是 1，没有被写成 NULL。TypeORM 1 对 where 里的 `undefined` 抛错；这条 SET 路径在 1.1.2 上没有改列。没有因此改业务代码。
+
+镜像 `dc6706e67054` 只完成构建，没有 `docker run`。入口会等待 `DB_HOST=mysql` 并跑 migration，所以没有启动容器。
 
 Docker：镜像里的 `pnpm install --frozen-lockfile` 和 `nest build` 都完成了。第一次用 npmmirror 失败，CDN 对 `@nestjs/cache-manager/-/cache-manager-12.0.4.tgz` 返回 404，因此 `.npmrc` 改回 `https://registry.npmjs.org`。本机没有 systemd 管理的 Docker 服务，`policy-rc.d` 拒绝 `docker.service`。验证时是手动启动 `dockerd --iptables=false --bridge=none`，构建使用 `--network=host`。镜像没有运行，避免入口脚本去连 `DB_HOST=mysql` 或任何库。
 
