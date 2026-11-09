@@ -1,0 +1,14 @@
+# pnpm 12 不再读取 package.json 的 pnpm 字段，构建脚本批准放在 allowBuilds。
+# minimumReleaseAge 设为 0，锁定当前 registry 上的最新稳定版，而不是被默认发布延迟挡下。
+minimumReleaseAge: 0
+minimumReleaseAgeExclude:
+  - dotenv@18.0.10
+
+shamefullyHoist: true
+
+allowBuilds:
+  '@parcel/watcher': true
+  '@scarf/scarf': false
+  esbuild: true
+  msgpackr-extract: true
+  simple-git-hooks: true

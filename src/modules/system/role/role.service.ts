@@ -71,7 +71,7 @@ export class RoleService {
 
     const menus = await this.menuRepository.find({
       where: { roles: { id } },
-      select: ['id'],
+      select: { id: true },
     })
 
     return { ...info, menuIds: menus.map(m => m.id) }
@@ -170,7 +170,7 @@ export class RoleService {
    * 根据角色ID查找是否有关联用户
    */
   async checkUserByRoleId(id: number): Promise<boolean> {
-    return this.roleRepository.exist({
+    return this.roleRepository.exists({
       where: {
         users: {
           roles: { id },

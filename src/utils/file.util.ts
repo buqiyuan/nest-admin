@@ -1,8 +1,6 @@
 import fs from 'node:fs'
 import path from 'node:path'
 
-import { MultipartFile } from '@fastify/multipart'
-
 import dayjs from 'dayjs'
 
 enum Type {
@@ -83,10 +81,9 @@ export async function saveLocalFile(buffer: Buffer, name: string, currentDate: s
   writeStream.write(buffer)
 }
 
-export async function saveFile(file: MultipartFile, name: string) {
+export async function saveFile(buffer: Buffer, name: string) {
   const filePath = path.join(__dirname, '../../', 'public/upload', name)
   const writeStream = fs.createWriteStream(filePath)
-  const buffer = await file.toBuffer()
   writeStream.write(buffer)
 }
 

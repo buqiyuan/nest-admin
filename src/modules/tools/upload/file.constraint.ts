@@ -1,4 +1,3 @@
-import { FastifyMultipartBaseOptions, MultipartFile } from '@fastify/multipart'
 import {
   registerDecorator,
   ValidationArguments,
@@ -6,33 +5,36 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator'
-import { has, isArray } from 'lodash'
+import { isArray } from 'lodash'
 
-type FileLimit = Pick<
-  FastifyMultipartBaseOptions['limits'],
-  'fileSize' | 'files'
-> & {
+interface FileLimit {
+  fileSize?: number
+  files?: number
   mimetypes?: string[]
 }
-function checkFileAndLimit(file: MultipartFile, limits: FileLimit = {}) {
-  if (!('mimetype' in file))
+
+interface UploadFileLike {
+  mimetype?: string
+  size?: number
+  buffer?: Buffer
+}
+
+function checkFileAndLimit(file: UploadFileLike, limits: FileLimit = {}) {
+  if (!file?.mimetype)
     return false
   if (limits.mimetypes && !limits.mimetypes.includes(file.mimetype))
     return false
-  if (
-    has(file, '_buf')
-    && Buffer.byteLength((file as any)._buf) > limits.fileSize
-  ) {
+  const bytes = file.buffer?.byteLength ?? file.size
+  if (limits.fileSize && bytes && bytes > limits.fileSize)
     return false
-  }
   return true
 }
 
 @ValidatorConstraint({ name: 'isFile' })
 export class FileConstraint implements ValidatorConstraintInterface {
-  validate(value: MultipartFile, args: ValidationArguments) {
+  validate(value: UploadFileLike, args: ValidationArguments) {
     const [limits = {}] = args.constraints
-    const values = (args.object as any)[args.property]
+    const values = (args.object as Record<string, unknown>)[args.property]
     const filesLimit = (limits as FileLimit).files ?? 0
     if (filesLimit > 0 && isArray(values) && values.length > filesLimit)
       return false

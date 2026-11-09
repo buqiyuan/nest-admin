@@ -1,6 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { FastifyRequest } from 'fastify'
+import { NodeRequest } from '@nestjs/platform-node'
 
 import { isArray, isEmpty, isNil } from 'lodash'
 
@@ -26,7 +26,7 @@ export class ResourceGuard implements CanActivate {
       context.getClass(),
     ])
 
-    const request = context.switchToHttp().getRequest<FastifyRequest>()
+    const request = context.switchToHttp().getRequest<NodeRequest>()
     const isSse = request.headers.accept === 'text/event-stream'
     // 忽略 sse 请求
     if (isPublic || isSse)
@@ -51,7 +51,7 @@ export class ResourceGuard implements CanActivate {
        * 获取请求中的 items (ids) 验证数据拥有者
        * @param request
        */
-      const getRequestItems = (request?: FastifyRequest): number[] => {
+      const getRequestItems = (request?: NodeRequest): number[] => {
         const { params = {}, body = {}, query = {} } = (request ?? {}) as any
         const id = params.id ?? body.id ?? query.id
 
@@ -74,7 +74,7 @@ export class ResourceGuard implements CanActivate {
           id: In(items),
           user: { id: user.uid },
         },
-        relations: ['user'],
+        relations: { user: true },
       }
 
       const records = await repo.find(recordQuery)

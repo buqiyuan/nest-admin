@@ -2,7 +2,9 @@
 # FROM 表示设置要制作的镜像基于哪个镜像，FROM指令必须是整个Dockerfile的第一个指令，如果指定的镜像不存在默认会自动从Docker Hub上下载。
 # 指定我们的基础镜像是node，latest表示版本是最新, 如果要求空间极致，可以选择lts-alpine
 # 使用 as 来为某一阶段命名
-FROM node:20-slim AS base
+# Node 24.15+：TypeORM 1.1 在 24 线上要求 >=24.11，@nestjs/schematics 12 要求 >=24.15，
+# @nestjs-labs/nestjs-ioredis 12 要求 >=24。24.22 是当前 24 LTS（Krypton）。
+FROM node:24.22-bookworm-slim AS base
 
 # 直接 `docker build -t web-api .` 时不要求额外 build-arg。
 # docker compose 仍可通过 --build-arg PROJECT_DIR 覆盖。
@@ -16,10 +18,11 @@ ENV DB_HOST=mysql \
     COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 ENV PATH="${PNPM_HOME}:${PATH}"
 
-# package.json 的 packageManager 为 pnpm@9.1.0。预先激活，避免非交互构建时 corepack 等待确认。
+# package.json 的 packageManager 为 pnpm@12.18.0。预先激活，避免非交互构建时 corepack 等待确认。
+# Node 24 镜像不再默认带可用的 yarn global，pm2 用 npm 安装。
 RUN corepack enable \
-    && corepack prepare pnpm@9.1.0 --activate \
-    && yarn global add pm2
+    && corepack prepare pnpm@12.18.0 --activate \
+    && npm install -g pm2
 
 # WORKDIR指令用于设置Dockerfile中的RUN、CMD和ENTRYPOINT指令执行命令的工作目录(默认为/目录)，该指令在Dockerfile文件中可以出现多次，
 # 如果使用相对路径则为相对于WORKDIR上一次的值，

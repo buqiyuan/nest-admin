@@ -1,9 +1,9 @@
 import { join } from 'node:path'
 
+import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer'
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/adapters/handlebars.adapter'
 import { Module, Provider } from '@nestjs/common'
 import { ConfigModule, ConfigService } from '@nestjs/config'
-import { MailerModule as NestMailerModule } from '@nestjs-modules/mailer'
-import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter'
 
 import { ConfigKeyPaths, IAppConfig, IMailerConfig } from '~/config'
 

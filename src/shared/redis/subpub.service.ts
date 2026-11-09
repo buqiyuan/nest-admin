@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 
-import { REDIS_PUBSUB } from './redis.constant'
 import { RedisSubPub } from './redis-subpub'
+import { REDIS_PUBSUB } from './redis.constant'
 
 @Injectable()
 export class RedisPubSubService {

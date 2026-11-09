@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post, Req } from '@nestjs/common'
-import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
+import { NodeRequest } from '@nestjs/platform-node'
 
-import { FastifyRequest } from 'fastify'
+import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
@@ -27,7 +27,7 @@ export class OnlineController {
   @ApiOperation({ summary: '查询当前在线用户' })
   @ApiResult({ type: [OnlineUserInfo] })
   @Perm(permissions.LIST)
-  async list(@Req() req: FastifyRequest): Promise<OnlineUserInfo[]> {
+  async list(@Req() req: NodeRequest): Promise<OnlineUserInfo[]> {
     return this.onlineService.listOnlineUser(req.accessToken)
   }
 

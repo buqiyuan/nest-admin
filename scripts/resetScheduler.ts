@@ -4,7 +4,7 @@ import { CronJob } from 'cron'
 
 /** 此文件仅供演示时使用 */
 
-const runMigrationGenerate = async function () {
+async function runMigrationGenerate() {
   exec('npm run migration:revert && npm run migration:run', (error, stdout, stderr) => {
     if (!error)
       console.log('操作成功', error)

@@ -5,6 +5,7 @@ import { Emitter } from '@socket.io/redis-emitter'
 import { Cache } from 'cache-manager'
 
 import { RedisIoAdapterKey } from '~/common/adapters/socket.adapter'
+import { REDIS_CLIENT } from '~/common/decorators/inject-redis.decorator'
 
 import { API_CACHE_PREFIX } from '~/constants/cache.constant'
 import { getRedisKey } from '~/utils/redis.util'
@@ -17,15 +18,15 @@ export type TCacheResult<T> = Promise<T | undefined>
 export class CacheService {
   private cache!: Cache
 
-  private ioRedis!: Redis
-  constructor(@Inject(CACHE_MANAGER) cache: Cache) {
+  constructor(
+    @Inject(CACHE_MANAGER) cache: Cache,
+    @Inject(REDIS_CLIENT) private readonly ioRedis: Redis,
+  ) {
     this.cache = cache
   }
 
   private get redisClient(): Redis {
-    // eslint-disable-next-line ts/ban-ts-comment
-    // @ts-expect-error
-    return this.cache.store.client
+    return this.ioRedis
   }
 
   public get<T>(key: TCacheKey): TCacheResult<T> {

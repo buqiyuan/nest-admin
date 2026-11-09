@@ -4,7 +4,8 @@ import { ErrorEnum } from '~/constants/error-code.constant'
 import { RESPONSE_SUCCESS_CODE } from '~/constants/response.constant'
 
 export class BusinessException extends HttpException {
-  private errorCode: number
+  // Nest 12 的 HttpException.errorCode 是字符串，和这里的业务数字码不是同一个字段。
+  private bizCode: number
 
   constructor(error: ErrorEnum | string) {
     // 如果是非 ErrorEnum
@@ -16,7 +17,7 @@ export class BusinessException extends HttpException {
         }),
         HttpStatus.OK,
       )
-      this.errorCode = RESPONSE_SUCCESS_CODE
+      this.bizCode = RESPONSE_SUCCESS_CODE
       return
     }
 
@@ -29,11 +30,11 @@ export class BusinessException extends HttpException {
       HttpStatus.OK,
     )
 
-    this.errorCode = Number(code)
+    this.bizCode = Number(code)
   }
 
   getErrorCode(): number {
-    return this.errorCode
+    return this.bizCode
   }
 }
 

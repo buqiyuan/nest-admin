@@ -4,7 +4,7 @@ import {
   Injectable,
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
-import { FastifyRequest } from 'fastify'
+import { NodeRequest } from '@nestjs/platform-node'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
 import { ErrorEnum } from '~/constants/error-code.constant'
@@ -28,7 +28,7 @@ export class RbacGuard implements CanActivate {
     if (isPublic)
       return true
 
-    const request = context.switchToHttp().getRequest<FastifyRequest>()
+    const request = context.switchToHttp().getRequest<NodeRequest>()
 
     const { user } = request
     if (!user)

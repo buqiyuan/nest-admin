@@ -1,4 +1,4 @@
-import type { FastifyRequest } from 'fastify'
+import type { NodeRequest } from '@nestjs/platform-node'
 
 import { ClassSerializerInterceptor, Module } from '@nestjs/common'
 import { ConfigModule } from '@nestjs/config'
@@ -45,10 +45,11 @@ import { SocketModule } from './socket/socket.module'
       interceptor: {
         mount: true,
         setup: (cls, context) => {
-          const req = context.switchToHttp().getRequest<FastifyRequest<{ Params: { id?: string } }>>()
-          if (req.params?.id && req.body) {
+          const req = context.switchToHttp().getRequest<NodeRequest>()
+          const operateId = req.params?.id
+          if (operateId && req.body) {
             // 供自定义参数验证器(UniqueConstraint)使用
-            cls.set('operateId', Number.parseInt(req.params.id))
+            cls.set('operateId', Number.parseInt(String(operateId)))
           }
         },
       },

@@ -4,7 +4,7 @@ import type {
   NestInterceptor,
 } from '@nestjs/common'
 
-import type { FastifyRequest } from 'fastify'
+import type { NodeRequest } from '@nestjs/platform-node'
 import {
   ConflictException,
   Injectable,
@@ -29,7 +29,7 @@ export interface IdempotenceOption {
   /**
    * 如果重复请求的话，手动处理异常
    */
-  handler?: (req: FastifyRequest) => any
+  handler?: (req: NodeRequest) => any
 
   /**
    * 记录重复请求的时间
@@ -40,7 +40,7 @@ export interface IdempotenceOption {
   /**
    * 如果 header 没有幂等 key，根据 request 生成 key，如何生成这个 key 的方法
    */
-  generateKey?: (req: FastifyRequest) => string
+  generateKey?: (req: NodeRequest) => string
 
   /**
    * 仅读取 header 的 key，不自动生成
@@ -57,7 +57,7 @@ export class IdempotenceInterceptor implements NestInterceptor {
   ) {}
 
   async intercept(context: ExecutionContext, next: CallHandler) {
-    const request = context.switchToHttp().getRequest<FastifyRequest>()
+    const request = context.switchToHttp().getRequest<NodeRequest>()
 
     // skip Get 请求
     if (request.method.toUpperCase() === 'GET')
@@ -126,7 +126,7 @@ export class IdempotenceInterceptor implements NestInterceptor {
     )
   }
 
-  private generateKey(req: FastifyRequest) {
+  private generateKey(req: NodeRequest) {
     const { body, params, query = {}, headers, url } = req
 
     const obj = { body, url, params, query } as any

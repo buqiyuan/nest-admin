@@ -1,4 +1,3 @@
-import { MultipartFile } from '@fastify/multipart'
 import { ApiProperty } from '@nestjs/swagger'
 
 import { IsDefined } from 'class-validator'
@@ -23,5 +22,5 @@ export class FileUploadDto {
       message: '文件类型不正确',
     },
   )
-  file: MultipartFile
+  file: Express.Multer.File
 }

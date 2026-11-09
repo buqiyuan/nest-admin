@@ -1,9 +1,12 @@
-import 'fastify'
+import '@nestjs/platform-node'
 
-declare module 'fastify' {
-  interface FastifyRequest {
+declare module '@nestjs/platform-node' {
+  interface NodeRequest {
     user?: IAuthUser
-    accessToken: string
+    accessToken?: string
+    /** cookie-parser 挂上的普通 cookie */
+    cookies?: Record<string, string | undefined>
+    signedCookies?: Record<string, string | undefined>
   }
 }
 

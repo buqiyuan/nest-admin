@@ -1,3 +1,4 @@
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node'
 import {
   ArgumentsHost,
   Catch,
@@ -6,7 +7,6 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common'
-import { FastifyReply, FastifyRequest } from 'fastify'
 import { QueryFailedError } from 'typeorm'
 
 import { BusinessException } from '~/common/exceptions/biz.exception'
@@ -31,10 +31,10 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp()
-    const request = ctx.getRequest<FastifyRequest>()
-    const response = ctx.getResponse<FastifyReply>()
+    const request = ctx.getRequest<NodeRequest>()
+    const response = ctx.getResponse<NodeResponse>()
 
-    const url = request.raw.url!
+    const url = request.url ?? ''
 
     const status = this.getStatus(exception)
     let message = this.getErrorMessage(exception)
@@ -69,6 +69,12 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   getStatus(exception: unknown): number {
+    const multerCode = readMulterCode(exception)
+    if (multerCode === 'LIMIT_FILE_SIZE')
+      return HttpStatus.PAYLOAD_TOO_LARGE
+    if (multerCode)
+      return HttpStatus.BAD_REQUEST
+
     if (exception instanceof HttpException) {
       return exception.getStatus()
     }
@@ -83,6 +89,9 @@ export class AllExceptionsFilter implements ExceptionFilter {
   }
 
   getErrorMessage(exception: unknown): string {
+    if (readMulterCode(exception))
+      return exception instanceof Error ? exception.message : '上传失败'
+
     if (exception instanceof HttpException) {
       return exception.message
     }
@@ -104,4 +113,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
       console.error('uncaughtException: ', err)
     })
   }
+}
+
+/** Multer（platform-node 的上传拦截器）抛出的错误。不把 multer 再列为直接依赖。 */
+function readMulterCode(exception: unknown): string | undefined {
+  if (typeof exception !== 'object' || exception === null)
+    return undefined
+  if (!('name' in exception) || exception.name !== 'MulterError')
+    return undefined
+  if (!('code' in exception) || typeof exception.code !== 'string')
+    return undefined
+  return exception.code
 }

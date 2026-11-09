@@ -99,6 +99,6 @@ type NestedKeyOf<ObjectType extends object> = {
     : `${Key}`;
 }[keyof ObjectType & (string | number)]
 
- type RecordNamePaths<T extends object> = {
-   [K in NestedKeyOf<T>]: PropType<T, K>
- }
+type RecordNamePaths<T extends object> = {
+  [K in NestedKeyOf<T>]: PropType<T, K>
+}

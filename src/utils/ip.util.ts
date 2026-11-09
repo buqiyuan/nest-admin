@@ -1,4 +1,3 @@
-import type { FastifyRequest } from 'fastify'
 import type { IncomingMessage } from 'node:http'
 /**
  * @module utils/ip
@@ -30,20 +29,23 @@ function isLAN(ip: string) {
   )
 }
 
-export function getIp(request: FastifyRequest | IncomingMessage) {
-  const req = request as any
+type RequestWithIp = IncomingMessage & { ip?: string }
 
-  let ip: string
-    = request.headers['x-forwarded-for']
-    || request.headers['X-Forwarded-For']
-    || request.headers['X-Real-IP']
-    || request.headers['x-real-ip']
-    || req?.ip
-    || req?.raw?.connection?.remoteAddress
-    || req?.raw?.socket?.remoteAddress
-    || undefined
-  if (ip && ip.split(',').length > 0)
-    ip = ip.split(',')[0]
+function firstHeader(value: string | string[] | undefined): string | undefined {
+  if (Array.isArray(value))
+    return value[0]
+  return value
+}
+
+export function getIp(request: RequestWithIp) {
+  // Node 会把 header 名转成小写。trustProxy 打开后 request.ip 已是客户端地址。
+  let ip = firstHeader(request.headers['x-forwarded-for'])
+    || firstHeader(request.headers['x-real-ip'])
+    || request.ip
+    || request.socket?.remoteAddress
+
+  if (ip && ip.includes(','))
+    ip = ip.split(',')[0].trim()
 
   return ip
 }

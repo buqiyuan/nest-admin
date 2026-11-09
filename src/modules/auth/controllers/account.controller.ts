@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Put, Req, UseGuards } from '@nestjs/common'
+import { NodeRequest } from '@nestjs/platform-node'
 import { ApiExtraModels, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { FastifyRequest } from 'fastify'
 
 import { ApiResult } from '~/common/decorators/api-result.decorator'
 
@@ -38,7 +38,7 @@ export class AccountController {
   @Get('logout')
   @ApiOperation({ summary: '账户登出' })
   @AllowAnon()
-  async logout(@AuthUser() user: IAuthUser, @Req() req: FastifyRequest): Promise<void> {
+  async logout(@AuthUser() user: IAuthUser, @Req() req: NodeRequest): Promise<void> {
     await this.authService.clearLoginStatus(user, req.accessToken)
   }
 
@@ -63,7 +63,7 @@ export class AccountController {
   @AllowAnon()
   async update(
     @AuthUser() user: IAuthUser, @Body()
-dto: AccountUpdateDto,
+    dto: AccountUpdateDto,
   ): Promise<void> {
     await this.userService.updateAccountInfo(user.uid, dto)
   }
@@ -73,7 +73,7 @@ dto: AccountUpdateDto,
   @AllowAnon()
   async password(
     @AuthUser() user: IAuthUser, @Body()
-dto: PasswordUpdateDto,
+    dto: PasswordUpdateDto,
   ): Promise<void> {
     await this.userService.updatePassword(user.uid, dto)
   }

@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common'
-
 import { MailerService as NestMailerService } from '@nestjs-modules/mailer'
+
+import { Inject, Injectable } from '@nestjs/common'
 import dayjs from 'dayjs'
 
 import Redis from 'ioredis'

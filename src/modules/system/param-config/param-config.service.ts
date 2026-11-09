@@ -73,7 +73,7 @@ export class ParamConfigService {
   async findValueByKey(key: string): Promise<string | null> {
     const result = await this.paramConfigRepository.findOne({
       where: { key },
-      select: ['value'],
+      select: { value: true },
     })
     if (result)
       return result.value

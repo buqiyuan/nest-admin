@@ -1,4 +1,5 @@
-import { Global, Module, type Provider } from '@nestjs/common'
+import type { Provider } from '@nestjs/common'
+import { Global, Module } from '@nestjs/common'
 
 import { CronService } from './cron.service'
 import { QQService } from './qq.service'
