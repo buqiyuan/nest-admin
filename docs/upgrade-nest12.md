@@ -118,7 +118,13 @@ Jest 30 要靠 `vm.SourceTextModule.prototype.hasAsyncGraph` 判断能不能同�
 
 `nanoid@6` 在 Node 24 上可以用 `require('nanoid')` 加载，应用启动和上传都没有因此失败。
 
-仓库的 GitHub Actions 只在推送到 `main` 时构建并推送镜像，部署 job 是注释掉的。PR 的 `statusCheckRollup` 是空数组。这表示没有流水线在这个分支上跑，不能写成 CI 通过。
+创建这个分支触发了仓库里已有的 `Build RC Image`。GitHub 文档写明 [`create`](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#create) 在新建分支或 tag 时运行。`.github/workflows/build-rc.yml` 写了 `on.create.tags: ['*']`，这次实际事件仍是分支创建，不是 tag。
+
+运行是 [Build RC Image #42558129023](https://github.com/buqiyuan/nest-admin/actions/runs/42558129023)，对应提交 `810fe97`，结论 success。日志里 `pnpm install --frozen-lockfile` 和 `nest build` 都完成，然后把镜像推到 Docker Hub 的 `buqiyuan/nest-admin-server:rc`。公开 registry 上这个 tag 的 digest 现在是 `sha256:fff3c1ed308e5544f06dde9457639b0a673f0fa272a5c9c8e5225e4d13c50e2b`，和这次 job 的 digest 一致。`:stable` 仍是 `sha256:d6995bef8ae9d118e75ef8e57e72af6a5ebc47e9beb71fe53a4537980232b2c4`，没有被这次运行改掉。
+
+构建只有一条警告：Dockerfile 第 67 行的 `ENTRYPOINT` 是 shell 形式，BuildKit 建议改成 JSON。镜像已经推出去了。这次没有改 Dockerfile，也没有再推一版把 `:rc` 盖回去。
+
+`build-stable.yml` 只在推送 `main` 时构建 `:stable`，里面的远程部署步骤是注释掉的。`deploy.yml` 跟着 `Sync To Gitee`，同步只在推送 `main` 时发生。这两个都没有在这个分支上跑。PR 的 `statusCheckRollup` 仍然是空数组：这个工作流不是 pull request check，文档提交 `1b75910` 也没有新的 run。这次 success 只证明 GitHub 上的镜像构建和 `:rc` 推送成功，不是测试流水线通过。
 
 ## 复核
 
@@ -140,7 +146,7 @@ Jest 30 要靠 `vm.SourceTextModule.prototype.hasAsyncGraph` 判断能不能同�
 
 省略 `status` 的用户更新会把 `status: undefined` 传给 `repository.update`。本轮用 MySQL 核对过：被改过昵称的用户 `status` 仍是 1，没有被写成 NULL。TypeORM 1 对 where 里的 `undefined` 抛错；这条 SET 路径在 1.1.2 上没有改列。没有因此改业务代码。
 
-镜像 `dc6706e67054` 只完成构建，没有 `docker run`。入口会等待 `DB_HOST=mysql` 并跑 migration，所以没有启动容器。
+本机镜像 `dc6706e67054` 只完成构建，没有 `docker run`。入口会等待 `DB_HOST=mysql` 并跑 migration，所以没有启动容器。GitHub Actions 另一次构建已经把 `:rc` 推到 Docker Hub，见上一节。
 
 Docker：镜像里的 `pnpm install --frozen-lockfile` 和 `nest build` 都完成了。第一次用 npmmirror 失败，CDN 对 `@nestjs/cache-manager/-/cache-manager-12.0.4.tgz` 返回 404，因此 `.npmrc` 改回 `https://registry.npmjs.org`。本机没有 systemd 管理的 Docker 服务，`policy-rc.d` 拒绝 `docker.service`。验证时是手动启动 `dockerd --iptables=false --bridge=none`，构建使用 `--network=host`。镜像没有运行，避免入口脚本去连 `DB_HOST=mysql` 或任何库。
 
@@ -152,5 +158,6 @@ Docker：镜像里的 `pnpm install --frozen-lockfile` 和 `nest build` 都完�
 4. 执行已有 migration。不要打开 `DB_SYNCHRONIZE`。这次没有新的 migration，回滚应用时不需要 `migration:revert`，除非你在此之后又加了自己的 migration。
 5. 重新构建镜像（基础镜像 `node:24.22-bookworm-slim`，pnpm 12.18.0）。确认镜像能构建后再替换正在运行的容器。
 6. 回滚就是回到上一版镜像和上一版代码。不要为了回滚去跑 TypeORM sync，也不要手改已经上线的索引名。
+7. 创建这个分支时，已有的 `Build RC Image` 已经把 `buqiyuan/nest-admin-server:rc` 换成 digest `sha256:fff3c1ed308e5544f06dde9457639b0a673f0fa272a5c9c8e5225e4d13c50e2b`。`:stable` 没有变，远程部署工作流也没有跑。如果公开环境正在拉 `:rc`，需要维护者自行把这个 tag 指回升级前的镜像。这次没有再推镜像。
 
 公开演示继续使用 `DEMO_MODE=true`。需要连普通写操作一起禁掉时才设 `IS_DEMO=true`。
