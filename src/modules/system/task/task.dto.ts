@@ -15,7 +15,7 @@ import {
   ValidatorConstraint,
   ValidatorConstraintInterface,
 } from 'class-validator'
-import { CronExpressionParser } from 'cron-parser';
+import { CronExpressionParser } from 'cron-parser'
 import { isEmpty } from 'lodash'
 
 import { PagerDto } from '~/common/dto/pager.dto'

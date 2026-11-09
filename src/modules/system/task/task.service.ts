@@ -68,7 +68,7 @@ export class TaskService implements OnModuleInit {
     // 防止重复初始化
     const result = await this.redis
       .multi()
-      .setnx(initKey, new Date().getTime())
+      .setnx(initKey, Date.now())
       .expire(initKey, 60 * 30)
       .exec()
     if (result[0][1] === 0) {

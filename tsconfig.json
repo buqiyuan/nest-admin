@@ -5,11 +5,11 @@
     "lib": ["ESNext"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "baseUrl": "./",
     "module": "commonjs",
     "paths": {
-      "~/*": ["src/*"]
+      "~/*": ["./src/*"]
     },
+    "types": ["*"],
     "strictBindCallApply": false,
     "strictNullChecks": false,
     "noFallthroughCasesInSwitch": false,

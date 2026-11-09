@@ -39,7 +39,8 @@ openssl rand -base64 48   # REFRESH_TOKEN_SECRET
 
 ## 环境要求
 
-- `nodejs` `20`+
+- `nodejs` `24.15`+（当前验证版本为 24.22 LTS）。NestJS 12 的包是 ESM，Jest 需要 Node 24.9+ 才能加载；`@nestjs/schematics` 12 在 24 线上要求 24.15+。不要用 Node 21/23/25。
+- `pnpm` 12（`packageManager` 为 `pnpm@12.18.0`）。升级说明见 [docs/upgrade-nest12.md](docs/upgrade-nest12.md)。
 - `docker` `20.x`+ ，其中 `docker compose`版本需要 `2.17.0`+
 - `mysql` `8.x`+
 - 使用 [`pnpm`](https://pnpm.io/zh/) 包管理器安装项目依赖

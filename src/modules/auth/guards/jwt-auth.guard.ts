@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common'
 import { Reflector } from '@nestjs/core'
 import { AuthGuard } from '@nestjs/passport'
-import { FastifyRequest } from 'fastify'
+import { NodeRequest } from '@nestjs/platform-node'
 import Redis from 'ioredis'
 import { isEmpty, isNil } from 'lodash'
 import { ExtractJwt } from 'passport-jwt'
@@ -21,19 +21,10 @@ import { genTokenBlacklistKey } from '~/helper/genRedisKey'
 import { AuthService } from '~/modules/auth/auth.service'
 
 import { checkIsDemoMode } from '~/utils'
+import { requestPathname } from '~/utils/request.util'
 
 import { AuthStrategy, PUBLIC_KEY } from '../auth.constant'
 import { TokenService } from '../services/token.service'
-
-/** @type {import('fastify').RequestGenericInterface} */
-interface RequestType {
-  Params: {
-    uid?: string
-  }
-  Querystring: {
-    token?: string
-  }
-}
 
 // https://docs.nestjs.com/recipes/passport#implement-protected-route-and-jwt-strategy-guards
 @Injectable()
@@ -55,9 +46,8 @@ export class JwtAuthGuard extends AuthGuard(AuthStrategy.JWT) {
       context.getHandler(),
       context.getClass(),
     ])
-    const request = context.switchToHttp().getRequest<FastifyRequest<RequestType>>()
-    // const response = context.switchToHttp().getResponse<FastifyReply>()
-    if (RouterWhiteList.includes(request.routeOptions.url))
+    const request = context.switchToHttp().getRequest<NodeRequest>()
+    if (RouterWhiteList.includes(requestPathname(request)))
       return true
     // TODO 此处代码的作用是判断如果在演示环境下，则拒绝用户的增删改操作，去掉此代码不影响正常的业务逻辑
     if (request.method !== 'GET' && !request.url.includes('/auth/login'))

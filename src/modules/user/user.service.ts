@@ -179,7 +179,7 @@ export class UserService {
         ...data,
         psalt: salt,
         roles: await this.roleRepository.findBy({ id: In(roleIds) }),
-        dept: await DeptEntity.findOneBy({ id: deptId }),
+        dept: deptId == null ? undefined : await DeptEntity.findOneBy({ id: deptId }),
       })
 
       const result = await manager.save(u)

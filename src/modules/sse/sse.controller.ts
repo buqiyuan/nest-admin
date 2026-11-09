@@ -1,7 +1,7 @@
+import type { NodeRequest, NodeResponse } from '@nestjs/platform-node'
 import { BeforeApplicationShutdown, Controller, Headers, Ip, Param, ParseIntPipe, Req, Res, Sse } from '@nestjs/common'
 import { ApiOperation, ApiTags } from '@nestjs/swagger'
 import { SkipThrottle } from '@nestjs/throttler'
-import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { interval, Observable } from 'rxjs'
 
@@ -15,7 +15,7 @@ import { MessageEvent, SseService } from './sse.service'
 @SkipThrottle()
 @Controller('sse')
 export class SseController implements BeforeApplicationShutdown {
-  private replyMap: Map<number, FastifyReply> = new Map()
+  private replyMap: Map<number, NodeResponse> = new Map()
 
   constructor(private readonly sseService: SseService, private onlineService: OnlineService) { }
 
@@ -24,14 +24,15 @@ export class SseController implements BeforeApplicationShutdown {
       type: 'close',
       data: 'bye~',
     })
-    this.replyMap.forEach((reply) => {
-      reply.raw.end().destroy()
+    this.replyMap.forEach((res) => {
+      res.end()
+      res.socket?.destroy()
     })
+    this.replyMap.clear()
   }
 
   // 通过控制台关闭程序时触发
   beforeApplicationShutdown() {
-    // console.log('beforeApplicationShutdown')
     this.closeAllConnect()
   }
 
@@ -39,8 +40,8 @@ export class SseController implements BeforeApplicationShutdown {
   @Sse(':uid')
   async sse(
     @Param('uid', ParseIntPipe) uid: number,
-    @Req() req: FastifyRequest,
-    @Res() res: FastifyReply,
+    @Req() req: NodeRequest,
+    @Res({ passthrough: true }) res: NodeResponse,
     @Ip() ip: string,
     @Headers('user-agent') ua: string,
   ): Promise<Observable<MessageEvent>> {
@@ -52,11 +53,10 @@ export class SseController implements BeforeApplicationShutdown {
       const subscription = interval(12000).subscribe(() => {
         subscriber.next({ type: 'ping' })
       })
-      // console.log(`user-${uid}已连接`)
       this.sseService.addClient(uid, subscriber)
 
-      // 当客户端断开连接时
-      req.raw.on('close', () => {
+      // 当客户端断开连接时。请求对象本身就是 IncomingMessage，没有 Fastify 的 req.raw。
+      req.on('close', () => {
         subscription.unsubscribe()
         this.sseService.removeClient(uid, subscriber)
         this.replyMap.delete(uid)

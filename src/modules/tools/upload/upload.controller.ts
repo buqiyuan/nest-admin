@@ -1,6 +1,12 @@
-import { BadRequestException, Controller, Post, Req } from '@nestjs/common'
+import {
+  BadRequestException,
+  Controller,
+  Post,
+  UploadedFile,
+  UseInterceptors,
+} from '@nestjs/common'
+import { FileInterceptor } from '@nestjs/platform-node'
 import { ApiBody, ApiConsumes, ApiOperation, ApiTags } from '@nestjs/swagger'
-import { FastifyRequest } from 'fastify'
 
 import { ApiSecurityAuth } from '~/common/decorators/swagger.decorator'
 import { AuthUser } from '~/modules/auth/decorators/auth-user.decorator'
@@ -13,6 +19,9 @@ import { UploadService } from './upload.service'
 export const permissions = definePermission('upload', {
   UPLOAD: 'upload',
 } as const)
+
+/** 与旧 @fastify/multipart 的 fileSize 限制一致。 */
+export const UPLOAD_MAX_FILE_SIZE = 1024 * 1024 * 6
 
 @ApiSecurityAuth()
 @ApiTags('Tools - 上传模块')
@@ -27,16 +36,12 @@ export class UploadController {
   @ApiBody({
     type: FileUploadDto,
   })
-  async upload(@Req() req: FastifyRequest, @AuthUser() user: IAuthUser) {
-    if (!req.isMultipart())
+  @UseInterceptors(FileInterceptor('file', {
+    limits: { fileSize: UPLOAD_MAX_FILE_SIZE },
+  }))
+  async upload(@UploadedFile() file: Express.Multer.File, @AuthUser() user: IAuthUser) {
+    if (!file)
       throw new BadRequestException('Request is not multipart')
-
-    const file = await req.file()
-
-    // https://github.com/fastify/fastify-multipart
-    // const parts = req.files()
-    // for await (const part of parts)
-    //   console.log(part.file)
 
     try {
       const path = await this.uploadService.saveFile(file, user.uid)

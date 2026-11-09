@@ -75,7 +75,7 @@ export class OnlineService {
   async removeOnlineUser(value: string) {
     const token = await AccessTokenEntity.findOne({
       where: { value },
-      relations: ['user'],
+      relations: { user: true },
       cache: true,
     })
     await this.redis.del(genOnlineUserKey(token?.id))
@@ -94,7 +94,7 @@ export class OnlineService {
   async listOnlineUser(value: string): Promise<OnlineUserInfo[]> {
     const token = await AccessTokenEntity.findOne({
       where: { value },
-      relations: ['user'],
+      relations: { user: true },
       cache: true,
     })
     const keys = await this.redis.keys(genOnlineUserKey('*'))
@@ -115,7 +115,7 @@ export class OnlineService {
   async kickUser(tokenId: string, user: IAuthUser): Promise<void> {
     const token = await AccessTokenEntity.findOne({
       where: { id: tokenId },
-      relations: ['user'],
+      relations: { user: true },
       cache: true,
     })
     if (!token)

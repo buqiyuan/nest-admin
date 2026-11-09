@@ -1,6 +1,6 @@
 import type { Logger as WinstonLogger } from 'winston'
 
-import { ConsoleLogger, ConsoleLoggerOptions, Injectable } from '@nestjs/common'
+import { ConsoleLogger, ConsoleLoggerOptions, Injectable, Optional } from '@nestjs/common'
 import { ConfigService } from '@nestjs/config'
 
 import { config, createLogger, format, transports } from 'winston'
@@ -22,8 +22,9 @@ export class LoggerService extends ConsoleLogger {
   private winstonLogger: WinstonLogger
 
   constructor(
-    context: string,
-    options: ConsoleLoggerOptions,
+    // Nest 12 会按构造参数做依赖注入。context/options 是 ConsoleLogger 的可选参数，不是容器里的 provider。
+    @Optional() context: string,
+    @Optional() options: ConsoleLoggerOptions,
     private configService: ConfigService<ConfigKeyPaths>,
   ) {
     super(context, options)

@@ -124,7 +124,7 @@ export class TokenService {
       await this.verifyAccessToken(value)
       const res = await AccessTokenEntity.findOne({
         where: { value },
-        relations: ['user', 'refreshToken'],
+        relations: { user: true, refreshToken: true },
         cache: true,
       })
       isValid = Boolean(res)
@@ -176,7 +176,7 @@ export class TokenService {
   async removeRefreshToken(value: string) {
     const refreshToken = await RefreshTokenEntity.findOne({
       where: { value },
-      relations: ['accessToken'],
+      relations: { accessToken: true },
     })
     if (refreshToken) {
       if (refreshToken.accessToken)

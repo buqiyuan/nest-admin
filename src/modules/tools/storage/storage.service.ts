@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Between, Like, Repository } from 'typeorm'
+import { Between, In, Like, Repository } from 'typeorm'
 
 import { paginateRaw } from '~/helper/paginate'
 import { PaginationTypeEnum } from '~/helper/paginate/interface'
@@ -32,7 +32,9 @@ export class StorageService {
    * 删除文件
    */
   async delete(fileIds: number[]): Promise<void> {
-    const items = await this.storageRepository.findByIds(fileIds)
+    const items = fileIds.length
+      ? await this.storageRepository.findBy({ id: In(fileIds) })
+      : []
     await this.storageRepository.delete(fileIds)
 
     items.forEach((el) => {
@@ -50,6 +52,23 @@ export class StorageService {
     time,
     username,
   }: StoragePageDto): Promise<Pagination<StorageInfo>> {
+    // 按用户名筛选时，用户不存在必须返回空页。
+    // TypeORM 1 遇到 where 里的 undefined 会抛错；0.3 则会忽略条件并查出全部记录。
+    let userId: number | undefined
+    if (username) {
+      const matched = await this.userRepository.findOneBy({ username })
+      if (!matched) {
+        return new Pagination([], {
+          itemCount: 0,
+          totalItems: 0,
+          itemsPerPage: pageSize,
+          totalPages: 0,
+          currentPage: page,
+        })
+      }
+      userId = matched.id
+    }
+
     const queryBuilder = this.storageRepository
       .createQueryBuilder('storage')
       .leftJoinAndSelect('sys_user', 'user', 'storage.user_id = user.id')
@@ -59,9 +78,7 @@ export class StorageService {
         ...(extName && { extName }),
         ...(size && { size: Between(size[0], size[1]) }),
         ...(time && { createdAt: Between(time[0], time[1]) }),
-        ...(username && {
-          userId: await (await this.userRepository.findOneBy({ username }))?.id,
-        }),
+        ...(userId !== undefined && { userId }),
       })
       .orderBy('storage.created_at', 'DESC')
 
